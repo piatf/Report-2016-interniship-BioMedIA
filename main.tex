@@ -32,17 +32,24 @@
 	diagnostic des patients atteints de maladie cardiovasculaire.
 
 	\section{MIRTK}
-	 => stable mais nécessite une maintenance et une amélioration continue pour rester pertinent
+	 => stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
 	 Intervention sur le module "Numerics", bibliotèque mathématique.
 \chapter{ objectifs/cahiers des charges}
 	\section{problématique (+contexte)}
 	Arrayfire:Bibliothèque mathématique fournissant plusieurs fonctions de manipulation de matrices, ainsi que la possibilité de faire des boucles parallèles
 	- Simplifier le code - Optimiser les performances de calcul -
 	\section{cahier des charges}
+	- Intégrer ArrayFire à MIRTK, aussi bien au niveau des manipulations mathématiques qu'à celui de la programmation parallèle.
+	\newline- Enlever toute dépendance de MIRTK à TBB
+	\newline- Le délivrable sera composé de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.
+	\newline- La programmation sera réalisée de manière transparente, c'est-à-dire que MIRTK doit réaliser les mêmes fonctions et garder la même API même si le code plus en profondeur est modifié.
+	\newline- Plusieurs benchmarks affirmeront les performances d'ArrayFire et de l'optimisation globale de MIRTK.
 	\section{objectifs et milestones}
 	\subsection{Objectifs}- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF
-	- Garder la transparence
+	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.
 	- Supprimer er les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).
+	- 
+	
 	\subsection{Diagramme de GANTT}
 	 => gantt chart prévisionnel
 	\begin{figure}[h!]
