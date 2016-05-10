@@ -1,0 +1,57 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage[top=0cm, bottom=0cm, left=2cm, right=2cm]{geometry}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\title{Rapport}
+\author{François PIAT}
+\date{WEEK 3 - }
+
+\begin{document}
+
+\maketitle
+
+\chapter*{Profiling}
+
+L'un des buts du stage est de ne plus utiliser la bibliothèque de programmation parallèle appelée TBB, en remplaçant ce qui sera necéssaire par ArrayFire, qui a une fonctionnalité semblable.
+\\
+Pour cela, on interviendra de 2 manières :\\
+- Les fonctions où TBB est efficace : on remplace par l'équivalent d'AF quand cela est possible. \\
+- Les fonctions où TBB n'est pas efficace : on supprime l'utilisation de TBB.
+\paragraph{Valgrind}
+Valgrind est une suite d'outils informatiques, incluant un debugger, un profiler, un analyseur de mémoire...
+On utilise callgrind, le profiler pour analyser les performances de MIRTK à partir d'une étude des caches lors de l'éxecution des fonctions 
+
+\paragraph{Stratégie} 
+- Analyse sur un mode debug activé, puis comparaison entre tbb on et tbb off.  - On analyse les filtres en premier (*) \newline Fonctions analysées : \newline
+\\close-image*
+cut-brain
+detect-edges
+dilate-image*
+downsample-image*
+erode-image*
+evaluate-similarity
+evaluate-overlap
+invert-dof
+open-image*
+reflect-image
+register : (- rigid only
+- affine only
+- ffd only)
+resample-image*
+smooth-image*
+transform-image*\\
+
+Pour transform-image et resample-image, on fait un test sur chacun des modes d'interpolation suivants: Linéaire, NN, BSpline, Sinc et Gaussien.
+
+\paragraph{Problèmes}
+- Certains tests sont très long à réaliser, ce que je n'avait pas prévu. J'ai donc fais du multi-tasking, mais seulement à la fin des tests.
+\newline - Les tests sur des programmes en multi-threading (TBB) n'arrivent pas à 100 pourcent dans Kcachegrind en cumulé. 
+
+\chapter*{Bazar}
+-Découverte de Jabref/Zotero, pour gérer les ressources documentaires.
+
+\end{document}
