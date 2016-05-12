@@ -1,18 +1,26 @@
-\documentclass{report}
+\documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
-\usepackage[top=0cm, bottom=0cm, left=2cm, right=2cm]{geometry}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 \usepackage[francais]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{subcaption}
 
+% charte graphique non respectée pour le moment
+
+\title{Développement d'une bibliothèque mathématique performante pour le traitement d'images médicales}
+\author{Elève ingénieur : François PIAT}
+\date{Année scolaire 2015-2016}
 
 \begin{document}
+	
+\maketitle
+\section*{Abstract/ résumé et mots-clés, Sommaire, Introduction} % dans cet ordre
 
-
-\chapter{entreprise} 
-	\section{biomedia (Imperial college, department of computing (biomedical image analysis section) )}
-
+\chapter{Environnement de travail} 
+	\section{Le laboratoire}
+	\subsection{Imperial College London - Department of computing}
+	\subsection{BioMedIA}
 	La mission du groupe BioMedIA est de développer de nouvelles techniques de
 	calcul pour l'analyse d'images biomédicales. Le groupe se concentre sur des
 	domaines de recherche de pointe, y compris:
@@ -31,24 +39,25 @@
 	développement du cerveau humain, l’évolution des maladies mentales et le
 	diagnostic des patients atteints de maladie cardiovasculaire.
 
-	\section{MIRTK}
-	 => stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
+	\section{Le logiciel sujet du projet : MIRTK}
+	 - logiciel de traitement d'image médicales, utilisé par les chercheurs en milieu médical.
+	 - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
 	 Intervention sur le module "Numerics", bibliotèque mathématique.
-\chapter{ objectifs/cahiers des charges}
-	\section{problématique (+contexte)}
+\chapter{Objectifs et cahiers des charges}
+	\section{Problématique et contexte)}
 	Arrayfire:Bibliothèque mathématique fournissant plusieurs fonctions de manipulation de matrices, ainsi que la possibilité de faire des boucles parallèles
 	- Simplifier le code - Optimiser les performances de calcul -
-	\section{cahier des charges}
+	\section{Cahier des charges}
 	- Intégrer ArrayFire à MIRTK, aussi bien au niveau des manipulations mathématiques qu'à celui de la programmation parallèle.
 	\newline- Enlever toute dépendance de MIRTK à TBB
 	\newline- Le délivrable sera composé de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.
 	\newline- La programmation sera réalisée de manière transparente, c'est-à-dire que MIRTK doit réaliser les mêmes fonctions et garder la même API même si le code plus en profondeur est modifié.
 	\newline- Plusieurs benchmarks affirmeront les performances d'ArrayFire et de l'optimisation globale de MIRTK.
-	\section{objectifs et milestones}
-	\subsection{Objectifs}- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF
-	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.
-	- Supprimer er les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).
-	- 
+	\section{Objectifs et milestones}
+	\subsection{Objectifs}- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
+	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
+	- Supprimer er les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
+	
 	
 	\subsection{Diagramme de GANTT}
 	 => gantt chart prévisionnel
@@ -59,12 +68,37 @@
 		\caption{Diagramme de GANTT prévisionnel}
 		\label{Diagramme de GANTT prévisionnel}
 	\end{figure}
-\chapter{ réalisation}
-	\section{profiling}
+\chapter{Réalisation}
+	\section{Profiling}
 	Profiling => on identifie les fonctions sur lesquelles agir en premier
 	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés, puis on double check avec VTune sur une autre machine.
-	\section{integration d'arrayfire dans MIRTK}
-	\section{benchmarking}
-	 
+	\newline\newline
+	Les tests ont été effectués sur une machine dont les caractéristiques sont les suivantes : \newline
+	{$\bullet$} \textit{Nombre de coeurs:} 8, 2 threads chacun\newline
+	{$\bullet$} \textit{Cadence:} 1.6 GHz \newline
+	{$\bullet$} \textit{Nombre de caches:} 4 \newline
+	{$\bullet$} \textit{Taille des caches:}32k, 32k, 256K, 8192K \newline
+	
+	Pour une quantité réduite de tests, et afin de cibler les modèles d'utilisation de TBB à remplacer, on a pris l'une des fonctions les plus sollicitées dans MIRTK, il s'agit d'une fonction nommée \textit{transform-image}, et qui dispose de 5 options, définissant un type d'interpolation mathématique : Linéaire (par défaut), méthode voisin le plus proche (NN), gaussienne, sinus cardinal et B-Spline. 
+	
+	\subsection{Analyse du nombre d'instructions}
+	
+	(Placer ici des graphiques de performances)
+	\subsection{Analyse des fuites de cache}
+	
+	(Placer ici des graphiques de performances)
+	
+	\section{Integration d'ArrayFire dans MIRTK}
+	\subsection{Implémentation du module mathématique}
+	Programmation transparente entre Eigen et ArrayFire.
+	\subsection{Gestion de la programmation parallèle}
+	Optimisation des threads et suppression de TBB au profit de ArrayFire.
+	\subsection{Switch automatique de back-end}
+	Commandes prépocesseur pour indiquer au logiciel quel est le back-end à utiliser (ArrayFire ou Eigen) en fonction de l'opération souhaitée.
+	\section{Benchmarking}
+	- Analyse des performances obtenues \newline
+	- Comparaison avec le profiling initial ? \newline
+	- Points où il y a eu des concessions (exemple: alourdir le code pour parvenir à un résultat précis)
+\section*{Conclusion, Sources, Table des illustrations, Glossaire, Annexes} % dans cet ordre
 	
 \end{document}
