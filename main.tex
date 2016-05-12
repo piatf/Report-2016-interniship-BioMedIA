@@ -20,39 +20,46 @@
 \chapter{Environnement de travail} 
 	\section{Le laboratoire}
 	\subsection{Imperial College London - Department of computing}
+	Domaine d'activité, stats, organigramme
 	\subsection{BioMedIA}
-	La mission du groupe BioMedIA est de développer de nouvelles techniques de
-	calcul pour l'analyse d'images biomédicales. Le groupe se concentre sur des
-	domaines de recherche de pointe, y compris:
+	synopsis
+	détail des activités du laboratoire
+	
+%	La mission du groupe BioMedIA est de développer de nouvelles techniques de
+%	calcul pour l'analyse d'images biomédicales. Le groupe se concentre sur des
+%	domaines de recherche de pointe, y compris:
+%
+%	- Le développement d'algorithmes d'acquisition, d'analyse et d'interprétation
+%	des images. En particulier dans les domaines du recalage, de la reconstruction,
+%	du suivi de mouvement, de la segmentation et de la modélisation.
+%
+%	- L'apprentissage machine pour l'extraction d'information clinique à partir
+%	d'images médicales. Les applications incluent le diagnostic assisté par
+%	ordinateur, la planification automatisée de traitement médicale, ou encore les
+%	interventions et la thérapie guidées par ordinateur.
+%
+%	Nous nous intéressons particulièrement à l'imagerie et les technologies de
+%	traitement informatique qui nous permettent de mieux comprendre le
+%	développement du cerveau humain, l’évolution des maladies mentales et le
+%	diagnostic des patients atteints de maladie cardiovasculaire.
 
-	- Le développement d'algorithmes d'acquisition, d'analyse et d'interprétation
-	des images. En particulier dans les domaines du recalage, de la reconstruction,
-	du suivi de mouvement, de la segmentation et de la modélisation.
-
-	- L'apprentissage machine pour l'extraction d'information clinique à partir
-	d'images médicales. Les applications incluent le diagnostic assisté par
-	ordinateur, la planification automatisée de traitement médicale, ou encore les
-	interventions et la thérapie guidées par ordinateur.
-
-	Nous nous intéressons particulièrement à l'imagerie et les technologies de
-	traitement informatique qui nous permettent de mieux comprendre le
-	développement du cerveau humain, l’évolution des maladies mentales et le
-	diagnostic des patients atteints de maladie cardiovasculaire.
-
-	\section{Le logiciel sujet du projet : MIRTK}
-	 - logiciel de traitement d'image médicales, utilisé par les chercheurs en milieu médical.
-	 - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
-	 Intervention sur le module "Numerics", bibliotèque mathématique.
+	\section{Cadre du projet} présentation d'MIRTK +application +architecture(modules...)
+%	 - logiciel de traitement d'image médicales, utilisé par les chercheurs en milieu médical.
+%	 - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
+%	 Intervention sur le module "Numerics", bibliothèque mathématique.
 \chapter{Objectifs et cahiers des charges}
-	\section{Problématique et contexte)}
-	Arrayfire:Bibliothèque mathématique fournissant plusieurs fonctions de manipulation de matrices, ainsi que la possibilité de faire des boucles parallèles
-	- Simplifier le code - Optimiser les performances de calcul -
+	\section{Problématique} inclure contexte du projet (back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage
+	===> n'utiliser qu'une seule dépendance (externe) : ArrayFire qui peut amener l'optimisation via GPU (3 points majeurs)
+	 
+
 	\section{Cahier des charges}
+	Arrayfire a été choisi pour palier les 3 points de la problematique
 	- Intégrer ArrayFire à MIRTK, aussi bien au niveau des manipulations mathématiques qu'à celui de la programmation parallèle.
 	\newline- Enlever toute dépendance de MIRTK à TBB
-	\newline- Le délivrable sera composé de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.
+	\newline- (Le délivrable sera composé IDEALEMENT de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.) => étape bonus
 	\newline- La programmation sera réalisée de manière transparente, c'est-à-dire que MIRTK doit réaliser les mêmes fonctions et garder la même API même si le code plus en profondeur est modifié.
-	\newline- Plusieurs benchmarks affirmeront les performances d'ArrayFire et de l'optimisation globale de MIRTK.
+	\newline- Plusieurs benchmarks affirmeront les performances d'ArrayFire et de l'optimisation globale de MIRTK. (test CPU et GPU)
+	
 	\section{Objectifs et milestones}
 	\subsection{Objectifs}- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
 	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
@@ -60,7 +67,7 @@
 	
 	
 	\subsection{Diagramme de GANTT}
-	 => gantt chart prévisionnel
+	 => gantt chart prévisionnel (à mettre en français)
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=18cm]{Reports/figures/estimated_gantt.png}
@@ -69,17 +76,22 @@
 		\label{Diagramme de GANTT prévisionnel}
 	\end{figure}
 \chapter{Réalisation}
-	\section{Profiling}
-	Profiling => on identifie les fonctions sur lesquelles agir en premier
-	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés, puis on double check avec VTune sur une autre machine.
-	\newline\newline
-	Les tests ont été effectués sur une machine dont les caractéristiques sont les suivantes : \newline
-	{$\bullet$} \textit{Nombre de coeurs:} 8, 2 threads chacun\newline
-	{$\bullet$} \textit{Cadence:} 1.6 GHz \newline
-	{$\bullet$} \textit{Nombre de caches:} 4 \newline
-	{$\bullet$} \textit{Taille des caches:}32k, 32k, 256K, 8192K \newline
+	\section{Profilage}
+	définition du profilage (merci wikipédia) + dire pourquoi c est important ici
 	
-	Pour une quantité réduite de tests, et afin de cibler les modèles d'utilisation de TBB à remplacer, on a pris l'une des fonctions les plus sollicitées dans MIRTK, il s'agit d'une fonction nommée \textit{transform-image}, et qui dispose de 5 options, définissant un type d'interpolation mathématique : Linéaire (par défaut), méthode voisin le plus proche (NN), gaussienne, sinus cardinal et B-Spline. 
+	Profilage=> on identifie les fonctions sur lesquelles agir en premier
+	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés.
+	pk valgrind ?
+% => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, qui nécessite des proc AMD).
+%	
+%	\newline\newline
+%	Les tests ont été effectués sur une machine dont les caractéristiques sont les suivantes : \newline
+%	{$\bullet$} \textit{Nombre de coeurs:} 8, 2 threads chacun\newline
+%	{$\bullet$} \textit{Cadence:} 1.6 GHz \newline
+%	{$\bullet$} \textit{Nombre de caches:} 4 \newline
+%	{$\bullet$} \textit{Taille des caches:}32k, 32k, 256K, 8192K \newline
+%	ajouter le maximum de détails (RAM, nom du proc ...)\newline
+%	Pour une quantité réduite de tests, et afin de cibler les modèles d'utilisation de TBB à remplacer, on a pris l'une des fonctions les plus sollicitées dans MIRTK, il s'agit d'une fonction nommée \textit{transform-image}, et qui dispose de 5 options, définissant un type d'interpolation mathématique : Linéaire (par défaut), méthode voisin le plus proche (NN), gaussienne, sinus cardinal et B-Spline. 
 	
 	\subsection{Analyse du nombre d'instructions}
 	
@@ -93,11 +105,13 @@
 	Programmation transparente entre Eigen et ArrayFire.
 	\subsection{Gestion de la programmation parallèle}
 	Optimisation des threads et suppression de TBB au profit de ArrayFire.
-	\subsection{Switch automatique de back-end}
-	Commandes prépocesseur pour indiquer au logiciel quel est le back-end à utiliser (ArrayFire ou Eigen) en fonction de l'opération souhaitée.
+	\newline
+	Le contenus des sous-parties, ainsi que d'éventuelles d'autres sous-parties dépendront du résultat du profilage.
+%	\subsection{Switch automatique de back-end}
+%	Commandes prépocesseur pour indiquer au logiciel quel est le back-end à utiliser (ArrayFire ou Eigen) en fonction de l'opération souhaitée.
 	\section{Benchmarking}
 	- Analyse des performances obtenues \newline
-	- Comparaison avec le profiling initial ? \newline
+	- Comparaison avec le profilage initial ? \newline
 	- Points où il y a eu des concessions (exemple: alourdir le code pour parvenir à un résultat précis)
 \section*{Conclusion, Sources, Table des illustrations, Glossaire, Annexes} % dans cet ordre
 	
