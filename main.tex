@@ -22,8 +22,7 @@
 	\subsection{Imperial College London - Department of computing}
 	Domaine d'activité, stats, organigramme
 	\subsection{BioMedIA}
-	synopsis
-	détail des activités du laboratoire
+	Synopsis, détail des activités du laboratoire
 	
 %	La mission du groupe BioMedIA est de développer de nouvelles techniques de
 %	calcul pour l'analyse d'images biomédicales. Le groupe se concentre sur des
@@ -43,17 +42,20 @@
 %	développement du cerveau humain, l’évolution des maladies mentales et le
 %	diagnostic des patients atteints de maladie cardiovasculaire.
 
-	\section{Cadre du projet} présentation d'MIRTK +application +architecture(modules...)
+	\section{Cadre du projet} présentation de MIRTK, de ses applications, de son architecture(modules, fonctions...).
 %	 - logiciel de traitement d'image médicales, utilisé par les chercheurs en milieu médical.
 %	 - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
 %	 Intervention sur le module "Numerics", bibliothèque mathématique.
 \chapter{Objectifs et cahiers des charges}
-	\section{Problématique} inclure contexte du projet (back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage
-	===> n'utiliser qu'une seule dépendance (externe) : ArrayFire qui peut amener l'optimisation via GPU (3 points majeurs)
+	\section{Problématique} Inclure contexte du projet.
+%	(back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage
+%	===> n'utiliser qu'une seule dépendance (externe) : ArrayFire qui peut amener l'optimisation via GPU (résumer ça en 3 points majeurs)
+	
+	
 	 
 
 	\section{Cahier des charges}
-	Arrayfire a été choisi pour palier les 3 points de la problematique
+	Arrayfire a été choisi pour palier les 3 points de la problematique \newline
 	- Intégrer ArrayFire à MIRTK, aussi bien au niveau des manipulations mathématiques qu'à celui de la programmation parallèle.
 	\newline- Enlever toute dépendance de MIRTK à TBB
 	\newline- (Le délivrable sera composé IDEALEMENT de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.) => étape bonus
@@ -77,11 +79,11 @@
 	\end{figure}
 \chapter{Réalisation}
 	\section{Profilage}
-	définition du profilage (merci wikipédia) + dire pourquoi c est important ici
+	définition du profilage + expliquer la nécessité d'une telle étape \newline
 	
-	Profilage=> on identifie les fonctions sur lesquelles agir en premier
-	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés.
-	pk valgrind ?
+%	Profilage=> on identifie les fonctions sur lesquelles agir en premier
+%	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés.
+	Expliquer le choix de valgrind 
 % => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, qui nécessite des proc AMD).
 %	
 %	\newline\newline
@@ -110,6 +112,7 @@
 %	\subsection{Switch automatique de back-end}
 %	Commandes prépocesseur pour indiquer au logiciel quel est le back-end à utiliser (ArrayFire ou Eigen) en fonction de l'opération souhaitée.
 	\section{Benchmarking}
+	(partie dépendante du déroulement du projet)
 	- Analyse des performances obtenues \newline
 	- Comparaison avec le profilage initial ? \newline
 	- Points où il y a eu des concessions (exemple: alourdir le code pour parvenir à un résultat précis)
