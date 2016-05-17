@@ -47,7 +47,7 @@
 %	 - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
 %	 Intervention sur le module "Numerics", bibliothèque mathématique.
 \chapter{Objectifs et cahiers des charges}
-	\section{Problématique} Inclure contexte du projet.
+	\section{Problématique} Inclure contexte du projet, avec la raison pour laquelle ce projet est nécessaire.
 %	(back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage
 %	===> n'utiliser qu'une seule dépendance (externe) : ArrayFire qui peut amener l'optimisation via GPU (résumer ça en 3 points majeurs)
 	
@@ -55,17 +55,21 @@
 	 
 
 	\section{Cahier des charges}
-	Arrayfire a été choisi pour palier les 3 points de la problematique \newline
-	- Intégrer ArrayFire à MIRTK, aussi bien au niveau des manipulations mathématiques qu'à celui de la programmation parallèle.
-	\newline- Enlever toute dépendance de MIRTK à TBB
-	\newline- (Le délivrable sera composé IDEALEMENT de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.) => étape bonus
-	\newline- La programmation sera réalisée de manière transparente, c'est-à-dire que MIRTK doit réaliser les mêmes fonctions et garder la même API même si le code plus en profondeur est modifié.
-	\newline- Plusieurs benchmarks affirmeront les performances d'ArrayFire et de l'optimisation globale de MIRTK. (test CPU et GPU)
+	Lister les attentes et les contraintes du projet.
+%	Arrayfire a été choisi pour palier les 3 points de la problematique \newline
+%	- Intégrer ArrayFire à MIRTK, aussi bien au niveau des manipulations mathématiques qu'à celui de la programmation parallèle.
+%	\newline- Enlever toute dépendance de MIRTK à TBB
+%	\newline- (Le délivrable sera composé IDEALEMENT de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.) => étape bonus
+%	\newline- La programmation sera réalisée de manière transparente, c'est-à-dire que MIRTK doit réaliser les mêmes fonctions et garder la même API même si le code plus en profondeur est modifié.
+%	\newline- Plusieurs benchmarks affirmeront les performances d'ArrayFire et de l'optimisation globale de MIRTK. (test CPU et GPU)
 	
 	\section{Objectifs et milestones}
-	\subsection{Objectifs}- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
-	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
-	- Supprimer er les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
+	
+	\subsection{Objectifs} 
+	Détailler les objectifs a atteindre idéalement.
+	%- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
+%	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
+%	- Supprimer er les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
 	
 	
 	\subsection{Diagramme de GANTT}
@@ -79,11 +83,11 @@
 	\end{figure}
 \chapter{Réalisation}
 	\section{Profilage}
-	définition du profilage + expliquer la nécessité d'une telle étape \newline
+	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
 	
 %	Profilage=> on identifie les fonctions sur lesquelles agir en premier
 %	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés.
-	Expliquer le choix de valgrind 
+	Expliquer le choix de valgrind, parmi les autres profileurs
 % => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, qui nécessite des proc AMD).
 %	
 %	\newline\newline
@@ -97,14 +101,15 @@
 	
 	\subsection{Analyse du nombre d'instructions}
 	
-	(Placer ici des graphiques de performances)
+	Placer ici des graphiques de performances, avec leurs interprétation
 	\subsection{Analyse des fuites de cache}
 	
-	(Placer ici des graphiques de performances)
+	Placer ici des graphiques des fuites de cache, avec leurs interprétation
 	
 	\section{Integration d'ArrayFire dans MIRTK}
 	\subsection{Implémentation du module mathématique}
 	Programmation transparente entre Eigen et ArrayFire.
+	Lister les fonctions principales à substituer.
 	\subsection{Gestion de la programmation parallèle}
 	Optimisation des threads et suppression de TBB au profit de ArrayFire.
 	\newline
@@ -112,7 +117,7 @@
 %	\subsection{Switch automatique de back-end}
 %	Commandes prépocesseur pour indiquer au logiciel quel est le back-end à utiliser (ArrayFire ou Eigen) en fonction de l'opération souhaitée.
 	\section{Benchmarking}
-	(partie dépendante du déroulement du projet)
+	(partie dépendante du déroulement du projet)\newline
 	- Analyse des performances obtenues \newline
 	- Comparaison avec le profilage initial ? \newline
 	- Points où il y a eu des concessions (exemple: alourdir le code pour parvenir à un résultat précis)
