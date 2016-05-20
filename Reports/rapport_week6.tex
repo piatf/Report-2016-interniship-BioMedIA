@@ -1,0 +1,66 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+\title{Rapport}
+\author{François PIAT}
+\date{WEEK 6}
+
+\begin{document}
+
+\maketitle
+
+\chapter*{Profiling}
+Durant cette semaine, le profiling passe au second plan. En effet, il n'est plus un élément essentiel à l'avancée du projet puisque la semaine passée, le profiling de MIRTK a révélé les performances globales de transform-image, qui est une fonction implicitement nécessaire à la plupart des filtres sur lesquels on veut travailler.
+\paragraph{Problèmes}
+L'espace disque utilisable étant limité sur le poste sur lequel le profiling est réalisé, les fichiers rassemblant les données des tests ne peuvent pas toujours être créé. On se retrouve donc bloqué sur ce point là.
+
+\paragraph{Solution}
+Utiliser l'emplacement "tmp/" dans l'ordinateur au lieu de "HOME" pour stocker les tests. Ainsi, plusieurs tests seront lancés via un script pendant le week-end.
+\chapter*{Implémentation}	
+L'objectif principal de la semaine est de s'intéresser à la mutation des fonctions utilisées par transform-image vers une implémentation quasiment indépendante de ArrayFire.
+\paragraph{Stratégie}
+- Grâce au fichier de profiling récupéré grâce à callgrind, kcachegrind permet de visualiser l'arbre des fonctions appelées par une commande. Il s'avère que pour transform-image, une fonction est appelée souvent, il s'agit de: \begin{lstlisting} 
+ApplyHomogeneousTransformation
+\end{lstlisting} 
+On va d'abord se focaliser sur cette fonction, qui présente un "blocked-range", ce qui signifie que cet aspect du code est parrallélisé. La première étape sera donc de remplacer ce blocked-range par une implémentation utilisant uniquement ArrayFire.
+\newline
+\newline
+(Cf rubrique "problèmes" ci-après) Suite aux problèmes apparus, il a fallu se pencher sur les fonctions qui nécessitaient le moins de modifications du design en amont.
+\newline
+\newline
+Plusieurs informations peuvent être trouvées sur le lien suivant, qui compare une programmation naïve, telle qu'implémentée dans le blocked-range, avec des solutions qu'offre ArrayFire:
+\url{http://arrayfire.org/docs/getting_started_2vectorize_8cpp-example.htm}
+
+\paragraph{Résultats}
+ - Sur la documentation d'ArrayFire, on peut voir un exemple (dont le lien est donné ci-dessus) qui indique comment vectoriser une fonction telle que suit : \begin{lstlisting} 
+static array dist_naive(array a, array b)
+{
+	array dist_mat = constant(0, a.dims(1), (int)b.dims(1));
+	for (int ii = 0; ii < (int)a.dims(1); ii++) {
+		for (int jj = 0; jj < (int)b.dims(1); jj++) {
+			for (int kk = 0; kk < (int)a.dims(0); kk++) {
+				dist_mat(ii, jj) += abs(a(kk, ii) - b(kk, jj));
+			}
+		}
+	}
+	return dist_mat;
+}
+\end{lstlisting} 
+Ce genre de fonction représente une accumulation, et gère un système de coordonnées en 3 dimension, qui est aussi présent dans MIRTK.\newline
+- De plus, il s'avère qu'ArrayFire dispose de fonctions similaires à MIRTK, telles que erode-image, dilate-image, ou encore transform-image. Leur implémentation doit être étudiée afin de savoir si des fonctions de MIRTK sont directement rempalçables, ou copiables partiellement.
+\paragraph{Problèmes}
+
+- Les fonctions de transformation utilisent des variables x,y,z et t, qui correspondent aux variables d'une matrice à 4 dimensions. Il faut donc repenser le design à ce niveau.
+\newline
+-Les fonctions d'interpolation utilisent la fonction ParrallelForEachVoxel
+
+
+\end{document}
