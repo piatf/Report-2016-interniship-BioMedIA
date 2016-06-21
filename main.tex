@@ -37,7 +37,7 @@
 	%	Intelligent behavior understanding, novel approaches to facial action and emotion prediction as well as novel approaches to robust face alignment, tracking and expression recognition, biomedical imaging computing, robotics & sensing, and appearance modelling for realistic computer graphics.
 	
 	La recherche en traitement visuel d'informations intervient dans de nombreux domaines tels que la visualisation, le graphisme, la compréhension intelligente, et le traitement d'images biomédicales.  
-	Les travaux du département ont été récompensés de 8 titres lors de conférences internationales majeures (IEEE FG, ICRA, ISMAR, MICCAI, SensorComm) et et de 4 prix Marie Curie.
+	Les travaux du département ont été récompensés de 8 titres lors de conférences internationales majeures (IEEE FG, ICRA, ISMAR, MICCAI, SensorComm) et de 4 prix Marie Curie.
 		
 
 	
@@ -61,11 +61,18 @@
 	traitement informatique qui nous permettent de mieux comprendre le
 	développement du cerveau humain, l’évolution des maladies mentales et le
 	diagnostic des patients atteints de maladie cardiovasculaire.
-
+	
+	
 	\section{Cadre du projet} % présentation de MIRTK, de ses applications, de son architecture(modules, fonctions...).
-	 - logiciel de traitement d'image médicales, utilisé par les chercheurs en milieu médical.
-	 - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
-	 Intervention sur le module "Numerics", bibliothèque mathématique.
+	Medical Image Registration Tool-Kit (abrégé MIRTK) est un logiciel open-source de traitement d'image médicales utilisé par des chercheurs dans le milieu médical. Le cahier des charges provient majoritairement de ces chercheurs, qui ont des besoins variables en termes de visualisation. Le logiciel est adapté en conséquence par la suite.
+	Afin de rester pertinent pour ces chercheurs, MIRTK nécessite donc une maintenance et une amélioration continue. 
+	 % - logiciel de traitement d'image médicales, utilisé par les chercheurs en milieu médical.
+	 % - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
+	 % - Intervention sur le module "Numerics", bibliothèque mathématique.
+	 
+	 A long terme, MIRTK serait potentiellement destiné a faire partie d'un projet global pour la UK BioBank qui prévoit de regrouper la plus grosse banque de données médicales, incluant notamment des données visualisables. Cette base de données regroupera aussi des dizaines de caractéristiques pour chaque patient (habitude alimentaires, antécédents médicaux, génotype...). Afin de pouvoir traiter un tel nombre de données, MIRTK n'est pas suffisamment optimisé. Le but principal de ce stage est donc de commencer la démarche d'amélioration du logiciel en terme de design et de performances.
+	 
+	 La majeure partie du projet sur les opérations les plus atomiques du logiciel, à savoir les fonctionnalités mathématiques, essentiellement basées sur du calcul matriciel. Pour cela, on interviendra directement dans le code source du logiciel, qui est codé en C++. On s'intéressera donc aux couches logicielles les plus basses de MIRTK.
 \chapter{Objectifs et cahiers des charges}
 	\section{Problématique} %Inclure contexte du projet, avec la raison pour laquelle ce projet est nécessaire.
 	(back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage
