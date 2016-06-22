@@ -41,12 +41,16 @@
 \end{titlepage}
 
 
-\section*{Abstract/ résumé et mots-clés} % dans cet ordre
-\section*{Sommaire}
+\paragraph*{Résumé} % dans cet ordre
+\paragraph*{Mots-clés}
+\paragraph*{Abstract}
+\paragraph*{Key-words}
+\renewcommand\contentsname{Sommaire}
 \tableofcontents
 
-\section*{Introduction}
-
+\newpage
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
 \chapter{Environnement de travail} 
 	\section{Le laboratoire}
 	\subsection{Imperial College London - Department of computing}
@@ -100,10 +104,16 @@
 	 La majeure partie du projet sur les opérations les plus atomiques du logiciel, à savoir les fonctionnalités mathématiques, essentiellement basées sur du calcul matriciel. Pour cela, on interviendra directement dans le code source du logiciel, qui est codé en C++. On s'intéressera donc aux couches logicielles les plus basses de MIRTK.
 \chapter{Objectifs et cahiers des charges}
 	\section{Problématique} %Inclure contexte du projet, avec la raison pour laquelle ce projet est nécessaire.
-	(back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage
-	===> n'utiliser qu'une seule dépendance (externe) : ArrayFire qui peut amener l'optimisation via GPU (résumer ça en 3 points majeurs)
+	%(back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage	===> n'utiliser qu'une seule dépendance (externe) : ArrayFire qui peut amener l'optimisation via GPU (résumer ça en 3 points majeurs) 
 	
-	
+	La majeure partie du stage se axée sur le back-end mathématique de MIRTK, c'est-à-dire les fonctions appliquant des opérations matricielles sur les images d'entrée par exemple. L'un des problèmes majeurs de MIRTK est sa forte dépendance de plusieurs bibliothèque qui, chacune, ne sont pas utilisées au maximum de leur potentiel, il s'agit de EIGEN, BOOST et TBB, dont les rôles sont définis ci-dessous:\\
+		\\{$\bullet$} \textit{EIGEN:} cette bibliothèque fournit les fonctions essentielles en termes de manipulation de matrice. \newline
+		\\{$\bullet$} \textit{BOOST:} écrite en C++, cette bibliothèque fournit des outils d'algèbre linéaire, de traitement d'image ou encore de génération de nombres pseudo-aléatoire... \newline
+		\\{$\bullet$} \textit{Threading Building Blocks (TBB)}: TBB permet l'implémentation de boucles a exécuter en parallèle. L'exécution parallèle (ou \textit{multi-threading}) est une méthode d'optimisation des performances d'un logiciel. Elle consiste a dédier plusieurs "threads" à son exécution, et transforme donc un processus itératif tel qu'une boucle FOR en une répartition de toutes les itérations, mais exécutées en simultanées. Le temps d'exécution est donc au final considérablement réduit. \newline
+	\\ Ainsi, l'inconsistance de MIRTK autour de ces 3 bibliothèques implique des performances parfois médiocres, et surtout une parallélisation réalisée de manière assez floue, dont l'efficacité est encore à prouver.  
+	\\ C'est pour cette raison, que l'apport d'une bibliothèque coordonnant des fonctions issues d'au moins 2 des 3 dépendances précédentes sera un véritable avantage si les performances du logiciel sont améliorées, ou même si elles demeurent inchangées. ArrayFire pourrait être la bibliothèque la plus adaptée pour ce genre de situation et permettrait d'ajouter la possibilité de gérer de manière dynamique le changement de back-end, travaillant sur un GPU (carte graphique), ou sur un CPU (processeur).
+		
+
 	 
 
 	\section{Cahier des charges}
@@ -121,9 +131,9 @@
 %	Détailler les objectifs a atteindre idéalement.
 	- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
 	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
-	- Supprimer er les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
+	- Supprimer les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
 	
-	
+	\vspace{5cm}
 	\subsection{Diagramme de GANTT}
 	 => gantt chart prévisionnel (à mettre en français)
 	\begin{figure}[h!]
@@ -178,13 +188,18 @@
 	- Points où il y a eu des concessions (exemple: alourdir le code pour parvenir à un résultat précis)
 	
 	\section{Améliorations et perspectives}
-	
-\section*{Conclusion} % dans cet ordre
-\section*{Sources}
+
+
+\chapter*{Conclusion} % dans cet ordre
+\addcontentsline{toc}{chapter}{Conclusion}
+\chapter*{Sources}
+\addcontentsline{toc}{chapter}{Sources}
 https://biomedia.doc.ic.ac.uk/
 http://www.imperial.ac.uk
-\section*{Table des illustrations}
-\section*{Glossaire}
-
-\section*{Annexes}
+\chapter*{Table des illustrations}
+\addcontentsline{toc}{chapter}{Table des illustrations}
+\chapter*{Glossaire}
+\addcontentsline{toc}{chapter}{Glossaire}
+\chapter*{Annexes}
+\addcontentsline{toc}{chapter}{Annexes}
 \end{document}
