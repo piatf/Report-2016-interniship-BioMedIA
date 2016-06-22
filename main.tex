@@ -32,7 +32,7 @@
 	\end{figure}
 	\vfill
 	\flushleft
-	Tuteur école: \hfill Tuteur entreprise: \par
+	Tuteur INSA: \hfill Tuteur BioMedIA: \par
 	Julien \textsc{Olivier} \hfill Ghislain-Anthony \textsc{Vaillant}
 	\vfill
 	% Bottom of the page
@@ -177,6 +177,23 @@
 %	Lister les fonctions principales à substituer.
 	\subsection{Gestion de la programmation parallèle}
 %	Optimisation des threads et suppression de TBB au profit de ArrayFire.
+Principe :
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=10cm]{Reports/figures/gfor.eps}
+		\end{center}	
+		\caption{Fonctionnement d'une boucle en parallèle}
+		\label{Fonctionnement d'une boucle en parallèle}
+	\end{figure}
+	
+Résultats de MIRTK pour transform-image:
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=12cm]{Reports/figures/performances_tbb_transform_image.eps}
+		\end{center}	
+		\caption{Améliorations apportées par TBB pour transform-image}
+		\label{Améliorations apportées par TBB pour transform-image}
+	\end{figure}
 %	\newline
 %	Le contenus des sous-parties, ainsi que d'éventuelles d'autres sous-parties dépendront du résultat du profilage.
 	\subsection{Switch automatique de back-end}
@@ -187,19 +204,21 @@
 	- Comparaison avec le profilage initial ? \newline
 	- Points où il y a eu des concessions (exemple: alourdir le code pour parvenir à un résultat précis)
 	
-	\section{Améliorations et perspectives}
-
+\chapter{Améliorations et perspectives}
+	\section{Au niveau technique...}
+	\section{...mais pas seulement!}
 
 \chapter*{Conclusion} % dans cet ordre
 \addcontentsline{toc}{chapter}{Conclusion}
 \chapter*{Sources}
 \addcontentsline{toc}{chapter}{Sources}
-https://biomedia.doc.ic.ac.uk/
-http://www.imperial.ac.uk
+https://biomedia.doc.ic.ac.uk/  : image page de garde, partie du texte 1.1.2 \\
+http://www.imperial.ac.uk : partie du texte 1.1.1
 \chapter*{Table des illustrations}
 \addcontentsline{toc}{chapter}{Table des illustrations}
 \chapter*{Glossaire}
 \addcontentsline{toc}{chapter}{Glossaire}
+back-end, MIRTK, ArrayFire,
 \chapter*{Annexes}
 \addcontentsline{toc}{chapter}{Annexes}
 \end{document}
