@@ -6,6 +6,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage{lmodern}
+\usepackage[colorlinks=true, linkcolor=black, urlcolor=blue, breaklinks, pagebackref, citebordercolor={0 0 0}, filebordercolor={0 0 0}, linkbordercolor={0 0 0}, pagebordercolor={0 0 0}, runbordercolor={0 0 0}, urlbordercolor={0 0 0}, pdfborder={0 0 0}]{hyperref}  %désactive les cadres autour des liens
 \usepackage{etoolbox}
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -16,6 +18,7 @@
 	% les chapitres étoilés
 	\patchcmd{\@makeschapterhead}{\vspace*{50\p@}}{}{}{}
 	\makeatother
+
 
 \begin{document}
 
@@ -65,7 +68,7 @@
 \addcontentsline{toc}{chapter}{Introduction}
 \chapter{Environnement de travail} 
 	\section{Le laboratoire}
-		Le laboratoire BioMedIAest implanté sur le campus principal de l'Imperial College London, dans le quartier du South Kensington. Il fait partie du groupe de recherche en traitement visuel d'informations (Visual Information Processing) au sein du département informatique de l'université.
+		Le laboratoire BioMedIA est implanté sur le campus principal de l'Imperial College London, dans le quartier du South Kensington. Il fait partie du groupe de recherche en traitement visuel d'informations (Visual Information Processing) au sein du département informatique de l'université.
 	\subsection{Imperial College London - Department of computing}
 %	Domaine d'activité, stats, organigramme
 
@@ -77,17 +80,22 @@
 	%	The group has pursued a successful strategy of growth in several key areas:  novel modelling and filtering approaches for SLAM and real-time dense scene mapping.
 	%	
 	%	Intelligent behavior understanding, novel approaches to facial action and emotion prediction as well as novel approaches to robust face alignment, tracking and expression recognition, biomedical imaging computing, robotics & sensing, and appearance modelling for realistic computer graphics.
-	\paragraph{Imperial College London}
+	\paragraph{Imperial College London}~\par
 		\begin{figure}[h!]
 			\begin{center}
-				\includegraphics[width=16cm]{Reports/figures/College-Organisation.pdf}
+				\includegraphics[width=18cm]{Reports/figures/College-Organisation.pdf}
 			\end{center}	
 			\caption{Organigramme de l'Imperial College London}
 			\label{Organigramme de l'Imperial College London}
 		\end{figure}
+	L’Imperial College London (officiellement The Imperial College of Science, Technology and Medicine) est une université britannique, se situant à Londres dans le quartier de South Kensington. Elle est spécialisée dans les sciences, l'ingénierie, la médecine et les études commerciales (avec Imperial College Business School). L'Imperial College attire des étudiants du monde entier (plus de 125 nationalités représentées en 2016).
+	
+	Fondée en 1907, l'Imperial College était d'abord une des composantes de l’université de Londres, avant de devenir une institution indépendante à l'occasion de son centenaire, en 2007. Elle est membre de la Ligue européenne des universités de recherche depuis le 1er janvier 2010. L'Imperial est également membre du Russell Group, du G5, de l'Association des Universités du Commonwealth et du "Golden Triangle" des universités britanniques.
+	
+	\paragraph{Department of computing}~\par~\par
 	La recherche en traitement visuel d'informations intervient dans de nombreux domaines tels que la visualisation, le graphisme, la compréhension intelligente, et le traitement d'images biomédicales.  
 	Les travaux du département ont été récompensés de 8 titres lors de conférences internationales majeures (IEEE FG, ICRA, ISMAR, MICCAI, SensorComm) et de 4 prix Marie Curie.
-	
+	blue
 
 	
 	\subsection{BioMedIA}
@@ -97,8 +105,7 @@
 	calcul pour l'analyse d'images biomédicales. Le groupe se concentre sur des
 	domaines de recherche de pointe, y compris:\\
 
-	{$\bullet$} Le développement d'algorithmes d'acquisition, d'analyse et d'interprétation
-	des images. En particulier dans les domaines du recalage, de la reconstruction,
+	{$\bullet$} Le développement d'algorithmes d'acquisition, d'analyse et d'interprétation des images. En particulier dans les domaines du recalage, de la reconstruction,
 	du suivi de mouvement, de la segmentation et de la modélisation. \\
 
 	{$\bullet$} L'apprentissage machine pour l'extraction d'information clinique à partir
@@ -149,18 +156,22 @@
 		\\{$\bullet$} La programmation sera réalisée de manière transparente, c'est-à-dire que MIRTK doit réaliser les mêmes fonctions et garder le même front-end même si le code plus en profondeur est modifié. En revanche, il sera possible d'ajouter des options d'exécution, notamment en ce qui concerne la gestion des back-end.\\
 		\\{$\bullet$} Plusieurs benchmarks devront affirmer la pertinence du nouveau code de MIRTK en comparant les test de performances avant et après l'intégration d'ArrayFire.\\
 %(Le délivrable sera composé IDEALEMENT de 2 backends, l'un AF et l'autre EIGEN. En fonction des applications, un switch automatique entre chaque structure sera appelé en dur grâce à des commandes pré-proc.) => étape bonus
-		\\{$\bullet$} A l'issue du stage, s'il reste suffisamment de temps pour s'y intéresser, il serait idéal d'implémenter une fonctionnalité de changement automatique de back-end en fonction des performances de EIGEN et ARRAYFIRE sur une fonction en particulier. En se basant purement sur un critère de performances, on pourrait par exemple avoir une génération de matrice initiée par EIGEN puis une rotation de matrice exécutée par ArrayFire. Les commandes de changement automatique de back-end seront idéalement codées dans le pré-processeur du code de MIRTK. Il restera tout de même une possibilité d'empêcher cette bascule automatisée (qui sera au final définie par défaut) par commande manuelle.
+		\\{$\bullet$} A l'issue du stage, s'il reste suffisamment de temps pour s'y intéresser, il serait idéal d'implémenter une fonctionnalité de changement automatique de back-end en fonction des performances de EIGEN et ArrayFire sur une fonction en particulier. En se basant purement sur un critère de performances, on pourrait par exemple avoir une génération de matrice initiée par EIGEN puis une rotation de matrice exécutée par ArrayFire. Les commandes de changement automatique de back-end seront idéalement codées dans le pré-processeur du code de MIRTK. Il restera tout de même une possibilité d'empêcher cette bascule automatisée (qui sera au final définie par défaut) par commande manuelle.
 	\\
 	\\
 	\textit{Je tiens à préciser que le cahier des charges listé ci-dessus sont idéaux. Ne sachant pas à quoi s'attendre lors de l'étude de MIRTK, il se peut que ces différents points se voient modifiés, en fonction de la difficulté, du temps requis ou encore de la possibilité de leur réalisation.} 
 	\section{Stratégie employée}
 	\subsection{Objectifs} 
 %	Détailler les objectifs a atteindre idéalement.
-	- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
-	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
-	- Supprimer les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
-	
-	\vspace{5cm}
+%	- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
+%	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
+%	- Supprimer les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
+	\noindent Dans un premier temps, il faudrait analyser le code de MIRTK sur deux plans:\\~\par 
+	\t - Les fonctions utilisées par Eigen et qui seraient davantage adaptées avec ArrayFire \\~\par
+	\t - Les outils de parallélisation et l'utilisation de la bibliothèque TBB \\\\
+	La première étape se fera simplement en comparant l'utilisation directe de Eigen, ainsi que les interdépendances des fichiers MIRTK avec ceux de la bibliothèque. Cependant, la deuxième demandera une analyse plus approfondie: en plus d'une analyse de code tel que précédemment avec EIGEN, il faudra réaliser un "test de performance" sur certaines fonctions. Ce test est appelé un profilage (ou \textit{profiling} en anglais) et peut analyser différents critères. Ainsi pourrons-nous cibler les fonctions les plus urgentes à modifier, qui sont mal rédigées ou qui demande relativement trop de ressources.
+	A la suite de ce profilage sera donc élaboré un "plan d'attaque" pour savoir par quelle partie du projet commencer.
+	\t - A terme, après avoir retiré au maximum les dépendances de MIRTK avec TBB, on pourra commencer des tests de benchmarking afin de vérifier l'amélioration des performances.
 	\subsection{Diagramme de GANTT}
 	 => gantt chart prévisionnel (à mettre en français)
 	\begin{figure}[h!]
@@ -174,7 +185,7 @@
 	\section{Profilage}
 %	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
 	Lors du début de mon stage, il a fallu que je me familiarise avec les dépendances de MIRTK, mais aussi a son fonctionnement interne. C'est lors de cette étude préliminaire que mon tuteur et moi avons étudié, en plus de la bibliothèque EIGEN (destinée aux fonctionnalité mathématiques), la bibliothèque TBB, qui a pour but de mettre en place une parallélisation d'un logiciel. Constatant qu'ArrayFire était constitué de fonctions mathématiques déjà optimisées sur ce plan, il a été convenu de faire un profilage de MIRTK avant d'y intégrer ArrayFire afin de prioriser les points les plus coûteux en ressources de MIRTK. 
-	\paragraph{Choix du profileur}
+	\paragraph{Choix du profileur}~\par
 	Afin de discerner au mieux les performances de MIRTK, le choix du profileur (l'outil faisant le profilage) était important. Le principal poste utilisée pour le profilage travaille sur un processeur INTEL, ce qui nous a convaincu de ne pas utiliser le profileur CodeXl puisque nous avons compris après installation qu'il ne fonctionnait qu'avec des processeurs AMD. On a ensuite basculé sur VTune, développé par les collaborateurs directs d'AMD, mais nous ne l'avons pas retenu non plus de part sa complexité d'installation sur l'ordinateur souhaité.
 	
 	Nous avons donc finalement choisi d'utiliser l'outil Callgrind de la suite VALGRIND, capable d'analyser à la fois la quantité d'instructions envoyées au run-time, et aussi les fuites de cache.
@@ -264,13 +275,25 @@ Résultats de MIRTK pour transform-image:
 \addcontentsline{toc}{chapter}{Conclusion}
 \chapter*{Sources}
 \addcontentsline{toc}{chapter}{Sources}
-https://biomedia.doc.ic.ac.uk/  : image page de garde, partie du texte 1.1.2 \\
-http://www.imperial.ac.uk : partie du texte 1.1.1
-\chapter*{Table des illustrations}
+\noindent
+\url{https://biomedia.doc.ic.ac.uk/}  : image page de garde, partie du texte 1.1.2 \\
+\url{http://www.imperial.ac.uk} : partie du texte 1.1.1 (Department of computing)\\
+\url{https://fr.wikipedia.org/wiki/Imperial_College_London} : partie du texte 1.1.1 (Imperial College London)
+\renewcommand{\listfigurename}{Table des illustations}
+\listoffigures
 \addcontentsline{toc}{chapter}{Table des illustrations}
 \chapter*{Glossaire}
 \addcontentsline{toc}{chapter}{Glossaire}
-back-end, front-end, MIRTK, ArrayFire, profilage, run-time, fuite de cache, benchmark
+\noindent
+\textbf{Back-end:}\\ 
+\textbf{Front-end:}\\
+\textbf{MIRTK:}\\
+\textbf{Profilage:} Différence avec le benchmarking ?\\
+\textbf{Run-time:}\\
+\textbf{Fuite de cache:}\\
+\textbf{Benchmarking:} Différence avec le profiling ?\\
+
+
 \chapter*{Annexes}
 \addcontentsline{toc}{chapter}{Annexes}
 \end{document}
