@@ -120,10 +120,32 @@
 	
 	
 	\section{Cadre du projet} % présentation de MIRTK, de ses applications, de son architecture(modules, fonctions...).
-	\paragraph{Le logiciel étudié}~\par~\par
+	\paragraph{Medical Image Registration Toolkit (MIRTK)}~\par~\par
 	Medical Image Registration Tool-Kit (abrégé MIRTK) est un logiciel open-source de traitement d'image médicales utilisé par des chercheurs dans le milieu médical. Le cahier des charges provient majoritairement de ces chercheurs, qui ont des besoins variables en termes de visualisation. Le logiciel est adapté en conséquence par la suite. Par conséquent, MIRTK, qui est codé en C++, comporte un nombre important de classes et de fonctions diverses, destinées à couvrir le maximum des besoins des chercheurs.
-	Afin de rester pertinent pour ces chercheurs, MIRTK nécessite donc une maintenance et une amélioration continue. 
+	Afin de rester pertinent pour ces chercheurs, MIRTK nécessite donc une maintenance et une amélioration continue.\\
+	Pour illustrer le fonctionnement du logiciel, on peut étudier l'action d'une fonction en particulier. Prenons la fonction "extract-image-region", qui correspond à un rognage d'image, en 3 dimensions.
 
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=10cm]{Reports/figures/mirtkextractregion1.png}
+		\end{center}	
+		\caption{Image fournie en entrée de "extract-image-region"}
+		\label{Image fournie en entrée de "extract-image-region"}
+	\end{figure}
+	
+	Comme vous pouvez le constater ci-dessus, l'image en entrée du logiciel est une image en 3 dimensions. C'est d'ailleurs ce qui fait la force de MIRTK: il peut agir sur des images en 2, 3, ou 4 dimensions (la quatrième dimension représentant le temps). L'image est ici en noir et blanc, mais des travaux de segmentations notamment, peuvent aussi bien utiliser des palettes de couleurs. Le cadre rouge est purement fictif et indique simplement les limites du rognage effectué.
+	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=10cm]{Reports/figures/mirtkextractregion2.png}
+		\end{center}	
+		\caption{Image obtenue après rognage 3D}
+		\label{Image obtenue après rognage 3D}
+	\end{figure} 
+	
+	Ci-dessus est maintenant présentée l'image de sortie, les paramètres de la fonction "extract-image-region" ayant été passés en ligne de commande. Il suffit d'indiquer les limites désirées sur chaque axe pour obtenir un tel résultat.\\
+	\\
+	On notera que cet exemple est très loin de refléter l'ensemble des capacités du logiciel. En effet, MIRTK agit aussi bien sur des filtres d'images, que de transformations, de recalages, de conversions... 
 	 % - logiciel de traitement d'image médicales, utilisé par les chercheurs en milieu médical.
 	 % - stable mais nécessite une maintenance et une amélioration continue pour rester pertinent.
 	 % - Intervention sur le module "Numerics", bibliothèque mathématique.
@@ -184,28 +206,61 @@
 \chapter{Réalisation}
 	\section{Profilage}
 %	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
-	Lors du début de mon stage, il a fallu que je me familiarise avec les dépendances de MIRTK, mais aussi a son fonctionnement interne. C'est lors de cette étude préliminaire que mon tuteur et moi avons étudié, en plus de la bibliothèque EIGEN (destinée aux fonctionnalité mathématiques), la bibliothèque TBB, qui a pour but de mettre en place une parallélisation d'un logiciel. Constatant qu'ArrayFire était constitué de fonctions mathématiques déjà optimisées sur ce plan, il a été convenu de faire un profilage de MIRTK avant d'y intégrer ArrayFire afin de prioriser les points les plus coûteux en ressources de MIRTK. 
-	\paragraph{Choix du profileur}~\par
+	Lors du début de mon stage, il a fallu que je me familiarise avec les dépendances de MIRTK, mais aussi a son fonctionnement interne. C'est lors de cette étude préliminaire que mon tuteur et moi avons étudié, en plus de la bibliothèque EIGEN (destinée aux fonctionnalité mathématiques), la bibliothèque TBB, qui a pour but de mettre en place une parallélisation d'un logiciel. Constatant qu'ArrayFire était constitué de fonctions mathématiques déjà optimisées sur ce plan, il a été convenu de faire un profilage de MIRTK avant d'y intégrer ArrayFire afin de prioriser les points les plus coûteux en ressources de MIRTK. \\
+%	Les tests ont été effectués sur une machine dont les caractéristiques sont les suivantes : \newline
+%	{$\bullet$} \textit{Nombre de coeurs:} 8, 2 threads chacun\newline
+%	{$\bullet$} \textit{Cadence:} 1.6 GHz \newline
+%	{$\bullet$} \textit{Nombre de caches:} 4 \newline
+%	{$\bullet$} \textit{Taille des caches:}32k, 32k, 256K, 8192K \newline
+	%ajouter le maximum de détails (RAM, nom du proc ...)\newline
+	Pour une quantité réduite de tests, et afin de cibler les modèles d'utilisation de TBB à remplacer, on a pris l'une des fonctions les plus sollicitées dans MIRTK, il s'agit d'une fonction nommée \textit{transform-image}, et qui dispose de 5 options, définissant un type d'interpolation mathématique : Linéaire (par défaut), méthode voisin le plus proche (NN), gaussienne, sinus cardinal et B-Spline. \\
+	On notera, de plus, que tous ces tests seront exécutés sur la même machine afin de garder des performances exactement semblables à chaque exécution.
+	
+	\subsection{Choix du profileur}~\par
 	Afin de discerner au mieux les performances de MIRTK, le choix du profileur (l'outil faisant le profilage) était important. Le principal poste utilisée pour le profilage travaille sur un processeur INTEL, ce qui nous a convaincu de ne pas utiliser le profileur CodeXl puisque nous avons compris après installation qu'il ne fonctionnait qu'avec des processeurs AMD. On a ensuite basculé sur VTune, développé par les collaborateurs directs d'AMD, mais nous ne l'avons pas retenu non plus de part sa complexité d'installation sur l'ordinateur souhaité.
 	
-	Nous avons donc finalement choisi d'utiliser l'outil Callgrind de la suite VALGRIND, capable d'analyser à la fois la quantité d'instructions envoyées au run-time, et aussi les fuites de cache.
+	Nous avons donc finalement choisi d'utiliser l'outil Callgrind de la suite VALGRIND (qui est open-source), capable d'analyser à la fois la quantité d'instructions envoyées au run-time, et aussi les fuites de cache.
+	Ci-dessous est affichée l'interface utilisateur de Kcachegrind, qui est un outil permettant de visualiser de manière claire les résultats de Callgrind:
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=13cm]{Reports/figures/UIkcachegrind.png}
+		\end{center}	
+		\caption{Interface de KCacheGrind pour le profilage}
+		\label{Interface de KCacheGrind pour le profilage}
+	\end{figure}~\par
+	{$\bullet$} \textit{Cadre vert: } Dans cette partie est distinguée tous les threads qui ont exécuté une partie du code lié à l'exécutable étudié. Tous les threads ayant été utilisés dans ce cas, on peut constater que la machine fonctionne donc avec 4 coeurs. \newline
+	{$\bullet$} \textit{Cadre bleu: } Ici est détaillé toutes les fonctions les plus coûteuses du thread sélectionné. \newline
+	{$\bullet$} \textit{Cadre rouge: } Grâce à ce diagramme, on peut visualiser la pile d'appel des fonctions avant et après la fonction sélectionné dans le cadre bleu. Les onglets en bas de page sont d'autres représentations plus textuelles (et plus détaillées) de ce que montre le diagramme. \newline
+	
+	
+
 %	=> on identifie les fonctions sur lesquelles agir en premier
-	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés.
+%	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés.
 %	Expliquer le choix de valgrind, parmi les autres profileurs
- => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, qui nécessite des proc AMD).\\
+% => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, qui nécessite des proc AMD).\\
 	
 	
-	Les tests ont été effectués sur une machine dont les caractéristiques sont les suivantes : \newline
-	{$\bullet$} \textit{Nombre de coeurs:} 8, 2 threads chacun\newline
-	{$\bullet$} \textit{Cadence:} 1.6 GHz \newline
-	{$\bullet$} \textit{Nombre de caches:} 4 \newline
-	{$\bullet$} \textit{Taille des caches:}32k, 32k, 256K, 8192K \newline
-	ajouter le maximum de détails (RAM, nom du proc ...)\newline
-	Pour une quantité réduite de tests, et afin de cibler les modèles d'utilisation de TBB à remplacer, on a pris l'une des fonctions les plus sollicitées dans MIRTK, il s'agit d'une fonction nommée \textit{transform-image}, et qui dispose de 5 options, définissant un type d'interpolation mathématique : Linéaire (par défaut), méthode voisin le plus proche (NN), gaussienne, sinus cardinal et B-Spline. 
+
 	
 	\subsection{Analyse du nombre d'instructions}
 	
-	Placer ici des graphiques de performances, avec leurs interprétation
+	Graphique:
+	Résultats de MIRTK pour transform-image:
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=12cm]{Reports/figures/performances_tbb_transform_image.eps}
+		\end{center}	
+		\caption{Améliorations apportées par TBB pour transform-image}
+		\label{Améliorations apportées par TBB pour transform-image}
+	\end{figure}
+		\begin{figure}[h!]
+			\begin{center}
+				\includegraphics[height=10cm]{Reports/figures/smooth_image_costs.eps}
+			\end{center}	
+			\caption{Coût de la fonction de flou gaussien}
+			\label{Coût de la fonction de flou gaussien}
+		\end{figure}
+	
 	\subsection{Analyse des fuites de cache}
 	Graphique: 
 		\begin{figure}[h!]
@@ -247,14 +302,7 @@ Principe :
 		\label{Fonctionnement d'une boucle en parallèle}
 	\end{figure}
 	
-Résultats de MIRTK pour transform-image:
-	\begin{figure}[h!]
-		\begin{center}
-			\includegraphics[width=12cm]{Reports/figures/performances_tbb_transform_image.eps}
-		\end{center}	
-		\caption{Améliorations apportées par TBB pour transform-image}
-		\label{Améliorations apportées par TBB pour transform-image}
-	\end{figure}
+
 	
 %	\newline
 %	Le contenus des sous-parties, ainsi que d'éventuelles d'autres sous-parties dépendront du résultat du profilage.
@@ -292,6 +340,7 @@ Résultats de MIRTK pour transform-image:
 \textbf{Run-time:}\\
 \textbf{Fuite de cache:}\\
 \textbf{Benchmarking:} Différence avec le profiling ?\\
+\textbf{Thread:}\\
 
 
 \chapter*{Annexes}
