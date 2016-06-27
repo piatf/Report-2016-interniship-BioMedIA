@@ -283,7 +283,10 @@
 	\end{figure}~\par
 	L'interpolation gaussienne est donc parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}.
 	\subsection{Analyse des fuites de cache}
-	Graphique: 
+	Un deuxième critère intéressant à regarder, au travers du profilage, est la quantité de fuites de caches à l'exécution de la fonction étudiée. Bien que la parallélisation ne soit pas toujours optimale, elle peut néanmoins être parfois délaissée au profit d'une gestion de fuites de caches plus poussée.
+	\paragraph{Qu'est-ce qu'une fuite de cache?}
+	\textit{?????}\\
+	Ci-dessous est détaillé l'histogramme de la quantité des fuites de caches pour \textit{transform-image}, dans chaque mode d'interpolation:
 		\begin{figure}[h!]
 			\begin{center}
 				\includegraphics[width=15cm]{Reports/figures/cache_misses_transform_image.eps}
@@ -291,9 +294,12 @@
 			\caption{Fuites de cache pour la fonction transform-image}
 			\label{Fuites de cache pour la fonction transform-image}
 		\end{figure}~\par
+	Les valeurs données ci-dessus (en pourcentage) sont assez mal réparties, mais le faible "cache miss rate" (taux de fuites de caches) est très faible. Le seul taux non négligeable est celui des mauvaises prédictions de branche, qui peut être considéré comme une fuite de cache, mais un taux inférieur à 20 \% reste négligeable. 
 	
+	~\par
+	MIRTK est donc bien conçu au niveau de la gestion de la mémoire cache, alors que le système de parallélisation est largement améliorable.
 	
-	\section{Integration d'ArrayFire dans MIRTK}
+	\section{Intégration d'ArrayFire dans MIRTK}
 	\subsection{Implémentation du module mathématique}
 %	Programmation transparente entre Eigen et ArrayFire.
 %	Lister les fonctions principales à substituer.
@@ -357,6 +363,8 @@ Smooth image :
 \textbf{Fuite de cache:}\\
 \textbf{Benchmarking:} Différence avec le profiling ?\\
 \textbf{Thread:}\\
+\textbf{Prédiction de branche:}\\
+\textbf{Fuite de cache:}\\
 
 
 \chapter*{Annexes}
