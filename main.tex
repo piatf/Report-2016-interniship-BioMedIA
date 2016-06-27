@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{lmodern}
+\usepackage{wrapfig}
 \usepackage[colorlinks=true, linkcolor=black, urlcolor=blue, breaklinks, pagebackref, citebordercolor={0 0 0}, filebordercolor={0 0 0}, linkbordercolor={0 0 0}, pagebordercolor={0 0 0}, runbordercolor={0 0 0}, urlbordercolor={0 0 0}, pdfborder={0 0 0}]{hyperref}  %désactive les cadres autour des liens
 \usepackage{etoolbox}
 \renewcommand{\familydefault}{\sfdefault}
@@ -93,6 +94,16 @@
 	Fondée en 1907, l'Imperial College était d'abord une des composantes de l’université de Londres, avant de devenir une institution indépendante à l'occasion de son centenaire, en 2007. Elle est membre de la Ligue européenne des universités de recherche depuis le 1er janvier 2010. L'Imperial est également membre du Russell Group, du G5, de l'Association des Universités du Commonwealth et du "Golden Triangle" des universités britanniques.
 	
 	\paragraph{Department of computing}~\par~\par
+	Le département d'informatique est divisé en 6 groupe de recherche : \textit{Logic and Artificial Intelligence, Distributed Software Engineering, Quantitative Analysis and Decision Science, Programming Languages and Systems, Intersection Research}, et celui de notre laboratoire : \textit{Visual Information Processing}.\\ 
+	La stratégie menée par le centre de recherche est la suivante : 
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=10cm]{Reports/figures/research_strategy.jpg}
+		\end{center}	
+		\caption{Stratégie du département de recherche}
+		\label{Stratégie du département de recherche}
+	\end{figure}~\par 
+		
 	La recherche en traitement visuel d'informations intervient dans de nombreux domaines tels que la visualisation, le graphisme, la compréhension intelligente, et le traitement d'images biomédicales.  
 	Les travaux du département ont été récompensés de 8 titres lors de conférences internationales majeures (IEEE FG, ICRA, ISMAR, MICCAI, SensorComm) et de 4 prix Marie Curie.
 	blue
@@ -131,7 +142,7 @@
 		\end{center}	
 		\caption{Image fournie en entrée de "extract-image-region"}
 		\label{Image fournie en entrée de "extract-image-region"}
-	\end{figure}
+	\end{figure}~\par
 	
 	Comme vous pouvez le constater ci-dessus, l'image en entrée du logiciel est une image en 3 dimensions. C'est d'ailleurs ce qui fait la force de MIRTK: il peut agir sur des images en 2, 3, ou 4 dimensions (la quatrième dimension représentant le temps). L'image est ici en noir et blanc, mais des travaux de segmentations notamment, peuvent aussi bien utiliser des palettes de couleurs. Le cadre rouge est purement fictif et indique simplement les limites du rognage effectué.
 	
@@ -141,7 +152,7 @@
 		\end{center}	
 		\caption{Image obtenue après rognage 3D}
 		\label{Image obtenue après rognage 3D}
-	\end{figure} 
+	\end{figure}~\par 
 	
 	Ci-dessus est maintenant présentée l'image de sortie, les paramètres de la fonction "extract-image-region" ayant été passés en ligne de commande. Il suffit d'indiquer les limites désirées sur chaque axe pour obtenir un tel résultat.\\
 	\\
@@ -161,12 +172,21 @@
 	La majeure partie du stage sera donc axée sur le back-end mathématique de MIRTK, c'est-à-dire les fonctions appliquant des opérations matricielles sur les images d'entrée par exemple. L'un des problèmes majeurs de MIRTK est sa forte dépendance de plusieurs bibliothèque qui, chacune, ne sont pas utilisées au maximum de leur potentiel, il s'agit de EIGEN, BOOST et TBB, dont les rôles sont définis ci-dessous:\\
 		\\{$\bullet$} \textit{EIGEN:} cette bibliothèque fournit les fonctions essentielles en termes de manipulation de matrice. \newline
 		\\{$\bullet$} \textit{BOOST:} écrite en C++, cette bibliothèque fournit des outils d'algèbre linéaire, de traitement d'image ou encore de génération de nombres pseudo-aléatoire... \newline
-		\\{$\bullet$} \textit{Threading Building Blocks (TBB)}: TBB permet l'implémentation de boucles a exécuter en parallèle. L'exécution parallèle (ou \textit{multi-threading}) est une méthode d'optimisation des performances d'un logiciel. Elle consiste a dédier plusieurs "threads" à son exécution, et transforme donc un processus itératif tel qu'une boucle FOR en une répartition de toutes les itérations, mais exécutées en simultanées. Le temps d'exécution est donc au final considérablement réduit. \newline
-	\\ Ainsi, l'inconsistance de MIRTK autour de ces 3 bibliothèques implique des performances parfois médiocres, et surtout une parallélisation réalisée de manière assez floue, dont l'efficacité est encore à prouver.  
+		\begin{wrapfigure}[13]{r}{9cm}
+			\includegraphics[width=10cm]{Reports/figures/gfor.eps}	
+			\caption{Fonctionnement d'une boucle en parallèle}
+			\label{Fonctionnement d'une boucle en parallèle}
+		\end{wrapfigure}\\
+		{$\bullet$} \textit{Threading Building Blocks (TBB)}: 
+		\\
+
+	TBB permet l'implémentation de boucles a exécuter en parallèle. L'exécution parallèle (ou \textit{multi-threading}) est une méthode d'optimisation des performances d'un logiciel. Elle consiste a dédier plusieurs "threads" à son exécution, et transforme donc un processus itératif tel qu'une boucle FOR en une répartition de toutes les itérations, mais exécutées en simultanées. Le temps d'exécution est donc au final considérablement réduit. On peut voir le fonctionnement d'une parallélisation sur, par exemple, une boucle "for" ci-contre:\vspace{1,5cm}\\
+	
+	Ainsi, l'inconsistance de MIRTK autour de ces 3 bibliothèques implique des performances parfois médiocres, et surtout une parallélisation réalisée de manière assez floue, dont l'efficacité est encore à prouver.  
 	\\ C'est pour cette raison, que l'apport d'une bibliothèque coordonnant des fonctions issues d'au moins 2 des 3 dépendances précédentes sera un véritable avantage si les performances du logiciel sont améliorées, ou même si elles demeurent inchangées. 
 		
 
-	 
+	 \newpage
 
 	\section{Cahier des charges}
 %	Lister les attentes et les contraintes du projet.
@@ -181,7 +201,7 @@
 		\\{$\bullet$} A l'issue du stage, s'il reste suffisamment de temps pour s'y intéresser, il serait idéal d'implémenter une fonctionnalité de changement automatique de back-end en fonction des performances de EIGEN et ArrayFire sur une fonction en particulier. En se basant purement sur un critère de performances, on pourrait par exemple avoir une génération de matrice initiée par EIGEN puis une rotation de matrice exécutée par ArrayFire. Les commandes de changement automatique de back-end seront idéalement codées dans le pré-processeur du code de MIRTK. Il restera tout de même une possibilité d'empêcher cette bascule automatisée (qui sera au final définie par défaut) par commande manuelle.
 	\\
 	\\
-	\textit{Je tiens à préciser que le cahier des charges listé ci-dessus sont idéaux. Ne sachant pas à quoi s'attendre lors de l'étude de MIRTK, il se peut que ces différents points se voient modifiés, en fonction de la difficulté, du temps requis ou encore de la possibilité de leur réalisation.} 
+	\textit{Je tiens à préciser que les différents points du cahier des charges listé ci-dessus sont idéaux. Ne sachant pas à quoi s'attendre lors de l'étude de MIRTK, il se peut que ces différents points se voient modifiés, en fonction de la difficulté, du temps requis ou encore de la possibilité de leur réalisation.} 
 	\section{Stratégie employée}
 	\subsection{Objectifs} 
 %	Détailler les objectifs a atteindre idéalement.
@@ -244,23 +264,24 @@
 	
 	\subsection{Analyse du nombre d'instructions}
 	
-	Graphique:
-	Résultats de MIRTK pour transform-image:
+	\begin{wrapfigure}{r}{7.2cm}
+		\includegraphics[height=9cm]{Reports/figures/smooth_image_costs.eps}
+		\caption{Coût de la fonction de flou gaussien}
+		\label{Coût de la fonction de flou gaussien}
+	\end{wrapfigure}
+	~\par~\par
+	Dans un premier temps, on s'intéresse au critère le plus pertinent concernant les performances du logiciel. Le nombre d'instructions correspond à la quantité de commandes atomiques (au niveau binaire) exécutées par le CPU et pour chaque thread.
+	Ainsi, on peut étudier l'efficacité de TBB en comparant le nombre d'instructions utilisées lorsque TBB est activé ou non. C'est ce qui est présenté sur l'image présentée ci-contre, en se focalisant sur une fonction de flou gaussien (nommée \textit{smooth-image}).\\
+	Sur l'axe des ordonnées, on a le coût total en instruction de la fonction, appelée sur une machine précise, avec une entrée précise (ici une image 3D). Les résultats dépendent de ces deux critères.Cependant, le ratio entre les coûts de la fonction parallélisée et celle qui ne l'est pas reste sensiblement le même. Au bas de l'image, on peut voir qu'ici, la fonction à un taux d'amélioration de x1.59. L'ordinateur ayant exécuté cette fonction ayant 8 coeurs, on peut dire que ce résultat reflète une mauvaise parallélisation dans ce cas, car un logiciel bien optimisé aurait un taux d'amélioration proche de x8 (équivalent au nombre de coeurs utilisés).\\
+	De même, ci-dessous, l'image décrit les performances de la fonction \textit{transform-image}. En revanche, ici, cette fonction possède une option qui permet de choisir son type d'interpolation mathématique. On a donc fait un test de coût d'instructions pour chaque interpolation et on a relevé ici le taux de performance associé:
 	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics[width=12cm]{Reports/figures/performances_tbb_transform_image.eps}
+			\includegraphics[width=9cm]{Reports/figures/performances_tbb_transform_image.eps}
 		\end{center}	
 		\caption{Améliorations apportées par TBB pour transform-image}
 		\label{Améliorations apportées par TBB pour transform-image}
-	\end{figure}
-		\begin{figure}[h!]
-			\begin{center}
-				\includegraphics[height=10cm]{Reports/figures/smooth_image_costs.eps}
-			\end{center}	
-			\caption{Coût de la fonction de flou gaussien}
-			\label{Coût de la fonction de flou gaussien}
-		\end{figure}
-	
+	\end{figure}~\par
+	L'interpolation gaussienne est donc parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}.
 	\subsection{Analyse des fuites de cache}
 	Graphique: 
 		\begin{figure}[h!]
@@ -269,13 +290,14 @@
 			\end{center}	
 			\caption{Fuites de cache pour la fonction transform-image}
 			\label{Fuites de cache pour la fonction transform-image}
-		\end{figure}
+		\end{figure}~\par
 	
 	
 	\section{Integration d'ArrayFire dans MIRTK}
 	\subsection{Implémentation du module mathématique}
 %	Programmation transparente entre Eigen et ArrayFire.
 %	Lister les fonctions principales à substituer.
+L'une des première fonctions qui nous a attiré était un filtre, qui avait une implémentation assez simple (un simple produit de convolution de deux matrices). On a donc choisi de s'y intéresser avec ArrayFire.
 Smooth image :
 	\begin{figure}[h!]
 		\begin{center}
@@ -290,17 +312,10 @@ Smooth image :
 		\end{center}	
 		\caption{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
 		\label{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
-	\end{figure}
+	\end{figure}~\par
 	\subsection{Gestion de la programmation parallèle}
 %	Optimisation des threads et suppression de TBB au profit de ArrayFire.
-Principe :
-	\begin{figure}[h!]
-		\begin{center}
-			\includegraphics[width=10cm]{Reports/figures/gfor.eps}
-		\end{center}	
-		\caption{Fonctionnement d'une boucle en parallèle}
-		\label{Fonctionnement d'une boucle en parallèle}
-	\end{figure}
+
 	
 
 	
@@ -325,8 +340,9 @@ Principe :
 \addcontentsline{toc}{chapter}{Sources}
 \noindent
 \url{https://biomedia.doc.ic.ac.uk/}  : image page de garde, partie du texte 1.1.2 \\
-\url{http://www.imperial.ac.uk} : partie du texte 1.1.1 (Department of computing)\\
-\url{https://fr.wikipedia.org/wiki/Imperial_College_London} : partie du texte 1.1.1 (Imperial College London)
+\url{http://www.imperial.ac.uk} : partie du texte 1.1.1 (Department of computing) et schéma stratégie du département\\
+\url{https://fr.wikipedia.org/wiki/Imperial_College_London} : partie du texte 1.1.1 (Imperial College London)\\
+\url{http://ric.uthscsa.edu/mango/papaya/index.html} : outil de visualisation d'images en format NIFTI
 \renewcommand{\listfigurename}{Table des illustations}
 \listoffigures
 \addcontentsline{toc}{chapter}{Table des illustrations}
