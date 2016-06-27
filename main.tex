@@ -303,15 +303,17 @@
 	\subsection{Implémentation du module mathématique}
 %	Programmation transparente entre Eigen et ArrayFire.
 %	Lister les fonctions principales à substituer.
-L'une des première fonctions qui nous a attiré était un filtre, qui avait une implémentation assez simple (un simple produit de convolution de deux matrices). On a donc choisi de s'y intéresser avec ArrayFire.
-Smooth image :
+	L'une des première fonctions qui nous a attiré était un filtre, qui avait une implémentation assez simple (un simple produit de convolution de deux matrices). On a donc choisi de s'y intéresser avec ArrayFire.
+	Ce filtre a été précédemment profilé, il s'agit de la fonction \textit{smooth-image}. La version de MIRTK était déjà implémentée de manière séparable, c'est-à-dire que le floutage est réalisé une dimension après l'autre, et c'est la méthode la plus optimisée pour un tel calcul. Cependant, on a tout de même remplacé l'implémentation existante en intégrant ArrayFire afin de comparer les performances et simplifier le code de la fonction. \\
+	Dans un premier temps, une implémentation naïve a été initiée en reprenant à zéro le code de la fonction. Le floutage d'une image se fais par un produit de convolution entre la matrice représentant l'image, et le filtre (gaussien), qui est déclaré dans la fonction elle-même. L'implémentation naïve a donc été de réaliser ce produit de convolution de matrices en utilisant la fonction \textit{af::convolve}, qui réalise simplement la convolution du filtre 3D avec l'image 3D, comme on peut le voir ci-dessous:\\
 	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics[width=12cm]{Reports/figures/gaussianblurring.png}
+			\includegraphics[width=11cm]{Reports/figures/gaussianblurring.png}
 		\end{center}	
 		\caption{Algorithme de flou gaussien incluant Arrayfire - Implémentation naïve}
 		\label{Algorithme de flou gaussien incluant Arrayfire - Implémentation naïve}
-	\end{figure}
+	\end{figure}~\par
+	Afin d'optimiser au maximum la fonction, il faut maintenant la ré-implémenter de la même manière que dans MIRTK, c'est-à-dire de manière séparable. Pour cela on effectue sur chaque dimension un produit de convolution sur la dimension 1 de la matrice, qu'on réordonne après, de telle manière à faire passer les valeurs de la dimension choisie en première dimension: \\
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=12cm]{Reports/figures/mygaussianblurring.png}
