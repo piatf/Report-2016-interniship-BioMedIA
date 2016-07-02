@@ -69,8 +69,8 @@
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 \chapter{Environnement de travail} 
-	\section{Le laboratoire}
 	Le stage s'inscrivant dans un cadre de recherche, cette section présente le laboratoire dans lequel il s'est déroulé. En fin de section seront présentées les raisons de la genèse du stage.
+	\section{Le laboratoire}
 	%Le laboratoire BioMedIA est implanté sur le campus principal de l'Imperial College London, dans le quartier du South Kensington. Il fait partie du groupe de recherche en traitement visuel d'informations (Visual Information Processing) au sein du département informatique de l'université.
 	%Cette section.... le cadre de travail,le contexte, justifie la genèse du stage
 	\subsection{Imperial College London - Department of computing}
@@ -139,7 +139,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	Sur cette ligne de commande:
 	\\{$\bullet$} "mirtk" indique que l'on souhaite utiliser une fonction de MIRTK
 	\\{$\bullet$} "extract-image-region" appelle la fonction de rognage
-	\\{$\bullet$} "input.nii.gz" indique l'emplacement de l'image d'entrée, idem pour la sortie avec "output.nii.gz"
+	\\{$\bullet$} "input.nii.gz" indique l'emplacement de l'image d'entrée, idem pour la sortie avec "output.nii.gz". Ces fichiers sont au format NIFTI (ici, ces images sont aussi compressées), seul format pris en charge par MIRTK.
 	\\{$\bullet$} "-Rx1 50" signifie "retirer 50 pixels sur l'axe x, pour la première direction" (idem pour "-Rx2 40 -Ry1 250 -Ry2 250"). 
 	L'action de cette ligne de commande est visualisable sur la Figure \ref{Effet de la fonction "extract-image-region"}.
 	\begin{figure}[h!]
@@ -158,7 +158,9 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 		\end{subfigure}
 		\caption{Effet de la fonction "extract-image-region"}
 		\label{Effet de la fonction "extract-image-region"}
-	\end{figure}
+	\end{figure}~\par
+	Chaque fonction de MIRTK est exécutée par un fichier binaire qui a été généré par le fichier d'application associé. Tous ces fichiers sont d'ailleurs répertoriés dans un dossier \textit{Applications} et font appel à certaines dépendances, qui sont réparties en 7 modules : \textit{Common, Image, I/O, Numerics, PointSet, Registration} et \textit{Transformation}. Ces différents modules représentent le lien entre le back-end de MIRTK et son corps. \\
+	
 %	\begin{figure}[h!]
 %		\begin{center}
 %			\includegraphics[width=10cm]{Reports/figures/mirtkextractregion1.png}
@@ -192,25 +194,22 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	\section{Problématique} %Inclure contexte du projet, avec la raison pour laquelle ce projet est nécessaire.
 %	%(back-end math) dépendances externes : eigen et boost + noyaux internes implémentés via TBB => inconsistence => parrallélisation existante floue , efficacité = ? performances=? => profilage	===> n'utiliser qu'une seule dépendance (externe) : ArrayFire qui peut amener l'optimisation via GPU (résumer ça en 3 points majeurs) 
 %	
-%	
-%	Tel que décrit dans le titre du stage, les notions abordées seront reliées, dans un premier temps aux performances de MIRTK, pour cela, M. Maxime NOEL et moi-même sommes intervenus sur différents niveaux d'abstraction du logiciel. Mon collègue s'est d'avantage concentré sur l'enchaînement des exécutions, et l'interface MIRTK/utilisateur (cf stage intitulé" \textbf{?????????????????????????????????????????}"), tandis que je suis intervenu dans les couches logicielles les plus basses, et les plus directement reliées aux composants hardware. \\
-%	
-%	La majeure partie du stage sera donc axée sur le back-end mathématique de MIRTK, c'est-à-dire les fonctions appliquant des opérations matricielles sur les images d'entrée par exemple. L'un des problèmes majeurs de MIRTK est sa forte dépendance de plusieurs bibliothèque qui, chacune, ne sont pas utilisées au maximum de leur potentiel, il s'agit de EIGEN, BOOST et TBB, dont les rôles sont définis ci-dessous:\\
-%		\\{$\bullet$} \textit{EIGEN:} cette bibliothèque fournit les fonctions essentielles en termes de manipulation de matrice. \newline
-%		\\{$\bullet$} \textit{BOOST:} écrite en C++, cette bibliothèque fournit des outils d'algèbre linéaire, de traitement d'image ou encore de génération de nombres pseudo-aléatoire... \newline
-%		\begin{wrapfigure}[13]{r}{9cm}
-%			\includegraphics[width=10cm]{Reports/figures/gfor.eps}	
-%			\caption{Fonctionnement d'une boucle en parallèle}
-%			\label{Fonctionnement d'une boucle en parallèle}
-%		\end{wrapfigure}\\
-%		{$\bullet$} \textit{Threading Building Blocks (TBB)}: 
-%		\\
-%
-%	tBB permet l'implémentation de boucles a exécuter en parallèle. L'exécution parallèle (ou \textit{multi-threading}) est une méthode d'optimisation des performances d'un logiciel. Elle consiste a dédier plusieurs "threads" à son exécution, et transforme donc un processus itératif tel qu'une boucle FOR en une répartition de toutes les itérations, mais exécutées en simultanées. Le temps d'exécution est donc au final considérablement réduit. On peut voir le fonctionnement d'une parallélisation sur, par exemple, une boucle "for" ci-contre:\vspace{1,5cm}\\
-%	
-%	Ainsi, l'inconsistance de MIRTK autour de ces 3 bibliothèques implique des performances parfois médiocres, et surtout une parallélisation réalisée de manière assez floue, dont l'efficacité est encore à prouver.  
-%	\\ C'est pour cette raison, que l'apport d'une bibliothèque coordonnant des fonctions issues d'au moins 2 des 3 dépendances précédentes sera un véritable avantage si les performances du logiciel sont améliorées, ou même si elles demeurent inchangées. 
-%		
+	Dans l'optique de préparer MIRTK à son insertion dans le projet UK BioBank, et d'obtenir des résultats concluant, on pourra distribuer les calculs à différentes échelle : \\
+	\t - sur un slurm, qui correspond a un réseau local de machine
+	\t - sur High Performance Computing
+	\t - sur un cloud 	
+	
+	La problématique du stage s'axera sur une optimisation de MIRTK au niveau des couches logicielles de bas niveau. Le logiciel, pour opérer chacune de ses fonctions, fait appel des dépendances mathématiques, implémentées dans le module \textit{Numerics}. La majeure partie du stage concernera donc ce module sur de MIRTK, c'est-à-dire les fonctions utilisant majoritairement des opérations matricielles.\\
+	
+	%pb : 100 000 executions : ca fait trop pour MIRTKtemps d'execution : les executions sont sous traitées, donc ils doivent etre cours pour eviter de payer trop : slurm (groupe de machine en local) => HPC (echelle de l'université, payant) => cloud (google amazon, payant), 
+	\vspace{-1cm}
+	\begin{wrapfigure}[20]{r}{11cm}
+		\includegraphics[width=12cm]{Reports/figures/gfor.eps}	
+		\caption{Fonctionnement d'une boucle en parallèle}
+		\label{Fonctionnement d'une boucle en parallèle}
+	\end{wrapfigure}
+	~\par~\par
+	Le second secteur sur lequel il faudra se pencher sera la réduction du temps d'exécution des fonctions du logiciel. Pour cela, MIRTK utilise une technique d'optimisation appelée "la parallélisation" d'un code. A l'inverse de l'exécution sérialisée, le principe de la parallélisation est d'assigner plusieurs threads dédiés à la commande appelée. Une fois assignés, chaque thread reçoit une quantité de "blocks" de code a exécuter. Chaque thread pourra donc traiter un block indépendamment du reste de l'exécution. Ainsi, plus la quantité de threads utilisée est grande, plus l'exécution sera accélérée. La figure \ref{Fonctionnement d'une boucle en parallèle} ci-contre représente ce principe avec des blocks de 2 itérations. \vspace{1,5cm}\\
 
 	
 
