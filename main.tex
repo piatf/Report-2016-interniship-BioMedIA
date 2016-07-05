@@ -190,6 +190,22 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	
 	\section{Stratégie employée}
 	\subsection{Objectifs} 
+	Afin de se familiariser avec MIRTK, les objectifs ont été établis de manière chronologique, de la manière suivante: 
+	~\par~\par 
+	1) \textbf{Études de MIRTK et de ses dépendances, et analyse de l'API d'ArrayFire} \\
+	Cette étape préliminaire permettra de comprendre le fonctionnement global de MIRTK et de se familiariser avec son code source. Dans le même temps, l'analyse de l'interface d'ArrayFire, et des différentes fonctions proposées par la bibliothèque. Cette étude corrélera donc les besoins de MIRTK et les solutions proposées par ArrayFire.
+	~\par~\par 
+	2) \textbf{Profilage de MIRTK}\\
+	Afin d'obtenir une première visualisation des performances du logiciel, un profilage sera exécuté sur les fonctions concernées. L'interprétation de ces premiers résultats sera nécessaire pour élaborer un ordre de priorité dans les fonctions à ré-implémenter.
+	~\par~\par 
+	\t 3) \textbf{Intégration de ArrayFire dans MIRTK} \\
+	A la suite du profilage sera donc obtenue une liste de fonctions à implémenter primordialement. La modification de ces fonctions sera faite indépendamment, en commençant par les fonctions dont la ré-implémentation sera la plus simple, en progressant ensuite sur celles plus complexes.
+	~\par~\par
+	\t 4) \textbf{Implémentation de la gestion optimisée des back-ends} \\
+	Afin d'apporter une fonctionnalité davantage liée au hardware utilisé, la gestion des back-ends serait un avantage pour les performances de MIRTK. Pour cette raison, cette gestion sera idéalement implémentée en fin de stage. 
+	~\par~\par 
+	\t 5) \textbf{Benchmarking} \\
+	Pour prouver l'efficacité d'ArrayFire et l'amélioration des performances de MIRTK, un test des fonctions précédemment optimisées sera réalisé. Les résultats attendus sont principalement des graphiques reflétant cette amélioration.
 %	Détailler les objectifs a atteindre idéalement.
 %	- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
 %	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
@@ -201,14 +217,14 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 %	A la suite de ce profilage sera donc élaboré un "plan d'attaque" pour savoir par quelle partie du projet commencer.
 %	\t - A terme, après avoir retiré au maximum les dépendances de MIRTK avec TBB, on pourra commencer des tests de benchmarking afin de vérifier l'amélioration des performances.
 	\subsection{Diagramme de GANTT}
-	 => gantt chart prévisionnel (à mettre en français)
-	\begin{figure}[h!]
-		\begin{center}
-			\includegraphics[width=18cm]{Reports/figures/estimated_gantt.png}
-		\end{center}	
-		\caption{Diagramme de GANTT prévisionnel}
-		\label{Diagramme de GANTT prévisionnel}
-	\end{figure}
+%	 => gantt chart prévisionnel (à mettre en français)
+%	\begin{figure}[h!]
+%		\begin{center}
+%			\includegraphics[width=18cm]{Reports/figures/estimated_gantt.png}
+%		\end{center}	
+%		\caption{Diagramme de GANTT prévisionnel}
+%		\label{Diagramme de GANTT prévisionnel}
+%	\end{figure}
 \chapter{Réalisation}
 	\section{Choix et justification du module mathématique}
 
