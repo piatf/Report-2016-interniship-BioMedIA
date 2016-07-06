@@ -8,6 +8,7 @@
 \usepackage{subcaption}
 \usepackage{lmodern}
 \usepackage{listings}
+\usepackage{amsmath} 
 \usepackage{wrapfig}
 \usepackage[colorlinks=true, linkcolor=black, urlcolor=blue, breaklinks, pagebackref, citebordercolor={0 0 0}, filebordercolor={0 0 0}, linkbordercolor={0 0 0}, pagebordercolor={0 0 0}, runbordercolor={0 0 0}, urlbordercolor={0 0 0}, pdfborder={0 0 0}]{hyperref}  %désactive les cadres autour des liens
 \usepackage{etoolbox}
@@ -152,10 +153,11 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 		\label{Effet de la fonction "extract-image-region"}
 	\end{figure}~\par
 	
-	Le dossier \textit{Applications} du MIRTK regroupe les fichiers correspondants aux commandes exécutables. Ils font appel à certaines dépendances, qui sont réparties en 7 modules : \textit{Common, Image, I/O, Numerics, PointSet, Registration} et \textit{Transformation}. Ces différents modules représentent le lien entre le back-end du MIRTK et son corps. Le recalage d'image (Registration) est l'une de ses principales fonctions.
+	Le dossier \textit{Applications} du MIRTK regroupe les fichiers correspondants aux commandes exécutables. Ils font appel à certaines dépendances, qui sont réparties en 7 modules : \textit{Common, Image, I/O, Numerics, PointSet, Registration} et \textit{Transformation}. 
+	 Le recalage d'image (Registration) est l'une de ses principales fonctions.
 	
 	 \subsection{UK BioBank}~\par
-%	 UK Biobank is a major national health resource, and a registered charity in its own right, with the aim of improving the prevention, diagnosis and treatment of a wide range of serious and life-threatening illnesses – including cancer, heart diseases, stroke, diabetes, arthritis, osteoporosis, eye disorders, depression and forms of dementia. UK Biobank recruited 500,000 people aged between 40-69 years in 2006-2010 from across the country to take part in this project. They have undergone measures, provided blood, urine and saliva samples for future analysis, detailed information about themselves and agreed to have their health followed. Over many years this will build into a powerful resource to help scientists discover why some people develop particular diseases and others do not.
+
 	 \textit{UK BioBank} est une banque de données médicales du Royaume-Uni, et une association  ayant pour but d'améliorer la prévention, le diagnostic et le traitement d'un large éventail de maladies graves, y compris le cancer, les maladies cardiaques, les accidents vasculaires cérébraux, le diabète, l'arthrite, l'ostéoporose, les affections oculaires, la dépression et les formes de démence. 500.000 personnes âgées de 40 à 69 ans ont été recrutées sur la période 2006-2010 à l'échelle nationale pour prendre part à ce projet. Ils ont accepté de donner leur sang, leur urine et des échantillons de salive pour une analyse future, ainsi que des informations détaillées sur eux-mêmes et sur leur santé. D'ici plusieurs années, ce processus va aboutir sur une ressource majeure pour aider les scientifiques à découvrir pourquoi certaines personnes développent des maladies particulières, contrairement à d'autres.~\par~\par
 	 
 	 
@@ -166,16 +168,17 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	Jusqu'ici, le MIRTK a été utilisé pour des études plus modestes, de l'ordre de la dizaine ou la centaine de patients. Pour cet ordre de grandeur, les performances actuelles du MIRTK sont suffisantes. Cependant avec UK BioBank, cette ordre de grandeur va augmenter significativement et le moindre gain de performance, à l'echelle du MIRTK, impactera le temps d'exécution globale sur la base de données UK BioBank.\\ ~\par
 	
 	Pour traiter un grand nombre de données, il est possible d'envoyer les calculs du MIRTK sur différents environnement d'exécution: %citer nombres pour faire tourner la tête, montrer qu'il y a des grosses possibilités
-	\\{$\bullet$}\textbf{ un réseau local}, %pas un reseau, une machine 
-	qui distribuera les tâches sur des machines de caractéristiques différentes au niveau du hardware. Chaque machine pourra exécuter ce qu'elle reçoit sur un CPU, un GPU, ou plusieurs GPU (multi-GPU).
+	\\{$\bullet$}\textbf{ sur une machine en local}, %pas un reseau, une machine 
+	qui distribuera les tâches sur différents cœurs d'exécution. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines cœurs.  
 	\\{$\bullet$}\textbf{ une solution d'ordonnancement de tâches informatiques}, tel que SLURM, qui permet de créer des grappes de serveurs sous Linux ayant une tolérance aux pannes, de type ip-failover. Cette solution peut être utilisée sur des grappes de tailles variées, de deux à plusieurs milliers de serveurs.
-	\\{$\bullet$}\textbf{ une grille de calculs}, %ex: euro(cern) / hpc (cf imperial)
-	 qui s'étend à tout le réseau de machines de l'Imperial college, mais qui est un service payant.
+	\\{$\bullet$}\textbf{ une grille de calculs}, plusieurs grilles étant disponibles, à des échelles différentes : \\%ex: euro(cern) / hpc (cf imperial)
+	\t - La grille de l'Imperial College, qui s'étend à tout le réseau de machines de l'université, mais qui est un service payant. Cette grille met au total 5300 cœurs d'exécution à disposition.\\
+	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques organismes européens de recherche. Ces services comprennent des environnements d'exécutions et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution, la grille fournit au total plus de 650 000 cœurs.
 	\\{$\bullet$}\textbf{ sur un "nuage"}, c'est-à-dire un serveur que l'on loue à une entreprise qui propose un tel service, telles que Google ou Amazon.\\ ~\par
 	Cependant, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un nuage serait payant, avec un prix croissant selon le temps d'exécution. Semblablement, un slurm ou une grille de calculs à l'échelle européenne utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'un autre logiciel. Si le temps d'exécution du MIRTK était réduit, cela représenterait un coût moindre dans un cas, un impact plus faible sur les ressources mutualisées dans l'autre.\\ ~\par
 	Par conséquent, plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'enchaînement des commandes sur un réseau de différentes machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"??????????????????".\\
 	\vspace{-0.7cm}
-	
+	\newpage
 	\begin{wrapfigure}[20]{r}{9cm}
 		\includegraphics[width=10cm]{Reports/figures/gfor.eps}	
 		\caption{Fonctionnement d'une boucle en parallèle}
@@ -187,32 +190,37 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	A l'inverse de l'exécution séquentielle, la parallélisation est consiste à mettre en œuvre des architectures d'électronique numérique permettant de traiter des informations de manière simultanée, ainsi que les algorithmes spécialisés pour celles-ci. Ces techniques ont pour but de réaliser le plus grand nombre d'opérations en un temps le plus petit possible.
 	Un algorithme adapté pour la parallélisation sépare l'exécution globale d'un programme en plusieurs "blocks" d'exécution, chacun correspondant à une sous-tâche. La figure \ref{Fonctionnement d'une boucle en parallèle} ci-contre représente ce principe avec des blocks de 2 itérations.\\
 
-%	Le MIRTK bénéficie seulement du multi-threading (malgré toutes les solutions précédentes), mais, bien que les opérations de traitement d'image utilisent souvent le GPU d'une machine n'est pas capable d'utiliser d'autres moyens d'accélération matériels comme l'utilisation d'un GPU.
-%	\\
+	Le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus, bien que les opérations de traitement d'image utilisent souvent le GPU d'une machine, le MIRTK n'est pas capable d'utiliser ce genre d'accélérations matérielles.
+	\\
 	
 	\section{Cahier des charges}
-	La réduction du temps d'exécution est l'objectif principal du stage. Pour cela, il va falloir travailler sur 3 plans principaux : \\
-	\\{$\bullet$} La compatibilité avec différents back-end, que ce soit pour CPU ou GPU. A l'heure actuelle, la gestion des back-end GPU n'est pas assurée par le logiciel. Le rendu idéal serait de laisser le MIRTK gérer automatiquement cet aspect, en vérifiant la présence d'une carte graphique sur l'ordinateur (sinon utiliser le CPU), puis le laisser choisir entre CPU et GPU pour des performances optimales. Si, par exemple, un ordinateur possède une bonne carte graphique, le MIRTK devra être apte à le détecter, et donc de l'utiliser.\\
-	\\{$\bullet$} Garder l'intégrité et la transparence du code du MIRTK. Il sera imposé de garder les mêmes fonctions (ainsi que leurs arguments) et la même API. Pour conserver cela, il faudra garder une transparence entre le code du MIRTK et la gestion de différents back-end. C'est-à-dire que l'implémentation la plus haut niveau des fonctions du logiciel devra rester inchangée.\\
-	\\{$\bullet$} Dans la mesure du possible, les fonctionnalités qui auront été dupliquées pendant le stage devront être supprimées, avec idéalement, la suppression d'une ou plusieurs dépendances du logiciel.
+	La réduction du temps d'exécution est l'objectif principal du stage. Pour cela, l'amélioration sera envisagée sur les couches les plus bas niveau du MIRTK. Dans le cadre du stage, l'intervention se fera au niveau de l'utilisation des bibliothèques mathématiques, et de leur interaction avec les dépendances liées au hardware. Ces interactions sont gérées par des backends.\\ ~\par
 	
+	Un backend (parfois aussi appelé un arrière-plan) est un terme désignant un étage de sortie d'un logiciel devant produire un résultat. Plusieurs types de backends On l'oppose au front-end (aussi appelé un frontal) qui lui est la partie visible de l'iceberg. Pour l'utilisation de GPU, plusieurs backends sont disponibles: \\
+	\t- \textit{CUDA ((Compute Unified Device Architecture)}, qui est compatible pour les GPU de la marque Intel.
+	\t- OpenCL (Open Computing Language), qui est un backend semblable à CUDA, mais compatible avec davantage de dispositifs hardware (y compris certains CPU), puisqu'il est open-source.\\
+	
+	Dans le cadre du stage, les 3 axes de développement ont été définis : \\
+	\\{$\bullet$} Le support de l'exécution sur différents backends, que ce soit pour CPU ou GPU. A l'heure actuelle, la gestion des backends GPU n'est pas assurée par le logiciel. Dans l'idéal, le MIRTK gérerait automatiquement cet aspect, en vérifiant la présence d'une carte graphique sur l'ordinateur (sinon utiliser le CPU), puis le laisser choisir entre CPU et GPU pour des performances optimales. Si, par exemple, un ordinateur possède une bonne carte graphique, le MIRTK devra être apte à le détecter, puis l'utiliser.\\
+	\\{$\bullet$} Garder l'intégrité et la transparence du code du MIRTK. Il sera imposé de garder la même interface, les mêmes ligne de commande. Pour conserver cela, il faudra garder une transparence entre le code du MIRTK et la gestion de différents backend. \\
+	\\{$\bullet$} Dans la mesure du possible, un réusinage devra être opéré. Le réusinage de code (\textit{code refactoring}, en anglais) est l'opération consistant à retravailler le code source d'un programme informatique (sans toutefois y ajouter des fonctionnalités ni en corriger les bogues) de façon à en améliorer la lisibilité et par voie de conséquence la maintenance, ou à le rendre plus générique (afin par exemple de faciliter le passage de simple en multiple précision); on parle aussi de « remaniement ». Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
 	\section{Planification}
 	\subsection{Objectifs} 
 	Afin de se familiariser avec le MIRTK, les objectifs ont été établis de manière chronologique, de la manière suivante: 
 	~\par~\par 
-	1) \textbf{Études du MIRTK et de ses dépendances, et analyse de l'API d'ArrayFire} \\
-	Cette étape préliminaire permettra de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. Dans le même temps, l'analyse de l'interface d'ArrayFire, et des différentes fonctions proposées par la bibliothèque. Cette étude corrélera donc les besoins du MIRTK et les solutions proposées par ArrayFire.
+	1) \textbf{Études du MIRTK et de ses dépendances, et analyse de l'interface d'ArrayFire} \\
+	Cette étape préliminaire permettra de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. Dans le même temps, l'analyse de l'interface d'ArrayFire, une bibliothèque mathématique optimisée, et des différentes fonctions proposées par la bibliothèque sera entreprise. Cette étude corrélera donc les besoins du MIRTK et les solutions proposées par ArrayFire.
 	~\par~\par 
 	2) \textbf{Profilage du MIRTK}\\
-	Afin d'obtenir une première visualisation des performances du logiciel, un profilage sera exécuté sur les fonctions concernées. L'interprétation de ces premiers résultats sera nécessaire pour élaborer un ordre de priorité dans les fonctions à ré-implémenter.
+	Afin d'obtenir une première visualisation des performances du logiciel, un profilage sera exécuté sur les fonctions concernées. Il consistera à analyser l'exécution du MIRTK afin de connaître son comportement à l'exécution. L'interprétation de ces premiers résultats sera nécessaire pour élaborer un ordre de priorité dans les fonctions à ré-implémenter.
 	~\par~\par 
 	\t 3) \textbf{Intégration de ArrayFire dans le MIRTK} \\
-	A la suite du profilage sera donc obtenue une liste de fonctions à implémenter primordialement. La modification de ces fonctions sera faite indépendamment, en commençant par les fonctions dont la ré-implémentation sera la plus simple, en progressant ensuite sur celles plus complexes.
+	A la suite du profilage sera donc obtenue une liste de fonctions à implémenter primordialement. La modification de ces fonctions sera implémentée indépendamment, en commençant par les fonctions dont la ré-implémentation sera la plus simple, en progressant ensuite sur celles plus complexes.
 	~\par~\par
-	\t 4) \textbf{Implémentation de la gestion optimisée des back-ends} \\
-	Afin d'apporter une fonctionnalité davantage liée au hardware utilisé, la gestion des back-ends serait un avantage pour les performances du MIRTK. Pour cette raison, cette gestion sera idéalement implémentée en fin de stage. 
+	\t 4) \textbf{Implémentation de la gestion optimisée des backends} \\
+	Comme détaillé dans la partie 2.2 précédente, la gestion des backends serait un avantage pour les performances du MIRTK. Pour cette raison, cette gestion sera idéalement implémentée en fin de stage. 
 	~\par~\par 
-	\t 5) \textbf{Parangonage} \\
+	\t 5) \textbf{Analyse des performances} \\
 	Pour prouver l'efficacité d'ArrayFire et l'amélioration des performances du MIRTK, un test des fonctions précédemment optimisées sera réalisé. Les résultats attendus sont principalement des graphiques reflétant cette amélioration.
 %	Détailler les objectifs a atteindre idéalement.
 %	- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
@@ -372,8 +380,12 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 \url{https://fr.wikipedia.org/wiki/Imperial_College_London} : partie du texte 1.1.1 (Imperial College London)\\
 \url{http://www.ukbiobank.ac.uk/about-biobank-uk/} : inspiration pour le paragraphe 1.2.2 (UK BioBank)\\
 \url{http://ric.uthscsa.edu/mango/papaya/index.html} : outil de visualisation d'images en format NIFTI\\
+\url{https://wiki.imperial.ac.uk/display/HPC/Systems} : données sur la grille de calcul de l'Imperial College\\
+\url{http://www.egi.eu/} : données sur la grille européenne de calcul
 \url{https://fr.wikipedia.org/wiki/SLURM} : définition du SLURM, partie 2.1\\
 \url{https://fr.wikipedia.org/wiki/Parall\%C3\%A9lisme_\%28informatique\%29} : définition de la parallélisation, partie 2.1\\
+\url{https://fr.wikipedia.org/wiki/Backend} : définition d'un backend\\
+\url{https://fr.wikipedia.org/wiki/R\%C3\%A9usinage_de_code} :  définition d'un réusinage \\
 \renewcommand{\listfigurename}{Table des illustations}
 \listoffigures
 \addcontentsline{toc}{chapter}{Table des illustrations}
