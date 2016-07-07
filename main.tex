@@ -12,6 +12,8 @@
 \usepackage{wrapfig}
 \usepackage[colorlinks=true, linkcolor=black, urlcolor=blue, breaklinks, pagebackref, citebordercolor={0 0 0}, filebordercolor={0 0 0}, linkbordercolor={0 0 0}, pagebordercolor={0 0 0}, runbordercolor={0 0 0}, urlbordercolor={0 0 0}, pdfborder={0 0 0}]{hyperref}  %désactive les cadres autour des liens
 \usepackage{etoolbox}
+\usepackage{setspace}
+\onehalfspacing
 \renewcommand{\familydefault}{\sfdefault}
 
 % Supprime l'espace avant l'en-tête des chapitres
@@ -70,10 +72,10 @@
 \addcontentsline{toc}{chapter}{Introduction}
 
 \chapter{Environnement de travail} 
-	Cette section détaille l'environnement dans lequel s'est déroulé le stage. Suite à al présentation du laboratoire interviendra le cadre du projet.
+	Cette section détaille l'environnement dans lequel s'est déroulé le stage. Le laboratoire sera d'abord présenté puis le cadre du stage sera introduit.
 	\section{Le laboratoire}
 	
-	\subsection{Imperial College London}~\par ~\par %souligner la section ou l'on est
+	\subsection{Imperial College London} %souligner la section ou l'on est
 	L’Imperial College London (officiellement The Imperial College of Science, Technology and Medicine) est une université britannique fondée en 1907 par la fusion du City and Guilds College, de la Royal School of Mines et du Royal College of Science (tous fondés entre 1845 et 1878).\\ ~\par
     L'université possède 9 campus au total, tous situés à Londres, et dont la plupart sont implantés dans des sites hospitaliers.  
     Elle possède 5 départements administratifs et 4 branches techniques: ingénierie, sciences naturelles, business, et médecine.	Le campus principal est localisé dans le quartier du South Kensington, et regroupe la branche d'ingénierie, de sciences naturelles, d'arts et de business. C'est sur ce campus que le département d'informatique se situe. 
@@ -82,14 +84,14 @@
 		\begin{center}
 			\includegraphics[width=18cm]{Reports/figures/College-Organisation.pdf}
 		\end{center}
-		\caption{Organigramme de l'Imperial College London \\ \textit{Le département d'informatique, encadré en noir, se situe dans la branche d'ingénierie (en rouge) de l'université.}}
+		\caption[Organigramme de l'Imperial College London]{Organigramme de l'Imperial College London \\ \textit{Le département d'informatique, encadré en noir, se situe dans la branche d'ingénierie (en rouge) de l'université.}}
 		\label{Organigramme de l'Imperial College London}
 	\end{figure}
 	
-	\subsection{Department of computing}~\par~\par
+	\subsection{Le département d'informatique}
 	
 	Le département d'informatique est divisé en 5 groupes de recherche : 
-	\\{$\bullet$}\textit{\textbf{Logic and Artificial Intelligence:}} la recherche en Intelligence Artificielle et Logique englobe des études fondamentales de logique et une variété de disciplines en intelligence artificielle.
+	\\{$\bullet$}\textit{\textbf{Logic and Artificial Intelligence:}} la recherche en Intelligence Artificielle et Logique englobe des études fondamentales de logique et une variété de disciplines en intelligence artificielle, telles que l'apprentissage automatisé, les flux neurologiques, et la vérification des systèmes autonomes.
 	\\{$\bullet$}\textit{\textbf{Distributed Software Engineering:}} la recherche dans le domaine de l'Ingénierie des Logiciels Distribués aborde la conception de systèmes distribués, adaptatifs et fiables.
 	\\{$\bullet$}\textit{\textbf{Quantitative Analysis and Decision Science:}} la recherche en Analyse Quantitative et Science de la décision varie de l'optimisation à l'ingénierie de performances, en passant par la des expériences de vérifications quantitatives ou de sécurité.
 	\\{$\bullet$}\textit{\textbf{Programming Languages and Systems:}} Systèmes et Langages de Programmation est une section qui combine des travaux théoriques et pratiques en langages et architecture pour obtenir des logiciels rapides, et efficaces.
@@ -101,7 +103,7 @@
 		\label{Stratégie du département de recherche}
 	\end{wrapfigure}~\par~\par
 	
-	Les différentes spécialités citées précédemment sont articulées au sein du centre de recherche afin d'appliquer les résultats à d'autres domaines de recherche. Ces principales applications concernent les domaines de la santé, de la fiabilité/sécurité, de l'environnement, des modes de vie, de l'énergie et des incertitudes.
+	Les différentes spécialités citées précédemment sont articulées au sein d'un centre de recherche translationnelle, qui se situe à l'intermédiaire entre la recherche fondamentale et la recherche appliquée. La recherche translationnelle s'inspire des travaux de recherche fondamentale et fournit des applications dans les domaines de la santé, de la fiabilité/sécurité, de l'environnement, des modes de vie, de l'énergie et des incertitudes.
 	\\
 	\\
 	\subsection{Le laboratoire BioMedIA}
@@ -109,43 +111,43 @@
 	La mission du groupe BioMedIA est de développer de nouvelles techniques de
 	calcul pour l'analyse d'images biomédicales. Le groupe se concentre sur des
 	domaines de recherche de pointe, y compris:\\
-	{$\bullet$} Le développement d'algorithmes d'acquisition, d'analyse et d'interprétation des images. En particulier dans les domaines du recalage, de la reconstruction,
+	\\{$\bullet$} Le développement d'algorithmes d'acquisition, d'analyse et d'interprétation des images. En particulier dans les domaines du recalage, de la reconstruction,
 	du suivi de mouvement, de la segmentation et de la modélisation. \\
-	{$\bullet$} L'apprentissage machine pour l'extraction d'information clinique à partir
+	\\{$\bullet$} L'apprentissage machine pour l'extraction d'information clinique à partir
 	d'images médicales. Les applications incluent le diagnostic assisté par
 	ordinateur, la planification automatisée de traitement médical, ou encore la thérapie et les interventions guidées par ordinateur. \\
-	Le laboratoire s'intéresse particulièrement à l'imagerie et les technologies de
+	\\Le laboratoire s'intéresse particulièrement à l'imagerie et les technologies de
 	traitement informatique qui permet de mieux comprendre le
 	développement du cerveau humain, l’évolution des maladies mentales et le
 	diagnostic des patients atteints de maladie cardiovasculaire.
 	
 	\section{Cadre du projet} 
-	\subsection{Medical Image Registration Toolkit (MIRTK)}~\par
+	\subsection{Medical Image Registration Toolkit (MIRTK)}
 	Le Medical Image Registration Tool-Kit (abrégé MIRTK) est un logiciel open-source de traitement d'images médicales codé en C++ et utilisé par des chercheurs dans le milieu médical. Le MIRTK prend en charge les formats d'image NIFTI, VTK et PNG. Il propose différents modules qui sont spécialisés pour le recalage d'images. \\ 
 	L'utilisation du MIRTK se concentre autour d'une interface en lignes de commandes, incluant le nom de la fonction, les paramètres et les arguments nécessaires, et propres à chacune des fonctions. Par exemple, la ligne de commande suivante permet de rogner une image :
 	
 	\begin{lstlisting}
-mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -Ry2 250
+mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\end{lstlisting}
 	
 	Sur cette ligne de commande:
 	\\{$\bullet$} "mirtk" indique que la commande à exécuter est une commande du MIRTK.
 	\\{$\bullet$} "extract-image-region" est la commande désirée. Celle-ci effectue un rognage.
 	\\{$\bullet$} "input.nii.gz" indique l'emplacement de l'image d'entrée, idem pour la sortie avec "output.nii.gz". Ces fichiers sont au format NIFTI (ici compressées).
-	\\{$\bullet$} "-R{$\lbrace$}x,y,z,t{$\rbrace$}{$\lbrace$}1,2{$\rbrace$}" permet de spécifier la région sur laquelle le rognage est effectué. 
+	\\{$\bullet$} "-Ry1 200 -Ry2 100" permet de spécifier la région sur laquelle le rognage est effectué. Ici, dans le cadre d'une étude de la section abdominale par exemple, la hauteur de l'image est réduite à la zone d'étude. 
 	L'action de cette ligne de commande est visualisable sur la Figure \ref{Effet de la fonction "extract-image-region"}.
 	
 	\begin{figure}[h!]
 		\centering
 		\begin{subfigure}{.5\textwidth}
 			\centering
-			\includegraphics[width=5cm]{Reports/figures/mirtkextractregion1d.png}
+			\includegraphics[width=5cm]{Reports/figures/mirtkextractregion1dbis.png}
 			\caption{Image d'entrée}
 			\label{Image d'entrée}
 		\end{subfigure}%
 		\begin{subfigure}{.5\textwidth}
 			\centering
-			\includegraphics[width=7cm]{Reports/figures/mirtkextractregion2_1d.png}
+			\includegraphics[width=7cm]{Reports/figures/mirtkextractregion21d.png}
 			\caption{Image de sortie}
 			\label{Image de sortie}
 		\end{subfigure}
@@ -156,26 +158,26 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	Le dossier \textit{Applications} du MIRTK regroupe les fichiers correspondants aux commandes exécutables. Ils font appel à certaines dépendances, qui sont réparties en 7 modules : \textit{Common, Image, I/O, Numerics, PointSet, Registration} et \textit{Transformation}. 
 	 Le recalage d'image (Registration) est l'une de ses principales fonctions.
 	
-	 \subsection{UK BioBank}~\par
+	 \subsection{UK BioBank}
 
-	 \textit{UK BioBank} est une banque de données médicales du Royaume-Uni, et une association  ayant pour but d'améliorer la prévention, le diagnostic et le traitement d'un large éventail de maladies graves, y compris le cancer, les maladies cardiaques, les accidents vasculaires cérébraux, le diabète, l'arthrite, l'ostéoporose, les affections oculaires, la dépression et les formes de démence. 500.000 personnes âgées de 40 à 69 ans ont été recrutées sur la période 2006-2010 à l'échelle nationale pour prendre part à ce projet. Ils ont accepté de donner leur sang, leur urine et des échantillons de salive pour une analyse future, ainsi que des informations détaillées sur eux-mêmes et sur leur santé. D'ici plusieurs années, ce processus va aboutir sur une ressource majeure pour aider les scientifiques à découvrir pourquoi certaines personnes développent des maladies particulières, contrairement à d'autres.~\par~\par
+	 \textit{UK BioBank} est une association fournissant la banque de données médicales la plus importante du Royaume-Uni. Elle a pour but d'améliorer la prévention, le diagnostic et le traitement d'un large éventail de maladies graves, y compris le cancer, les maladies cardiaques, les accidents vasculaires cérébraux, le diabète, l'arthrite, l'ostéoporose, les affections oculaires, la dépression et les formes de démence. 500.000 personnes âgées de 40 à 69 ans ont été recrutées sur la période 2006-2010 à l'échelle nationale pour prendre part à ce projet. Ils ont accepté de donner leur sang, leur urine et des échantillons de salive pour une analyse future, ainsi que des informations détaillées sur eux-mêmes et sur leur santé. D'ici quelques années, ce processus permettra aux chercheurs d'identifier les critères qui influent le développement de certaines maladies.
 	 
 	 
 	 
 \chapter{Objectifs et cahier des charges}
-	Lors de cette partie seront détaillées la motivation du stage, le cahier des charges et la planification des différentes étapes du projet.
+	Ce chapitre détaille la motivation du stage, le cahier des charges et la planification des différentes étapes du projet.
 	\section{Problématique} 
-	Jusqu'ici, le MIRTK a été utilisé pour des études plus modestes, de l'ordre de la dizaine ou la centaine de patients. Pour cet ordre de grandeur, les performances actuelles du MIRTK sont suffisantes. Cependant avec UK BioBank, cette ordre de grandeur va augmenter significativement et le moindre gain de performance, à l'echelle du MIRTK, impactera le temps d'exécution globale sur la base de données UK BioBank.\\ ~\par
+	Jusqu'ici, le MIRTK a été utilisé pour des études de tailles modestes, dont la validation s'effectue sur une dizaine ou une centaine de patients. Pour cet ordre de grandeur, les performances actuelles du MIRTK sont suffisantes. Cependant avec UK BioBank, cette ordre de grandeur va être multiplié par 10, 100, voire 1000 et le moindre gain de performances, à l'échelle du MIRTK, impactera le temps d'exécution globale sur la base de données UK BioBank.\\ ~\par
 	
-	Pour traiter un grand nombre de données, il est possible d'envoyer les calculs du MIRTK sur différents environnement d'exécution: %citer nombres pour faire tourner la tête, montrer qu'il y a des grosses possibilités
+	Pour traiter un grand nombre de données, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution: %citer nombres pour faire tourner la tête, montrer qu'il y a des grosses possibilités
 	\\{$\bullet$}\textbf{ sur une machine en local}, %pas un reseau, une machine 
 	qui distribuera les tâches sur différents cœurs d'exécution. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines cœurs.  
-	\\{$\bullet$}\textbf{ une solution d'ordonnancement de tâches informatiques}, tel que SLURM, qui permet de créer des grappes de serveurs sous Linux ayant une tolérance aux pannes, de type ip-failover. Cette solution peut être utilisée sur des grappes de tailles variées, de deux à plusieurs milliers de serveurs.
-	\\{$\bullet$}\textbf{ une grille de calculs}, plusieurs grilles étant disponibles, à des échelles différentes : \\%ex: euro(cern) / hpc (cf imperial)
+	\\{$\bullet$}\textbf{ une solution d'ordonnancement de tâches informatiques}, tel que SLURM \textit{(Simple Linux Utility for Resource Management)}, qui permettrait de déployer et gérer des tâches simultanément sur plusieurs machines. 
+	\\{$\bullet$}\textbf{ une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécutions) et mise à disposition d'entreprises et/ou de chercheurs. Selon la quantité de ressources nécessitées, il existe des grilles de tailles différentes : \\%ex: euro(cern) / hpc (cf imperial)
 	\t - La grille de l'Imperial College, qui s'étend à tout le réseau de machines de l'université, mais qui est un service payant. Cette grille met au total 5300 cœurs d'exécution à disposition.\\
-	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques organismes européens de recherche. Ces services comprennent des environnements d'exécutions et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution, la grille fournit au total plus de 650 000 cœurs.
-	\\{$\bullet$}\textbf{ sur un "nuage"}, c'est-à-dire un serveur que l'on loue à une entreprise qui propose un tel service, telles que Google ou Amazon.\\ ~\par
-	Cependant, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un nuage serait payant, avec un prix croissant selon le temps d'exécution. Semblablement, un slurm ou une grille de calculs à l'échelle européenne utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'un autre logiciel. Si le temps d'exécution du MIRTK était réduit, cela représenterait un coût moindre dans un cas, un impact plus faible sur les ressources mutualisées dans l'autre.\\ ~\par
+	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques aux organismes européens de recherche. Ces services comprennent des environnements d'exécutions et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution, la grille fournit au total plus de 650 000 cœurs.
+	\\{$\bullet$}\textbf{ sur un "cloud"}, c'est-à-dire un service par des entreprises telles que Google ou Amazon, qui autorise la location d'un serveur distant. Cette procédure moyenne cependant un coût croissant proportionnellement au temps de location.\\ ~\par
+	En revanche, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un cloud serait payant, avec un prix croissant selon le temps d'exécution. Semblablement, un slurm ou une grille de calculs mutualisée utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'autres tâches. La réduction du temps d'exécution du MIRTK représenterait un coût moindre dans un cas, sinon un impact plus faible sur les ressources mutualisées.\\ ~\par
 	Par conséquent, plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'enchaînement des commandes sur un réseau de différentes machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"??????????????????".\\
 	\vspace{-0.7cm}
 	\newpage
@@ -187,41 +189,45 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	
 	~\par~\par
 	Une autre possibilité d'optimisation sera la réduction du temps d'exécution sur une machine. Pour cela, le MIRTK utilise une technique d'optimisation appelée "la parallélisation" d'un code. 
-	A l'inverse de l'exécution séquentielle, la parallélisation est consiste à mettre en œuvre des architectures d'électronique numérique permettant de traiter des informations de manière simultanée, ainsi que les algorithmes spécialisés pour celles-ci. Ces techniques ont pour but de réaliser le plus grand nombre d'opérations en un temps le plus petit possible.
-	Un algorithme adapté pour la parallélisation sépare l'exécution globale d'un programme en plusieurs "blocks" d'exécution, chacun correspondant à une sous-tâche. La figure \ref{Fonctionnement d'une boucle en parallèle} ci-contre représente ce principe avec des blocks de 2 itérations.\\
+	A l'inverse de l'exécution séquentielle, la parallélisation consiste à mettre en œuvre des architectures d'électronique numérique permettant de traiter des informations de manière simultanée, ainsi que les algorithmes spécialisés pour celles-ci. Ces techniques ont pour but de réaliser le plus grand nombre d'opérations en un temps le plus court possible.
+	Un algorithme adapté pour la parallélisation partage l'exécution globale d'un programme en plusieurs "blocks" d'exécution, chacun correspondant à un groupe d'instructions. La figure \ref{Fonctionnement d'une boucle en parallèle} ci-contre représente ce principe avec des blocks de 2 itérations.\\
 
-	Le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus, bien que les opérations de traitement d'image utilisent souvent le GPU d'une machine, le MIRTK n'est pas capable d'utiliser ce genre d'accélérations matérielles.
+
+	PARAGRAPHE SUR LES AVANTAGES ET INCONVENIENTS CPU/GPU ICI, MAIS RECHERCHES PRÉALABLES + AVIS DE JOJO
+%	Le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus, bien que les opérations de traitement d'image utilisent souvent le GPU d'une machine, le MIRTK n'est pas capable d'utiliser ce genre d'accélérations matérielles.
 	\\
 	
 	\section{Cahier des charges}
-	La réduction du temps d'exécution est l'objectif principal du stage. Pour cela, l'amélioration sera envisagée sur les couches les plus bas niveau du MIRTK. Dans le cadre du stage, l'intervention se fera au niveau de l'utilisation des bibliothèques mathématiques, et de leur interaction avec les dépendances liées au hardware. Ces interactions sont gérées par des backends.\\ ~\par
+	La réduction du temps d'exécution est l'objectif principal du stage. Pour cela, l'amélioration sera portée sur les fonctions les plus atomiques du MIRTK. Dans le cadre du stage, l'intervention se fera au niveau de l'utilisation des bibliothèques mathématiques, et de leur interaction avec les dépendances liées aux backends du MIRTK.\\ ~\par
 	
-	Un backend (parfois aussi appelé un arrière-plan) est un terme désignant un étage de sortie d'un logiciel devant produire un résultat. Plusieurs types de backends On l'oppose au front-end (aussi appelé un frontal) qui lui est la partie visible de l'iceberg. Pour l'utilisation de GPU, plusieurs backends sont disponibles: \\
-	\t- \textit{CUDA ((Compute Unified Device Architecture)}, qui est compatible pour les GPU de la marque Intel.
-	\t- OpenCL (Open Computing Language), qui est un backend semblable à CUDA, mais compatible avec davantage de dispositifs hardware (y compris certains CPU), puisqu'il est open-source.\\
+	Un backend (parfois aussi appelé un arrière-plan) est un terme ayant différentes significations dans le domaine informatique. Concernant MIRTK, il s'agit du lien entre le support physique d'exécution et le logiciel. On l'oppose au front-end (aussi appelé un frontal) qui, lui, correspond au code source du MIRTK. \\ ~\par
+	%retirer ca
+%	\t- \textit{CUDA ((Compute Unified Device Architecture)}, qui est compatible pour les GPU de la marque Intel.\\
+%	\t- OpenCL (Open Computing Language), qui est un backend semblable à CUDA, mais compatible avec davantage de dispositifs hardware (y compris certains CPU), puisqu'il est open-source.\\
 	
 	Dans le cadre du stage, les 3 axes de développement ont été définis : \\
-	\\{$\bullet$} Le support de l'exécution sur différents backends, que ce soit pour CPU ou GPU. A l'heure actuelle, la gestion des backends GPU n'est pas assurée par le logiciel. Dans l'idéal, le MIRTK gérerait automatiquement cet aspect, en vérifiant la présence d'une carte graphique sur l'ordinateur (sinon utiliser le CPU), puis le laisser choisir entre CPU et GPU pour des performances optimales. Si, par exemple, un ordinateur possède une bonne carte graphique, le MIRTK devra être apte à le détecter, puis l'utiliser.\\
-	\\{$\bullet$} Garder l'intégrité et la transparence du code du MIRTK. Il sera imposé de garder la même interface, les mêmes ligne de commande. Pour conserver cela, il faudra garder une transparence entre le code du MIRTK et la gestion de différents backend. \\
-	\\{$\bullet$} Dans la mesure du possible, un réusinage devra être opéré. Le réusinage de code (\textit{code refactoring}, en anglais) est l'opération consistant à retravailler le code source d'un programme informatique (sans toutefois y ajouter des fonctionnalités ni en corriger les bogues) de façon à en améliorer la lisibilité et par voie de conséquence la maintenance, ou à le rendre plus générique (afin par exemple de faciliter le passage de simple en multiple précision); on parle aussi de « remaniement ». Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
+	\\{$\bullet$} Le support de l'exécution sur différents backends, que ce soit pour CPU ou GPU. A l'heure actuelle, la gestion des backends GPU n'est pas assurée par le MIRTK. Dans l'idéal, le MIRTK gérerait automatiquement les backends  pour des performances optimales . Si, par exemple, un ordinateur possède une bonne carte graphique, le MIRTK devra être apte à lui associer le bon backend de manière transparente, puis l'utiliser.\\
+	\\{$\bullet$} Garder l'intégrité et la transparence du code du MIRTK. Il sera imposé de garder la même interface et les mêmes ligne de commande afin de conserver l'intégrité des applications actuelles du MIRTK.  \\
+	\\{$\bullet$} Dans la mesure du possible, un réusinage devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
 	\section{Planification}
 	\subsection{Objectifs} 
 	Afin de se familiariser avec le MIRTK, les objectifs ont été établis de manière chronologique, de la manière suivante: 
 	~\par~\par 
-	1) \textbf{Études du MIRTK et de ses dépendances, et analyse de l'interface d'ArrayFire} \\
-	Cette étape préliminaire permettra de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. Dans le même temps, l'analyse de l'interface d'ArrayFire, une bibliothèque mathématique optimisée, et des différentes fonctions proposées par la bibliothèque sera entreprise. Cette étude corrélera donc les besoins du MIRTK et les solutions proposées par ArrayFire.
+	1) \textbf{Étude du MIRTK et de ses dépendances} \\
+	Cette étape préliminaire permettra de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. 
 	~\par~\par 
-	2) \textbf{Profilage du MIRTK}\\
-	Afin d'obtenir une première visualisation des performances du logiciel, un profilage sera exécuté sur les fonctions concernées. Il consistera à analyser l'exécution du MIRTK afin de connaître son comportement à l'exécution. L'interprétation de ces premiers résultats sera nécessaire pour élaborer un ordre de priorité dans les fonctions à ré-implémenter.
+	2)\textbf{Analyse de l'interface d'ArrayFire} \\
+	Dans le même temps, l'analyse de l'interface d'ArrayFire, une bibliothèque mathématique optimisée, et des différentes fonctions proposées par la bibliothèque sera entreprise. Cette étude corrélera les besoins du MIRTK et les solutions proposées par ArrayFire.
 	~\par~\par 
-	\t 3) \textbf{Intégration de ArrayFire dans le MIRTK} \\
-	A la suite du profilage sera donc obtenue une liste de fonctions à implémenter primordialement. La modification de ces fonctions sera implémentée indépendamment, en commençant par les fonctions dont la ré-implémentation sera la plus simple, en progressant ensuite sur celles plus complexes.
-	~\par~\par
-	\t 4) \textbf{Implémentation de la gestion optimisée des backends} \\
-	Comme détaillé dans la partie 2.2 précédente, la gestion des backends serait un avantage pour les performances du MIRTK. Pour cette raison, cette gestion sera idéalement implémentée en fin de stage. 
+	3) \textbf{Profilage du MIRTK}\\
+	Un profilage du logiciel en amont de l'implémentation permettra de visualiser les performances du logiciel non-modifié.	
+	Après le profilage des fonctions principales du recalage d'image, celles qui auront les plus médiocres performances seront travaillées en premier par la suite.
+	~\par~\par 
+	\t 4) \textbf{Intégration de ArrayFire dans le MIRTK} \\
+	L'étape fondamentale du stage sera la ré-implémentation de différentes fonctions du MIRTK. Tout en intégrant les fonctionnalités mathématiques d'ArrayFire. Il faudra ensuite utiliser ArrayFire pour implémenter l'utilisation optimisée des backends avec le MIRTK.
 	~\par~\par 
 	\t 5) \textbf{Analyse des performances} \\
-	Pour prouver l'efficacité d'ArrayFire et l'amélioration des performances du MIRTK, un test des fonctions précédemment optimisées sera réalisé. Les résultats attendus sont principalement des graphiques reflétant cette amélioration.
+	Une analyse des performances obtenues, en comparaison avec le logiciel non-modifié, sera attendue afin de justifier le travail réalisé.
 %	Détailler les objectifs a atteindre idéalement.
 %	- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
 %	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
@@ -245,8 +251,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	\section{Introduction à ArrayFire}
 
 	
-	\section{Implémentation}
-	\subsection{Intégration de ArrayFire dans le MIRTK} 
+	\section{Intégration de ArrayFire dans le MIRTK}
 	%	Programmation transparente entre Eigen et ArrayFire.
 	%	Lister les fonctions principales à substituer.
 	
@@ -269,7 +274,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 %		\caption{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
 %		\label{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
 %	\end{figure}~\par
-	\subsection{Dette technique}
+	\paragraph{Dette technique}
 	%	Optimisation des threads et suppression de TBB au profit de ArrayFire.
 	
 	
@@ -278,7 +283,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	%	\newline
 	%	Le contenus des sous-parties, ainsi que d'éventuelles d'autres sous-parties dépendront du résultat du profilage.
 	
-	\section{Analyse des performances}
+	\section{Évaluation des performances}
 		\subsection{Profilage}
 	%	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
 	
@@ -360,7 +365,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 %	\subsection{Switch automatique de back-end}
 %	Commandes prépocesseur pour indiquer au logiciel quel est le back-end à utiliser (ArrayFire ou Eigen) en fonction de l'opération souhaitée.
 
-	\subsection{Parangonnage}
+	\subsection{Analyse}
 %	(partie dépendante du déroulement du projet)\newline
 %	- Analyse des performances obtenues \newline
 %	- Comparaison avec le profilage initial ? \newline
@@ -382,9 +387,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 \url{http://ric.uthscsa.edu/mango/papaya/index.html} : outil de visualisation d'images en format NIFTI\\
 \url{https://wiki.imperial.ac.uk/display/HPC/Systems} : données sur la grille de calcul de l'Imperial College\\
 \url{http://www.egi.eu/} : données sur la grille européenne de calcul
-\url{https://fr.wikipedia.org/wiki/SLURM} : définition du SLURM, partie 2.1\\
 \url{https://fr.wikipedia.org/wiki/Parall\%C3\%A9lisme_\%28informatique\%29} : définition de la parallélisation, partie 2.1\\
-\url{https://fr.wikipedia.org/wiki/Backend} : définition d'un backend\\
 \url{https://fr.wikipedia.org/wiki/R\%C3\%A9usinage_de_code} :  définition d'un réusinage \\
 \renewcommand{\listfigurename}{Table des illustations}
 \listoffigures
@@ -404,7 +407,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 \textbf{Environnement d'exécution:}\\
 \textbf{CPU:}\\
 \textbf{GPU:}\\
-
+\textbf{Réusinage d'un code (ou \textit{code refactoring}, en anglais):} opération consistant à retravailler le code source d'un programme informatique (sans toutefois y ajouter des fonctionnalités ni en corriger les bogues) de façon à en améliorer la lisibilité et par voie de conséquence la maintenance, ou à le rendre plus générique (afin par exemple de faciliter le passage de simple en multiple précision); on parle aussi de « remaniement ». 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
@@ -425,109 +428,105 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Rx1 50 -Rx2 40 -Ry1 250 -
 	\addcontentsline{toc}{chapter}{Annexe 1: Implémentation de "smooth-image" en Python}
 	\begin{lstlisting}[language=python]
 import arrayfire as af
-from array import array
 import matplotlib.pyplot as plt
 import nibabel as nib 
 from scipy import signal
-from scipy.fftpack import fft, fftshift 
 import numpy as np
 import argparse as ap
+	
+# Command line arguments and options handling 
+parser = ap.ArgumentParser()
+parser.add_argument("InputImage", type=str, help="Path to the input image")
+parser.add_argument("OutputImage", type=str, help="Path to the input image")
+parser.add_argument("Sigma", type=int, help="Defines the value of sigma for the Gaussian kernel. Default: 1")
+parser.add_argument("--dimension", type=str, choices=["x", "y", "z", "xy", "yz", "xz", "xyz"], help="Specifies on which dimensions execute the blurring. Default: xyz")
+parser.add_argument("-color", help="Enable colored input/output image plot.", action="store_false")
+parser.add_argument("-nodisplay", help="Cancel plot of the input/output images. Has priority over \"-color argument\".", action="store_false")
 
-if __name__ == '__main__':
+args = parser.parse_args()
+
+# Loading input
+img = nib.load(args.InputImage)
+hdr = img.get_header()
+img_data = img.get_data().astype('f')
+
+# Conversion numpy => arrayfire
+img_data_af = af.interop.np_to_af_array(img_data)
+
+# Declaration of Gaussian kernel
+if args.Sigma:
+	kernel = signal.gaussian(img_data.shape[0], std = args.Sigma).astype('f')
+else:
+	kernel = signal.gaussian(img_data.shape[0], std = 1).astype('f')
+
+# Conversion numpy => arrayfire for the Gaussian kernel
+kernel_af = af.interop.np_to_af_array(kernel)
+
+# Convolution along dimensions chosen 
+output_image = img_data_af.copy()
+input_image = img_data_af.copy()
+
+if (args.dimension):
+
+	if ("x" in args.dimension):
+		output = af.convolve1(input_image, kernel_af)
 	
-	# Command line arguments and options handling 
-	parser = ap.ArgumentParser()
-	parser.add_argument("InputImage", type=str, help="Path to the input image")
-	parser.add_argument("OutputImage", type=str, help="Path to the input image")
-	parser.add_argument("Sigma", type=int, help="Defines the value of sigma for the Gaussian kernel. Default: 1")
-	parser.add_argument("--dimension", type=str, choices=["x", "y", "z", "xy", "yz", "xz", "xyz"], help="Specifies on which dimensions execute the blurring. Default: xyz")
-	parser.add_argument("-color", help="Enable colored input/output image plot.", action="store_false")
-	parser.add_argument("-nodisplay", help="Cancel plot of the input/output images. Has priority over \"-color argument\".", action="store_false")
-	
-	args = parser.parse_args()
-	
-	# Loading input
-	img = nib.load(args.InputImage)
-	hdr = img.get_header()
-	img_data = img.get_data().astype('f')
-	
-	# Conversion numpy => arrayfire
-	img_data_af = af.interop.np_to_af_array(img_data)
-	
-	# Declaration of Gaussian kernel
-	if args.Sigma:
-		kernel = signal.gaussian(img_data.shape[0], std = args.Sigma).astype('f')
-	else:
-		kernel = signal.gaussian(img_data.shape[0], std = 1).astype('f')
-	
-	# Conversion numpy => arrayfire for the Gaussian kernel
-	kernel_af = af.interop.np_to_af_array(kernel)
-	
-	# Convolution along dimensions chosen 
-	output_image = img_data_af.copy()
-	input_image = img_data_af.copy()
-	
-	if (args.dimension):
-	
-		if ("x" in args.dimension):
-			output = af.convolve1(input_image, kernel_af)
-		
-		if ("y" in args.dimension):
-			input_image = af.reorder(output_image, 1, 0, 2)
-			output_image = af.convolve1(input_image, kernel_af)
-			output_image = af.reorder(output_image, 1, 0, 2)
-		
-		if ("z" in args.dimension):
-			input_image = af.reorder(output_image, 2, 1, 0)
-			output_image = af.convolve1(input_image, kernel_af)
-			output_image = af.reorder(output_image, 2, 1, 0)
-	else:
-		output_image = af.convolve1(input_image, kernel_af)
+	if ("y" in args.dimension):
 		input_image = af.reorder(output_image, 1, 0, 2)
 		output_image = af.convolve1(input_image, kernel_af)
 		output_image = af.reorder(output_image, 1, 0, 2)
+	
+	if ("z" in args.dimension):
 		input_image = af.reorder(output_image, 2, 1, 0)
 		output_image = af.convolve1(input_image, kernel_af)
 		output_image = af.reorder(output_image, 2, 1, 0)
-	
-	
-	# Conversion arrayfire => numpy
-	output_np = output_image.to_array()
-	output_np = np.asarray(output_np)
-	output_np = output_np.reshape(320, 250, 202, order='F')
-	
-	# Saving the output file
-	affine = img.get_affine()
-	new_img = nib.Nifti1Image(output_np, affine)
-	nib.save(new_img, args.OutputImage)
-	
-	# Check if plot is not cancelled by "-nosdisplay" argument
-	if (args.nodisplay == True):
-		# Assimilating color option
-		if (args.color):
+else:
+	output_image = af.convolve1(input_image, kernel_af)
+	input_image = af.reorder(output_image, 1, 0, 2)
+	output_image = af.convolve1(input_image, kernel_af)
+	output_image = af.reorder(output_image, 1, 0, 2)
+	input_image = af.reorder(output_image, 2, 1, 0)
+	output_image = af.convolve1(input_image, kernel_af)
+	output_image = af.reorder(output_image, 2, 1, 0)
+
+
+# Conversion arrayfire => numpy
+output_np = output_image.to_array()
+output_np = np.asarray(output_np)
+output_np = output_np.reshape(320, 250, 202, order='F')
+
+# Saving the output file
+affine = img.get_affine()
+new_img = nib.Nifti1Image(output_np, affine)
+nib.save(new_img, args.OutputImage)
+
+# Check if plot is not cancelled by "-nosdisplay" argument
+if (args.nodisplay == True):
+	# Assimilating color option
+	if (args.color):
 		colors = 'gray'
-		else:
+	else:
 		colors = None
-		
-		# Ploting 1rst window
-		f,fig = plt.subplots(1, 2)
-		fig[0].imshow(img_data[125, :, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
-		fig[1].imshow(output_np[125, :, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
-		plt.suptitle("Gaussian Blurring on x-axis")
-		
-		# Ploting 2nd window
-		f2,fig2 = plt.subplots(1, 2)
-		fig2[0].imshow(img_data[:, 125, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
-		fig2[1].imshow(output_np[:, 125, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
-		plt.suptitle("Gaussian Blurring on y-axis")
-		
-		# Ploting 3rd window
-		f3,fig3 = plt.subplots(1, 2)
-		fig3[0].imshow(img_data[:, :, 125].T, cmap=colors, origin='lower')
-		fig3[1].imshow(output_np[:, :, 125].T, cmap=colors, origin='lower')
-		plt.suptitle("Gaussian Blurring on z-axis")
-		
-		plt.show()
+	
+	# Ploting 1rst window
+	f,fig = plt.subplots(1, 2)
+	fig[0].imshow(img_data[125, :, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
+	fig[1].imshow(output_np[125, :, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
+	plt.suptitle("Gaussian Blurring on x-axis")
+	
+	# Ploting 2nd window
+	f2,fig2 = plt.subplots(1, 2)
+	fig2[0].imshow(img_data[:, 125, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
+	fig2[1].imshow(output_np[:, 125, :].T, extent=[0, hdr['pixdim'][1], 0, hdr['pixdim'][3]], cmap=colors, origin='lower')
+	plt.suptitle("Gaussian Blurring on y-axis")
+	
+	# Ploting 3rd window
+	f3,fig3 = plt.subplots(1, 2)
+	fig3[0].imshow(img_data[:, :, 125].T, cmap=colors, origin='lower')
+	fig3[1].imshow(output_np[:, :, 125].T, cmap=colors, origin='lower')
+	plt.suptitle("Gaussian Blurring on z-axis")
+	
+	plt.show()
 	\end{lstlisting}
 \end{appendix}
 
