@@ -211,7 +211,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\\{$\bullet$} Dans la mesure du possible, un réusinage devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
 	\section{Planification}
 	\subsection{Objectifs} 
-	Afin de se familiariser avec le MIRTK, les objectifs ont été établis de manière chronologique, de la manière suivante: 
+	Les objectifs ont été établis de manière chronologique, de la manière suivante: 
 	~\par~\par 
 	1) \textbf{Étude du MIRTK et de ses dépendances} \\
 	Cette étape préliminaire permettra de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. 
@@ -247,10 +247,20 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 %		\caption{Diagramme de GANTT prévisionnel}
 %		\label{Diagramme de GANTT prévisionnel}
 %	\end{figure}
-\chapter{Réalisation du stage}
+\chapter{Réalisation du stage} %faire apparaitre clairement la réalisation des objectifs, avec les concessions
+Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son intégration dans le MIRTK.
 	\section{Introduction à ArrayFire}
-
+	ArrayFire est une bibliothèque logicielle open-source, proposant une grande variété de fonctions mathématiques optimisées. Elle propose aussi plusieurs fonctionnalités de manipulations de backends afin d'exécuter le même code sur différentes configurations matérielles.
+	\paragraph{Les fonctions mathématiques}~\par
+	ArrayFire utilise un type de variable appelé \textit{af::array} ("array" signifiant "tableau" en anglais). Un \textit{af::array} contient plusieurs valeurs d'un même type, dans une structure de données semblables à la représentation mathématique d'une matrice. Ces matrices traitent tous les types numériques de variables, et peuvent être de une, deux, trois, ou quatre dimensions. ~\par 
 	
+	Autour de ce type, s'articulent de nombreuses fonctions issues d'algèbre linéaire, de traitement du signal, et d'algorithmes vectoriels. %contenu a rajouter 
+	~\par 
+	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire.
+		\\
+		%Algèbre linéaire, manipulations de matrices...
+	\paragraph{Les fonctionnalités d'optimisation}~\par
+		manipulation des backends, fonctions vectorisées...
 	\section{Intégration de ArrayFire dans le MIRTK}
 	%	Programmation transparente entre Eigen et ArrayFire.
 	%	Lister les fonctions principales à substituer.
@@ -373,6 +383,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	
 \chapter{Améliorations et perspectives}
 	\section{A cours terme}
+		
 	\section{A long terme}
 
 \chapter*{Conclusion} % dans cet ordre
