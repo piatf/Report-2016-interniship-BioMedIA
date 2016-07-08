@@ -254,9 +254,9 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	\paragraph{Les fonctions mathématiques}~\par
 	ArrayFire utilise un type de variable appelé \textit{af::array} ("array" signifiant "tableau" en anglais). Un \textit{af::array} contient plusieurs valeurs d'un même type, dans une structure de données semblables à la représentation mathématique d'une matrice. Ces matrices traitent tous les types numériques de variables, et peuvent être de une, deux, trois, ou quatre dimensions. ~\par 
 	
-	Autour de ce type, s'articulent de nombreuses fonctions issues d'algèbre linéaire, de traitement du signal, et d'algorithmes vectoriels. %contenu a rajouter 
+	Autour de ce type s'articulent de nombreuses fonctions issues d'algèbre linéaire, de traitement du signal, et d'algorithmes vectoriels. %contenu a rajouter 
 	~\par 
-	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire.
+	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire. Le code source de cette fonction est exposé en \textbf{Annexe 2}.
 		\\
 		%Algèbre linéaire, manipulations de matrices...
 	\paragraph{Les fonctionnalités d'optimisation}~\par
@@ -435,9 +435,66 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 }
 
 \begin{appendix}
-	\chapter*{Annexe 1: Implémentation de "smooth-image" en Python}
-	\addcontentsline{toc}{chapter}{Annexe 1: Implémentation de "smooth-image" en Python}
-	\begin{lstlisting}[language=python]
+	\chapter*{Annexe 1: Implémentation d'une fonction de recherche de valeurs propres en C++}
+	\addcontentsline{toc}{chapter}{Annexe 1: Implémentation d'une fonction de recherche de valeurs propres en C++}
+\vspace{-1cm}
+\begin{lstlisting}[language=C++]
+#include <arrayfire.h>
+#include <cstdio>
+#include <cstdlib>
+// A prelimibnary test has been done to check whether the matrix is square and symmteric or not
+af::array EigenValuesSolver(af::array &in) // the input is an array
+{
+	int size = in.dims(0); // gets dimensions of the input array
+	int coltemp = 0;
+	int rowtemp = 0;
+	unsigned index = 0;
+	float maxi = 0;
+	float last_value;
+	float new_value;
+	float threshold = 0.001; // sets a threshhold for the stopping condition of the algorithm
+	af::array U = af::identity(size, size);
+	af::array V;
+	af::array A = in; // copy the input array into a local variable
+	af::array alpha = af::constant(1, 1, 1); // stores a numeric variable in an array
+	af::array temp;
+	/* Starts a Jacobi algorithm */
+	do
+	{
+		last_value = maxi; // keeps the previous maximum value of A 
+		
+		/* Gets the maximum value from A outside its diagonal */
+		temp = af::abs(A-af::diag(af::diag(A), 0, false)); 
+		af::max(&maxi, &index, temp);  diagonal
+		rowtemp = index%size;         // gets maximum value's row index
+		coltemp = index/size;         // gets maximum value's column index
+		
+		/* Calculates the new rotation angle */
+		alpha = 0.5*atan(2*A(rowtemp, coltemp)/(A(coltemp, coltemp)-A(rowtemp, rowtemp)));
+		
+		/* Creates the new rotation matrix */
+		V = af::identity(size, size);
+		V(rowtemp, coltemp) = sin(alpha);
+		V(coltemp, coltemp) = cos(alpha);
+		V(rowtemp, rowtemp) = cos(alpha);
+		V(coltemp, rowtemp) = -sin(alpha);
+		
+		/* Final multiplications */
+		A = af::matmul((af::transpose(V)),A,V); 
+		U = af::matmul(U,V);
+		
+		new_value = maxi; // update the maximum value 
+	}while(abs(last_value-new_value) > threshold); // loop condition
+	
+	return af::diag(A); // eigen values of the input are returned by getting
+}
+
+\end{lstlisting}
+
+\chapter*{Annexe 2: Implémentation de "smooth-image" en Python}
+\addcontentsline{toc}{chapter}{Annexe 2: Implémentation de "smooth-image" en Python}
+\vspace{-1cm}
+\begin{lstlisting}[language=python]
 import arrayfire as af
 import matplotlib.pyplot as plt
 import nibabel as nib 
@@ -539,6 +596,7 @@ if (args.nodisplay == True):
 	
 	plt.show()
 	\end{lstlisting}
+
 \end{appendix}
 
 \end{document}
