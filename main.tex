@@ -135,7 +135,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\\{$\bullet$} "extract-image-region" est la commande désirée. Celle-ci effectue un rognage.
 	\\{$\bullet$} "input.nii.gz" indique l'emplacement de l'image d'entrée, idem pour la sortie avec "output.nii.gz". Ces fichiers sont au format NIFTI (ici compressées).
 	\\{$\bullet$} "-Ry1 200 -Ry2 100" permet de spécifier la région sur laquelle le rognage est effectué. Ici, dans le cadre d'une étude de la section abdominale par exemple, la hauteur de l'image est réduite à la zone d'étude. 
-	L'action de cette ligne de commande est visualisable sur la Figure \ref{Effet de la fonction "extract-image-region"}.
+	\\L'action de cette ligne de commande est visualisable sur la Figure \ref{Effet de la fonction "extract-image-region"}.
 	
 	\begin{figure}[h!]
 		\centering
@@ -252,12 +252,24 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	\section{Introduction à ArrayFire}
 	ArrayFire est une bibliothèque logicielle open-source, proposant une grande variété de fonctions mathématiques optimisées. Elle propose aussi plusieurs fonctionnalités de manipulations de backends afin d'exécuter le même code sur différentes configurations matérielles.
 	\paragraph{Les fonctions mathématiques}~\par
-	ArrayFire utilise un type de variable appelé \textit{af::array} ("array" signifiant "tableau" en anglais). Un \textit{af::array} contient plusieurs valeurs d'un même type, dans une structure de données semblables à la représentation mathématique d'une matrice. Ces matrices traitent tous les types numériques de variables, et peuvent être de une, deux, trois, ou quatre dimensions. ~\par 
+	ArrayFire utilise un type de variable appelé \textit{af::array} ("array" signifiant "tableau" en anglais). Un \textit{af::array} contient une ou plusieurs valeurs d'un même type, dans une structure de données semblables à la représentation mathématique d'une matrice. Ces matrices traitent tous les types numériques de variables, et peuvent être de une, deux, trois, ou quatre dimensions. ~\par 
 	
 	Autour de ce type s'articulent de nombreuses fonctions issues d'algèbre linéaire, de traitement du signal, et d'algorithmes vectoriels. %contenu a rajouter 
 	~\par 
-	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire. Le code source de cette fonction est exposé en \textbf{Annexe 2}.
-		\\
+	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire. Le code source de cette fonction est exposé en \textbf{Annexe 2}. Dans ce code on été utilisées quelques fonctions issues d'ArrayFire :\\~\par
+	{$\bullet$} \underline{\textit{array identity(const long d0, const long d1)}}: 
+	retourne un array représentant une matrice identité (1 sur la diagonale, 0 sinon) dont la taille des dimensions est passées en paramètres. Cet exemple confirme la déclaration d'une matrice en 2 dimensions.\\~\par
+	{$\bullet$} \underline{\textit{array constant(double val, const long d0, const long d1)}}: retourne un array représentant une matrice pleine. Elle est remplie avec une seule et même valeur, passée en premier paramètre. Les paramètres suivants correspondent à la taille des dimensions de la matrice.\\~\par
+	{$\bullet$} \underline{\textit{array abs(const array \&in)}}: retourne une matrice dont les valeurs sont égales aux valeurs absolues de la matrice d'entrée.\\~\par
+	{$\bullet$} \underline{\textit{array diag(const array \&in, const int num=0, const bool extract=true)}}:
+	retourne un array contenant les valeurs de la diagonale d'un array passé en paramètre. Par défaut, les valeurs retournées proviennent de la diagonale du milieu et sont stockées dans un vecteur colonne. La modification du deuxième paramètre permet d'obtenir les valeurs d'une diagonale qui n'est pas celle du milieu. La modification du dernier paramètre permet de retourner une matrice de taille identique à celle d'entrée, contenant uniquement les valeurs de la diagonale choisie.\\~\par
+	{$\bullet$} \textit{\underline{void max(array \&val, array \&idx, const array \&in)}} Attribue la valeur maximum d'un array passé en (troisième) paramètre à la valeur en premier paramètre. Le second paramètre récupère l'indice de ce maximum.\\~\par
+	{$\bullet$} \underline{\textit{array matmul(const array \&lhs, const array \&rhs)}}: retourne un array, résultat du produit matriciel des deux arrays en paramètres. Par la suite, la fonction \underline{\textit{array matmul(const array \&a, const array \&b, const array \&c)}} est employée, et effectue deux produits matriciels consécutifs. \\~\par
+	{$\bullet$} \textit{\underline{array transpose(const array \&in)}}: retourne un array représentant la matrice transposée de l'array passé en paramètre.\\~\par
+	
+	Ces quelques fonctions reflètent la forme de l'interface d'ArrayFire, mais ne représentent en aucun cas une liste exhaustive des fonctions disponibles. 
+	
+	
 		%Algèbre linéaire, manipulations de matrices...
 	\paragraph{Les fonctionnalités d'optimisation}~\par
 		manipulation des backends, fonctions vectorisées...
@@ -458,6 +470,7 @@ af::array EigenValuesSolver(af::array &in) // the input is an array
 	af::array A = in; // copy the input array into a local variable
 	af::array alpha = af::constant(1, 1, 1); // stores a numeric variable in an array
 	af::array temp;
+	
 	/* Starts a Jacobi algorithm */
 	do
 	{
