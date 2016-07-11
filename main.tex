@@ -178,9 +178,8 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques aux organismes européens de recherche. Ces services comprennent des environnements d'exécutions et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution, la grille fournit au total plus de 650 000 cœurs.
 	\\{$\bullet$}\textbf{ sur un "cloud"}, c'est-à-dire un service par des entreprises telles que Google ou Amazon, qui autorise la location d'un serveur distant. Cette procédure moyenne cependant un coût croissant proportionnellement au temps de location.\\ ~\par
 	En revanche, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un cloud serait payant, avec un prix croissant selon le temps d'exécution. Semblablement, un slurm ou une grille de calculs mutualisée utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'autres tâches. La réduction du temps d'exécution du MIRTK représenterait un coût moindre dans un cas, sinon un impact plus faible sur les ressources mutualisées.\\ ~\par
-	Par conséquent, plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'enchaînement des commandes sur un réseau de différentes machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"??????????????????".\\
+	Par conséquent, plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'enchaînement des commandes sur un réseau de différentes machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"Interfaçage de fonctions de traitement d'images médicales à une bibliothèque Python et intégration dans un outil de workflow".\\
 	\vspace{-0.7cm}
-	\newpage
 	\begin{wrapfigure}[20]{r}{9cm}
 		\includegraphics[width=10cm]{Reports/figures/gfor.eps}	
 		\caption{Fonctionnement d'une boucle en parallèle}
@@ -251,12 +250,12 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son intégration dans le MIRTK.
 	\section{Introduction à ArrayFire}
 	ArrayFire est une bibliothèque logicielle open-source, proposant une grande variété de fonctions mathématiques optimisées. Elle propose aussi plusieurs fonctionnalités de manipulations de backends afin d'exécuter le même code sur différentes configurations matérielles.
-	\paragraph{Les fonctions mathématiques}~\par
+	\subsection{Les fonctions mathématiques}
 	ArrayFire utilise un type de variable appelé \textit{af::array} ("array" signifiant "tableau" en anglais). Un \textit{af::array} contient une ou plusieurs valeurs d'un même type, dans une structure de données semblables à la représentation mathématique d'une matrice. Ces matrices traitent tous les types numériques de variables, et peuvent être de une, deux, trois, ou quatre dimensions. ~\par 
 	
 	Autour de ce type s'articulent de nombreuses fonctions issues d'algèbre linéaire, de traitement du signal, et d'algorithmes vectoriels. %contenu a rajouter 
 	~\par 
-	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire. Le code source de cette fonction est exposé en \textbf{Annexe 2}. Dans ce code on été utilisées quelques fonctions issues d'ArrayFire :\\~\par
+	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire. Le code source de cette fonction est exposé en \textbf{Annexe 2}. Dans ce code ont été utilisées quelques fonctions issues d'ArrayFire :\\~\par
 	{$\bullet$} \underline{\textit{array identity(const long d0, const long d1)}}: 
 	retourne un array représentant une matrice identité (1 sur la diagonale, 0 sinon) dont la taille des dimensions est passées en paramètres. Cet exemple confirme la déclaration d'une matrice en 2 dimensions.\\~\par
 	{$\bullet$} \underline{\textit{array constant(double val, const long d0, const long d1)}}: retourne un array représentant une matrice pleine. Elle est remplie avec une seule et même valeur, passée en premier paramètre. Les paramètres suivants correspondent à la taille des dimensions de la matrice.\\~\par
@@ -267,13 +266,22 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	{$\bullet$} \underline{\textit{array matmul(const array \&lhs, const array \&rhs)}}: retourne un array, résultat du produit matriciel des deux arrays en paramètres. Par la suite, la fonction \underline{\textit{array matmul(const array \&a, const array \&b, const array \&c)}} est employée, et effectue deux produits matriciels consécutifs. \\~\par
 	{$\bullet$} \textit{\underline{array transpose(const array \&in)}}: retourne un array représentant la matrice transposée de l'array passé en paramètre.\\~\par
 	
-	Ces quelques fonctions reflètent la forme de l'interface d'ArrayFire, mais ne représentent en aucun cas une liste exhaustive des fonctions disponibles. 
-	
+	Ces quelques fonctions reflètent la forme de l'interface d'ArrayFire, mais ne représentent en aucun cas une liste exhaustive des fonctions disponibles.\\~\par
+	Outre les fonctionnalités mathématiques qu'elles fournissent, les fonctions d'ArrayFire sont optimisées en termes de performances. Ces fonctions étant structurées de manière à traiter des vecteurs de données.  
 	
 		%Algèbre linéaire, manipulations de matrices...
-	\paragraph{Les fonctionnalités d'optimisation}~\par
-		manipulation des backends, fonctions vectorisées...
+	\subsection{Les fonctionnalités d'optimisation}
+	
+	ArrayFire dispose aussi d'un ensemble de fonctions permettant de manipuler des backends. La fonction suivante initialise le backend choisi:
+	\underline{\textit{void setBackend(const Backend bknd)}}. \\Grâce à cette fonction, toute la partie du code située après cette commande sera exécutée avec ce backend, jusqu'à la fin du programme ou jusqu'à un autre appel de \underline{\textit{void setBackend(const Backend bknd)}}. Cette fonctionnalité permet d'interagir directement avec l'interface d'ArrayFire sans se préoccuper des commandes associées aux interfaces des backends et ainsi d'obtenir un code facilement lisible.\\~\par
+	De la même manière, ArrayFire possède des fonctionnalités de gestion des supports physiques. Semblablement à la fonction précédente, il existe une fonction permettant de choisir le support physique désiré: \textit{\underline{void setDevice(const int device)}}. L'entier passé en paramètre est le numéro d'identification du support voulu, qui peut être récupéré par \underline{\textit{int deviceget()}}.\\~\par
+	En combinant les différentes fonctions précédentes, et en utilisant les fonctions vectorisées d'ArrayFire, les performances de MIRTK sont enclines être améliorées.
+	
+	
+	
+	
 	\section{Intégration de ArrayFire dans le MIRTK}
+	\subsection{Filtres concernés}
 	%	Programmation transparente entre Eigen et ArrayFire.
 	%	Lister les fonctions principales à substituer.
 	
@@ -296,7 +304,7 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 %		\caption{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
 %		\label{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
 %	\end{figure}~\par
-	\paragraph{Dette technique}
+	\subsection{Dette technique}
 	%	Optimisation des threads et suppression de TBB au profit de ArrayFire.
 	
 	
