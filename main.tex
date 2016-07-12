@@ -9,6 +9,8 @@
 \usepackage{lmodern}
 \usepackage{listings}
 \usepackage{amsmath} 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 \usepackage{wrapfig}
 \usepackage[colorlinks=true, linkcolor=black, urlcolor=blue, breaklinks, pagebackref, citebordercolor={0 0 0}, filebordercolor={0 0 0}, linkbordercolor={0 0 0}, pagebordercolor={0 0 0}, runbordercolor={0 0 0}, urlbordercolor={0 0 0}, pdfborder={0 0 0}]{hyperref}  %désactive les cadres autour des liens
 \usepackage{etoolbox}
@@ -23,6 +25,7 @@
 % les chapitres étoilés
 \patchcmd{\@makeschapterhead}{\vspace*{50\p@}}{}{}{}
 \makeatother
+
 
 
 \begin{document}
@@ -282,6 +285,74 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	
 	\section{Intégration de ArrayFire dans le MIRTK}
 	\subsection{Filtres concernés}
+	\paragraph{Algorithme de "smooth-image"}
+~\par
+
+	\begin{algorithm}[H]
+		\caption{smooth-image}\label{smooth-image}
+		\begin{algorithmic}[1]
+			\Procedure{Naive procedure}{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
+				\State $\textit{af::array InputArray, OutputArray, Kernel}$
+				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
+				\State $\textit{InputArray} \gets \textit{OutputArray}$
+				\If {$SigmaX > 0$} 
+					\State $\textit{af::array KernelX}$	
+					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$
+					\State $\textit{Kernel} \gets \textit{KernelX}$
+				\EndIf
+				\If {$SigmaY > 0$} 
+					\State $\textit{af::array KernelY}$	
+					\State $\textit{KernelY} \gets \textit{InitializeKernel(SigmaY)}$
+					\State $\textit{Kernel} \gets \textit{Kernel*KernelY}$
+
+				\EndIf
+				\If {$SigmaZ > 0$} 
+					\State $\textit{af::array KernelZ}$	
+					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
+					\State $\textit{Kernel} \gets \textit{Kernel*KernelZ}$
+				\EndIf
+				\State $\textit{OutputArray} \gets \textit{convolve3(InputArray, Kernel)}$
+			\EndProcedure
+			\State $ $
+			\Procedure{Optimised procedure}{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
+				\State $\textit{af::array InputArray, OutputArray}$
+				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
+				\If {$SigmaX > 0$} 
+					\State $\textit{af::array KernelX}$	
+					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$
+					\State $\textit{InputArray} \gets \textit{OutputArray}$
+					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, Kernel)}$
+				\EndIf
+				\If {$SigmaY > 0$} 
+					\State $\textit{af::array KernelY}$	
+					\State $\textit{KernelY} \gets \textit{InitializeKernel(SigmaY)}$
+					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$
+					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, Kernel)}$
+					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$
+				\EndIf
+				\If {$SigmaZ > 0$} 
+					\State $\textit{af::array KernelZ}$	
+					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
+					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
+					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, Kernel)}$
+					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
+				\EndIf
+			\EndProcedure
+
+%			\State $j \gets \textit{patlen}$
+
+%			\If {$\textit{string}(i) = \textit{path}(j)$}
+%			\State $j \gets j-1$.
+%			\State $i \gets i-1$.
+%			\State \textbf{goto} \emph{loop}.
+%			\State \textbf{close};
+%			\EndIf
+%			\State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+%			\State \textbf{goto} \emph{top}.
+			
+		\end{algorithmic}
+	\end{algorithm}
+	\paragraph{Algorithme de "transform-image"}
 	%	Programmation transparente entre Eigen et ArrayFire.
 	%	Lister les fonctions principales à substituer.
 	
@@ -462,7 +533,7 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 #include <arrayfire.h>
 #include <cstdio>
 #include <cstdlib>
-// A prelimibnary test has been done to check whether the matrix is square and symmteric or not
+// A preliminary test has been done to check whether the matrix is square and symmteric or not
 af::array EigenValuesSolver(af::array &in) // the input is an array
 {
 	int size = in.dims(0); // gets dimensions of the input array
@@ -486,7 +557,7 @@ af::array EigenValuesSolver(af::array &in) // the input is an array
 		
 		/* Gets the maximum value from A outside its diagonal */
 		temp = af::abs(A-af::diag(af::diag(A), 0, false)); 
-		af::max(&maxi, &index, temp);  diagonal
+		af::max(&maxi, &index, temp);  
 		rowtemp = index%size;         // gets maximum value's row index
 		coltemp = index/size;         // gets maximum value's column index
 		
