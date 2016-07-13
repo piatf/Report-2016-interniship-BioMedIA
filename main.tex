@@ -278,26 +278,36 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	ArrayFire dispose aussi d'un ensemble de fonctions permettant de manipuler des backends. La fonction suivante initialise le backend choisi:
 	\underline{\textit{void setBackend(const Backend bknd)}}. \\Grâce à cette fonction, toute la partie du code située après cette commande sera exécutée avec ce backend, jusqu'à la fin du programme ou jusqu'à un autre appel de \underline{\textit{void setBackend(const Backend bknd)}}. Cette fonctionnalité permet d'interagir directement avec l'interface d'ArrayFire sans se préoccuper des commandes associées aux interfaces des backends et ainsi d'obtenir un code facilement lisible.\\~\par
 	De la même manière, ArrayFire possède des fonctionnalités de gestion des supports physiques. Semblablement à la fonction précédente, il existe une fonction permettant de choisir le support physique désiré: \textit{\underline{void setDevice(const int device)}}. L'entier passé en paramètre est le numéro d'identification du support voulu, qui peut être récupéré par \underline{\textit{int deviceget()}}.\\~\par
-	En combinant les différentes fonctions précédentes, et en utilisant les fonctions vectorisées d'ArrayFire, les performances de MIRTK sont enclines être améliorées.
+	En combinant les différentes fonctions précédentes, et en utilisant les fonctions vectorisées d'ArrayFire, les performances du MIRTK sont enclines être améliorées.
 	
 	
 	
 	
 	\section{Intégration de ArrayFire dans le MIRTK}
 	\subsection{Filtres concernés}
+	La finalité de la plupart des exécutables du MIRTK est de contribuer directement ou indirectement au module de recalage du logiciel. 
+	
+	~\par
+	ICI UNE EXPLICATION DU FONCTIONNEMENT DU RECALAGE??
+	
+	
+	 Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par la recherche d'une transformation géométrique permettant de passer d'une image à une autre.
+	 source: wikipédia
+	\\~\par
+	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, deux fonctions ont été traitées: \textit{smooth-image} et \textit{transform-image}.
 	\paragraph{Algorithme de "smooth-image"}
 ~\par
 
 	\begin{algorithm}[H]
 		\caption{smooth-image}\label{smooth-image}
 		\begin{algorithmic}[1]
-			\Procedure{Naive procedure}{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
+			\Procedure{Naive procedure }{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
 				\State $\textit{af::array InputArray, OutputArray, Kernel}$
 				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
 				\State $\textit{InputArray} \gets \textit{OutputArray}$
 				\If {$SigmaX > 0$} 
 					\State $\textit{af::array KernelX}$	
-					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$
+					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$ \Comment  \textit{InitializeKernel} creates a 1D Gaussian kernel
 					\State $\textit{Kernel} \gets \textit{KernelX}$
 				\EndIf
 				\If {$SigmaY > 0$} 
@@ -311,32 +321,34 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
 					\State $\textit{Kernel} \gets \textit{Kernel*KernelZ}$
 				\EndIf
-				\State $\textit{OutputArray} \gets \textit{convolve3(InputArray, Kernel)}$
+				\State $\textit{OutputArray} \gets \textit{convolve3(InputArray, Kernel)}$ \Comment  \textit{convolve3} convolves two 3D matrix 
+				\State $\textit{Output pointer} \gets \textit{OutputArray}$
 			\EndProcedure
 			\State $ $
-			\Procedure{Optimised procedure}{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
+			\Procedure{Optimised procedure }{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
 				\State $\textit{af::array InputArray, OutputArray}$
 				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
 				\If {$SigmaX > 0$} 
 					\State $\textit{af::array KernelX}$	
-					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$
+					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$ 
 					\State $\textit{InputArray} \gets \textit{OutputArray}$
-					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, Kernel)}$
+					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelX)}$ \Comment \textit{convolve1} convolves one 3D matrix  \& one 1D matrix 
 				\EndIf
 				\If {$SigmaY > 0$} 
 					\State $\textit{af::array KernelY}$	
 					\State $\textit{KernelY} \gets \textit{InitializeKernel(SigmaY)}$
-					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$
-					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, Kernel)}$
+					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$ \Comment \textit{reorder} switches dimensions into another order
+					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelY)}$
 					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$
 				\EndIf
 				\If {$SigmaZ > 0$} 
 					\State $\textit{af::array KernelZ}$	
 					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
 					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
-					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, Kernel)}$
+					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelZ)}$
 					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
 				\EndIf
+				\State $\textit{Output pointer} \gets \textit{OutputArray}$
 			\EndProcedure
 
 %			\State $j \gets \textit{patlen}$
@@ -378,7 +390,8 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	\subsection{Dette technique}
 	%	Optimisation des threads et suppression de TBB au profit de ArrayFire.
 	
-	
+c++ => langage qui vieillit, programmé en application de kernels successivement sur tous les voxels	//
+Kernels en voxel/voxel => bien qu'optimisé, n'atteindra jamais les performances de fonctions vectorisees.
 	
 	
 	%	\newline
@@ -387,8 +400,27 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	\section{Évaluation des performances}
 		\subsection{Profilage}
 	%	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
-	
-		% a refaire!!!
+Un profilage est une étude de comportement d'un programme lors de son exécution. Cette étape est un relevé de performances du MIRTK, et, de même que toutes les démarches utilisées dans la partie "Evaluation de performances", ne modifie aucunement le code source du MIRTK. 
+
+
+
+		\paragraph{Choix du profileur}~\par
+
+Avant d'effectuer un profilage, il a en premier lieu été nécessaire de choisir le bon outil de profilage. Pour le choisir, ont été définis deux principaux critères:\\
+{$\bullet$} Le genre d'informations relevées : dans le cadre du MIRTK il était suffisant de se restreindre au temps d'exécution. En revanche, il était nécessaire d'avoir une fonctionnalité analysant (ou permettant au moins de visualiser) l'exécution parallèle du code. \\
+{$\bullet$} L'accès gratuit au programme de profilage, puisqu'il ne sera pas utilisé à long terme.\\
+Après recherche en ligne d'outils respectant ces critères, 3 différents logiciels de profilage ont été retenus: le "JIT profiling tool" issu de l'application VTune, CodeXL et le module "Callgrind" de la suite d'outils Valgrind.\\~\par
+\noindent VTune, développé par l'entreprise Intel, possède un ensemble de fonctionnalités d'analyses de performances couplées à des outils d'assistance pour rendre un programme plus performant. \\
+CodeXL est un outil qui rassemble deux fonctionnalités principales qui sont le débuggage et le profilage. Il s'agit d'un produit fournit par l'entreprise AMD pour accompagner les développeurs à la fois sur CPU, GPU et APU. Un APU est une unité spécialisée dans l'accélération matérielle.
+\\Les fonctionnalités fournies par Valgrind sont similaires à celles CodeXL. Cependant, Valgrind est un logiciel open-source dont la structure est constituée de différents modules, chacun étant spécialisé pour une fonction précise.\\
+
+Bien que les trois programmes précédents semblaient convenir pour l'étude, un critère pourtant essentiel n'avait pas été pris en compte. En effet il était nécessaire que le profileur soit compatible avec différentes configurations matérielles afin de pouvoir réaliser le profilage d'un même code sur différents machines. VTune étant développé par Intel, il n'est compatible qu'avec des configurations matérielles issue de l'entreprise Intel. Semblablement, CodeXL n'est pas fonctionnel pour des supports physiques non produits par AMD.\\
+
+Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les critères cités précédemment.
+ \\
+ 
+ 		\paragraph{Caractéristiques techniques du support physique}~\par	
+% a refaire!!!
 %		Lors du début de mon stage, il a fallu que je me familiarise avec les dépendances de MIRTK, mais aussi a son fonctionnement interne. C'est lors de cette étude préliminaire que mon tuteur et moi avons étudié, en plus de la bibliothèque EIGEN (destinée aux fonctionnalité mathématiques), la bibliothèque TBB, qui a pour but de mettre en place une parallélisation d'un logiciel. Constatant qu'ArrayFire était constitué de fonctions mathématiques déjà optimisées sur ce plan, il a été convenu de faire un profilage de MIRTK avant d'y intégrer ArrayFire afin de prioriser les points les plus coûteux en ressources de MIRTK. \\
 %	%	Les tests ont été effectués sur une machine dont les caractéristiques sont les suivantes : \newline
 %	%	{$\bullet$} \textit{Nombre de coeurs:} 8, 2 threads chacun\newline
@@ -399,7 +431,6 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 %		Pour une quantité réduite de tests, et afin de cibler les modèles d'utilisation de TBB à remplacer, on a pris l'une des fonctions les plus sollicitées dans MIRTK, il s'agit d'une fonction nommée \textit{transform-image}, et qui dispose de 5 options, définissant un type d'interpolation mathématique : Linéaire (par défaut), méthode voisin le plus proche (NN), gaussienne, sinus cardinal et B-Spline. \\
 %		On notera, de plus, que tous ces tests seront exécutés sur la même machine afin de garder des performances exactement semblables à chaque exécution.
 %		
-%		\subsection{Choix du profileur}~\par
 %		Afin de discerner au mieux les performances de MIRTK, le choix du profileur (l'outil faisant le profilage) était important. Le principal poste utilisée pour le profilage travaille sur un processeur INTEL, ce qui nous a convaincu de ne pas utiliser le profileur CodeXl puisque nous avons compris après installation qu'il ne fonctionnait qu'avec des processeurs AMD. On a ensuite basculé sur VTune, développé par les collaborateurs directs d'AMD, mais nous ne l'avons pas retenu non plus de part sa complexité d'installation sur l'ordinateur souhaité.
 %		
 %		Nous avons donc finalement choisi d'utiliser l'outil Callgrind de la suite VALGRIND (qui est open-source), capable d'analyser à la fois la quantité d'instructions envoyées au run-time, et aussi les fuites de cache.
@@ -415,6 +446,9 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 %		{$\bullet$} \textit{Cadre bleu: } Ici est détaillé toutes les fonctions les plus coûteuses du thread sélectionné. \newline
 %		{$\bullet$} \textit{Cadre rouge: } Grâce à ce diagramme, on peut visualiser la pile d'appel des fonctions avant et après la fonction sélectionné dans le cadre bleu. Les onglets en bas de page sont d'autres représentations plus textuelles (et plus détaillées) de ce que montre le diagramme. \newline
 %		
+
+%		\subsection{Choix du profileur}~\par
+
 %		
 %	
 %	%	=> on identifie les fonctions sur lesquelles agir en premier
