@@ -194,10 +194,14 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	A l'inverse de l'exécution séquentielle, la parallélisation consiste à mettre en œuvre des architectures d'électronique numérique permettant de traiter des informations de manière simultanée, ainsi que les algorithmes spécialisés pour celles-ci. Ces techniques ont pour but de réaliser le plus grand nombre d'opérations en un temps le plus court possible.
 	Un algorithme adapté pour la parallélisation partage l'exécution globale d'un programme en plusieurs "blocks" d'exécution, chacun correspondant à un groupe d'instructions. La figure \ref{Fonctionnement d'une boucle en parallèle} ci-contre représente ce principe avec des blocks de 2 itérations.\\
 
-
-	PARAGRAPHE SUR LES AVANTAGES ET INCONVENIENTS CPU/GPU ICI, MAIS RECHERCHES PRÉALABLES + AVIS DE JOJO
+	
+	Le calcul par le GPU permet de paralléliser les tâches et d'offrir un maximum de performances dans de nombreuses applications : le GPU accélère les portions de code les plus lourdes en ressources de calcul, le reste de l'application restant affecté au CPU. Les applications des utilisateurs s'exécutent ainsi bien plus rapidement.\\
+	Pour comprendre les différences fondamentales entre un CPU et un GPU, il suffit de comparer leur manière de traiter chaque opération. Les CPU incluent un nombre restreint de cœurs optimisés pour le traitement en série, alors que les GPU intègrent des milliers de cœurs conçus pour traiter efficacement de nombreuses tâches simultanées.\\
+	Les GPU incluent des milliers de cœurs pour traiter efficacement des tâches parallèles. \\ 
+	 
+%	pARAGRAPHE SUR LES AVANTAGES ET INCONVENIENTS CPU/GPU ICI, MAIS RECHERCHES PRÉALABLES + AVIS DE JOJO
 %	Le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus, bien que les opérations de traitement d'image utilisent souvent le GPU d'une machine, le MIRTK n'est pas capable d'utiliser ce genre d'accélérations matérielles.
-	\\
+	
 	
 	\section{Cahier des charges}
 	La réduction du temps d'exécution est l'objectif principal du stage. Pour cela, l'amélioration sera portée sur les fonctions les plus atomiques du MIRTK. Dans le cadre du stage, l'intervention se fera au niveau de l'utilisation des bibliothèques mathématiques, et de leur interaction avec les dépendances liées aux backends du MIRTK.\\ ~\par
@@ -402,24 +406,25 @@ Kernels en voxel/voxel => bien qu'optimisé, n'atteindra jamais les performances
 	%	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
 Un profilage est une étude de comportement d'un programme lors de son exécution. Cette étape est un relevé de performances du MIRTK, et, de même que toutes les démarches utilisées dans la partie "Evaluation de performances", ne modifie aucunement le code source du MIRTK. 
 
-
-
-		\paragraph{Choix du profileur}~\par
+		\subsubsection{Configuration}
+			\paragraph{Choix du profileur}~\par
 
 Avant d'effectuer un profilage, il a en premier lieu été nécessaire de choisir le bon outil de profilage. Pour le choisir, ont été définis deux principaux critères:\\
 {$\bullet$} Le genre d'informations relevées : dans le cadre du MIRTK il était suffisant de se restreindre au temps d'exécution. En revanche, il était nécessaire d'avoir une fonctionnalité analysant (ou permettant au moins de visualiser) l'exécution parallèle du code. \\
 {$\bullet$} L'accès gratuit au programme de profilage, puisqu'il ne sera pas utilisé à long terme.\\
-Après recherche en ligne d'outils respectant ces critères, 3 différents logiciels de profilage ont été retenus: le "JIT profiling tool" issu de l'application VTune, CodeXL et le module "Callgrind" de la suite d'outils Valgrind.\\~\par
+Après recherche en ligne d'outils respectant ces critères, 3 différents logiciels de profilage ont été retenus: le "JIT (just-in-time) profiling tool" issu de l'application VTune, CodeXL et le module "Callgrind" de la suite d'outils Valgrind.\\~\par
 \noindent VTune, développé par l'entreprise Intel, possède un ensemble de fonctionnalités d'analyses de performances couplées à des outils d'assistance pour rendre un programme plus performant. \\
 CodeXL est un outil qui rassemble deux fonctionnalités principales qui sont le débuggage et le profilage. Il s'agit d'un produit fournit par l'entreprise AMD pour accompagner les développeurs à la fois sur CPU, GPU et APU. Un APU est une unité spécialisée dans l'accélération matérielle.
-\\Les fonctionnalités fournies par Valgrind sont similaires à celles CodeXL. Cependant, Valgrind est un logiciel open-source dont la structure est constituée de différents modules, chacun étant spécialisé pour une fonction précise.\\
+\\Les fonctionnalités fournies par Valgrind sont similaires à celles de CodeXL. Cependant, Valgrind est un logiciel open-source dont la structure est constituée de différents modules, chacun étant spécialisé pour une fonction précise.\\
 
-Bien que les trois programmes précédents semblaient convenir pour l'étude, un critère pourtant essentiel n'avait pas été pris en compte. En effet il était nécessaire que le profileur soit compatible avec différentes configurations matérielles afin de pouvoir réaliser le profilage d'un même code sur différents machines. VTune étant développé par Intel, il n'est compatible qu'avec des configurations matérielles issue de l'entreprise Intel. Semblablement, CodeXL n'est pas fonctionnel pour des supports physiques non produits par AMD.\\
+Bien que les trois programmes précédents semblaient convenir pour l'étude, un critère pourtant essentiel n'avait pas été pris en compte. En effet il était nécessaire que le profileur soit compatible avec différentes configurations matérielles afin de pouvoir réaliser le profilage d'un même code sur différents machines si nécessaire. VTune étant développé par Intel, il n'est compatible qu'avec des configurations matérielles issue de l'entreprise Intel. Semblablement, CodeXL n'est pas fonctionnel pour des supports physiques non produits par AMD.\\
 
 Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les critères cités précédemment.
  \\
  
- 		\paragraph{Caractéristiques techniques du support physique}~\par	
+ 		\paragraph{Caractéristiques techniques du support physique}~\par
+ 	
+ 		
 % a refaire!!!
 %		Lors du début de mon stage, il a fallu que je me familiarise avec les dépendances de MIRTK, mais aussi a son fonctionnement interne. C'est lors de cette étude préliminaire que mon tuteur et moi avons étudié, en plus de la bibliothèque EIGEN (destinée aux fonctionnalité mathématiques), la bibliothèque TBB, qui a pour but de mettre en place une parallélisation d'un logiciel. Constatant qu'ArrayFire était constitué de fonctions mathématiques déjà optimisées sur ce plan, il a été convenu de faire un profilage de MIRTK avant d'y intégrer ArrayFire afin de prioriser les points les plus coûteux en ressources de MIRTK. \\
 %	%	Les tests ont été effectués sur une machine dont les caractéristiques sont les suivantes : \newline
@@ -454,45 +459,52 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 %	%	=> on identifie les fonctions sur lesquelles agir en premier
 %	%	On utilise Valgrind, qui, avec callgrind analyse la manière dont les caches sont utilisés.
 %	%	Expliquer le choix de valgrind, parmi les autres profileurs
-%	% => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, qui nécessite des proc AMD).\\
+%	% => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, valgrindqui nécessite des proc AMD).\\
 %		
-%		
+			\subsubsection{Résultats}
 %	
 %		
-%		\paragraph{Analyse du nombre d'instructions}
+		\paragraph{Analyse du nombre d'instructions}
 %		
-%		\begin{wrapfigure}{r}{7.2cm}
-%			\includegraphics[height=9cm]{Reports/figures/smooth_image_costs.eps}
-%			\caption{Coût de la fonction de flou gaussien}
-%			\label{Coût de la fonction de flou gaussien}
-%		\end{wrapfigure}
+		\begin{wrapfigure}{r}{7.2cm}
+			\includegraphics[height=9cm]{Reports/figures/smooth_image_costs.eps}
+			\caption{Coût de la fonction de flou gaussien}
+			\label{Coût de la fonction de flou gaussien}
+		\end{wrapfigure}
 %		~\par~\par
 %		Dans un premier temps, on s'intéresse au critère le plus pertinent concernant les performances du logiciel. Le nombre d'instructions correspond à la quantité de commandes atomiques (au niveau binaire) exécutées par le CPU et pour chaque thread.
 %		Ainsi, on peut étudier l'efficacité de TBB en comparant le nombre d'instructions utilisées lorsque TBB est activé ou non. C'est ce qui est présenté sur l'image présentée ci-contre, en se focalisant sur une fonction de flou gaussien (nommée \textit{smooth-image}).\\
 %		Sur l'axe des ordonnées, on a le coût total en instruction de la fonction, appelée sur une machine précise, avec une entrée précise (ici une image 3D). Les résultats dépendent de ces deux critères.Cependant, le ratio entre les coûts de la fonction parallélisée et celle qui ne l'est pas reste sensiblement le même. Au bas de l'image, on peut voir qu'ici, la fonction à un taux d'amélioration de x1.59. L'ordinateur ayant exécuté cette fonction ayant 8 coeurs, on peut dire que ce résultat reflète une mauvaise parallélisation dans ce cas, car un logiciel bien optimisé aurait un taux d'amélioration proche de x8 (équivalent au nombre de coeurs utilisés).\\
 %		De même, ci-dessous, l'image décrit les performances de la fonction \textit{transform-image}. En revanche, ici, cette fonction possède une option qui permet de choisir son type d'interpolation mathématique. On a donc fait un test de coût d'instructions pour chaque interpolation et on a relevé ici le taux de performance associé:
-%		\begin{figure}[h!]
-%			\begin{center}
-%				\includegraphics[width=9cm]{Reports/figures/performances_tbb_transform_image.eps}
-%			\end{center}	
-%			\caption{Améliorations apportées par TBB pour transform-image}
-%			\label{Améliorations apportées par TBB pour transform-image}
-%		\end{figure}~\par
+		\begin{figure}[h!]
+			\begin{center}
+				\includegraphics[width=9cm]{Reports/figures/performances_tbb_transform_image.eps}
+			\end{center}	
+			\caption{Améliorations apportées par TBB pour transform-image}
+			\label{Améliorations apportées par TBB pour transform-image}
+		\end{figure}~\par
 %		L'interpolation gaussienne est donc parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}.
 %		
-%		\paragraph{Analyse des fuites de cache}
+		\paragraph{Analyse des fuites de cache}
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=15cm]{Reports/figures/Mem_hierarchy.jpg}
+				\end{center}	
+				\caption{Différents niveaux de mémoire d'un microprocesseur}
+				\label{Différents niveaux de mémoire d'un microprocesseur}
+			\end{figure}~\par
 %		Un deuxième critère intéressant à regarder, au travers du profilage, est la quantité de fuites de caches à l'exécution de la fonction étudiée. Bien que la parallélisation ne soit pas toujours optimale, elle peut néanmoins être parfois délaissée au profit d'une gestion de fuites de caches plus poussée.
 %		
 %		\subparagraph{Qu'est-ce qu'une fuite de cache?}
 %		\textit{?????}\\
 %		Ci-dessous est détaillé l'histogramme de la quantité des fuites de caches pour \textit{transform-image}, dans chaque mode d'interpolation:
-%			\begin{figure}[h!]
-%				\begin{center}
-%					\includegraphics[width=15cm]{Reports/figures/cache_misses_transform_image.eps}
-%				\end{center}	
-%				\caption{Fuites de cache pour la fonction transform-image}
-%				\label{Fuites de cache pour la fonction transform-image}
-%			\end{figure}~\par
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=15cm]{Reports/figures/cache_misses_transform_image.eps}
+				\end{center}	
+				\caption{Fuites de cache pour la fonction transform-image}
+				\label{Fuites de cache pour la fonction transform-image}
+			\end{figure}~\par
 %		Les valeurs données ci-dessus (en pourcentage) sont assez mal réparties, mais le faible "cache miss rate" (taux de fuites de caches) est très faible. Le seul taux non négligeable est celui des mauvaises prédictions de branche, qui peut être considéré comme une fuite de cache, mais un taux inférieur à 20 \% reste négligeable. 
 %		~\par
 %		MIRTK est donc bien conçu au niveau de la gestion de la mémoire cache, alors que le système de parallélisation est largement améliorable.
@@ -508,9 +520,9 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 	
 \chapter{Améliorations et perspectives}
 	\section{A cours terme}
-		
+		rien
 	\section{A long terme}
-
+%uk biobank
 \chapter*{Conclusion} % dans cet ordre
 \addcontentsline{toc}{chapter}{Conclusion}
 \chapter*{Sources}
@@ -525,8 +537,11 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 \url{http://www.egi.eu/} : données sur la grille européenne de calcul
 \url{https://fr.wikipedia.org/wiki/Parall\%C3\%A9lisme_\%28informatique\%29} : définition de la parallélisation, partie 2.1\\
 \url{https://fr.wikipedia.org/wiki/R\%C3\%A9usinage_de_code} :  définition d'un réusinage \\
-\renewcommand{\listfigurename}{Table des illustations}
-\listoffigures
+\url{http://www.nvidia.fr/object/gpu-computing-fr.html}: explication du calcul sur GPU en 2.1\\
+ProGit\\
+
+
+\renewcommand{\listfigurename}{Table des illustations}\listoffigures 
 \addcontentsline{toc}{chapter}{Table des illustrations}
 \chapter*{Glossaire}
 \addcontentsline{toc}{chapter}{Glossaire}
