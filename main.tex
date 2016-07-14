@@ -461,13 +461,26 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 %	%	Expliquer le choix de valgrind, parmi les autres profileurs
 %	% => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, valgrindqui nécessite des proc AMD).\\
 %		
-			\subsubsection{Résultats}
-%	
-%		
+		\subsubsection{Résultats}
+		La suite d'outils de Valgrind permet d'étudier deux différents critères au travers de deux modules appelés Callgrind et Cachegrind.\\
+		Callgrind va étudier le coût, en nombre d'instructions CPU, des fonctions du programmes profilé. Chaque instruction ayant le même temps d'exécution, le nombre d'instructions est proportionnel au temps. L'évolution relative du nombre d'instructions est donc équivalente à celle du temps d'exécution.\\
+		Cachegrind est un module qui simule l'interaction du programme avec la hiérarchie des caches et la prédiction des branches. Les caches représentent une partie de la mémoire informatique, qui enregistre temporairement des copies de données provenant d'une source, afin de diminuer le temps d'un nouvel accès d'un CPU à ces données. Comme représenté en figure \ref{Différents niveaux de mémoire d'un microprocesseur}, il y a plusieurs niveaux de mémoire entre un CPU et sa mémoire principale. 
+
+		\begin{figure}[h!]
+			\begin{center}
+				\includegraphics[width=13cm]{Reports/figures/Mem_hierarchy.jpg}
+			\end{center}	
+			\caption{Différents niveaux de mémoire d'un microprocesseur}
+			\label{Différents niveaux de mémoire d'un microprocesseur}
+		\end{figure}~\par
+		Sur la figure précédente sont représenté 2 niveaux de mémoire cache, mais il est possible d'avoir plus ou moins de niveaux.
+		Les différents niveaux de mémoire cache sont désignés de la manière suivante : Level 1 (abrégé L1), Level 2 (abrégé L2) ... et le dernier niveau : Last Level (abrégé LL). Les niveaux de cache les plus bas correspondent aux caches les plus proches du CPU. 
+		
 		\paragraph{Analyse du nombre d'instructions}
 %		
+		
 		\begin{wrapfigure}{r}{7.2cm}
-			\includegraphics[height=9cm]{Reports/figures/smooth_image_costs.eps}
+			\includegraphics[height=10cm]{Reports/figures/smooth_image_costs.eps}
 			\caption{Coût de la fonction de flou gaussien}
 			\label{Coût de la fonction de flou gaussien}
 		\end{wrapfigure}
@@ -486,13 +499,7 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 %		L'interpolation gaussienne est donc parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}.
 %		
 		\paragraph{Analyse des fuites de cache}
-			\begin{figure}[h!]
-				\begin{center}
-					\includegraphics[width=15cm]{Reports/figures/Mem_hierarchy.jpg}
-				\end{center}	
-				\caption{Différents niveaux de mémoire d'un microprocesseur}
-				\label{Différents niveaux de mémoire d'un microprocesseur}
-			\end{figure}~\par
+
 %		Un deuxième critère intéressant à regarder, au travers du profilage, est la quantité de fuites de caches à l'exécution de la fonction étudiée. Bien que la parallélisation ne soit pas toujours optimale, elle peut néanmoins être parfois délaissée au profit d'une gestion de fuites de caches plus poussée.
 %		
 %		\subparagraph{Qu'est-ce qu'une fuite de cache?}
