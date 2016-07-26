@@ -376,9 +376,15 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 
 	\subsection{Dette technique}
 
+	Le MIRTK est un logiciel dont le code source dérive de celui d'un logiciel plus ancien, appelé IRTK (Image Registration ToolKit). Cependant, peu d'améliorations techniques y ont été ajouté lors de sa refonte en MIRTK. C'est-à-dire que le langage employé, le C++, a été conservé, ou encore que les classes et structures de données ont été simplement étoffées de nouveaux attributs et méthodes. \\
 	
-c++ => langage qui vieillit, programmé en application de kernels successivement sur tous les voxels	//
-Kernels en voxel/voxel => bien qu'optimisé, n'atteindra jamais les performances de fonctions vectorisees.
+	Devenant un logiciel de plus en plus abouti, le code source du MIRTK à renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. Ces interdépendances sont devenues tellement omniprésentes que l'intégration d'ArrayFire dans le MIRTK a dû se réaliser sur des fonctions dont l'implémentation est relativement simple. \\
+	
+	De plus, outre la complexité du code, 
+	
+	
+%c++ => langage qui vieillit, programmé en application de kernels successivement sur tous les voxels	//
+%Kernels en voxel/voxel => bien qu'optimisé, n'atteindra jamais les performances de fonctions vectorisees.
 	
 
 	%	Le contenus des sous-parties, ainsi que d'éventuelles d'autres sous-parties dépendront du résultat du profilage.
@@ -509,7 +515,7 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 	
 \chapter{Améliorations et perspectives}
 	\section{A cours terme}
-		rien
+		De plus, puisque ArrayFire remplace maintenant les fonctions \textit{smooth-image} et \textit{transform-image}, un réusinage de son code est nécessaire, afin d'éliminer les doublons, ou les attributs et méthodes qui ne sont plus utiles.
 	\section{A long terme}
 %uk biobank
 \chapter*{Conclusion} % dans cet ordre
