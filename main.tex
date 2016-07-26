@@ -78,7 +78,7 @@
 	Cette section détaille l'environnement dans lequel s'est déroulé le stage. Le laboratoire sera d'abord présenté puis le cadre du stage sera introduit.
 	\section{Le laboratoire}
 	
-	\subsection{Imperial College London} %souligner la section ou l'on est
+	\subsection{Imperial College London} 
 	L’Imperial College London (officiellement The Imperial College of Science, Technology and Medicine) est une université britannique fondée en 1907 par la fusion du City and Guilds College, de la Royal School of Mines et du Royal College of Science (tous fondés entre 1845 et 1878).\\ ~\par
     L'université possède 9 campus au total, tous situés à Londres, et dont la plupart sont implantés dans des sites hospitaliers.  
     Elle possède 5 départements administratifs et 4 branches techniques: ingénierie, sciences naturelles, business, et médecine.	Le campus principal est localisé dans le quartier du South Kensington, et regroupe la branche d'ingénierie, de sciences naturelles, d'arts et de business. C'est sur ce campus que le département d'informatique se situe. 
@@ -172,11 +172,11 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\section{Problématique} 
 	Jusqu'ici, le MIRTK a été utilisé pour des études de tailles modestes, dont la validation s'effectue sur une dizaine ou une centaine de patients. Pour cet ordre de grandeur, les performances actuelles du MIRTK sont suffisantes. Cependant avec UK BioBank, cette ordre de grandeur va être multiplié par 10, 100, voire 1000 et le moindre gain de performances, à l'échelle du MIRTK, impactera le temps d'exécution globale sur la base de données UK BioBank.\\ ~\par
 	
-	Pour traiter un grand nombre de données, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution: %citer nombres pour faire tourner la tête, montrer qu'il y a des grosses possibilités
-	\\{$\bullet$}\textbf{ sur une machine en local}, %pas un reseau, une machine 
+	Pour traiter un grand nombre de données, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution:
+	\\{$\bullet$}\textbf{ sur une machine en local}, 
 	qui distribuera les tâches sur différents cœurs d'exécution. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines cœurs.  
 	\\{$\bullet$}\textbf{ une solution d'ordonnancement de tâches informatiques}, tel que SLURM \textit{(Simple Linux Utility for Resource Management)}, qui permettrait de déployer et gérer des tâches simultanément sur plusieurs machines. 
-	\\{$\bullet$}\textbf{ une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécutions) et mise à disposition d'entreprises et/ou de chercheurs. Selon la quantité de ressources nécessitées, il existe des grilles de tailles différentes : \\%ex: euro(cern) / hpc (cf imperial)
+	\\{$\bullet$}\textbf{ une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécutions) et mise à disposition d'entreprises et/ou de chercheurs. Selon la quantité de ressources nécessitées, il existe des grilles de tailles différentes : \\
 	\t - La grille de l'Imperial College, qui s'étend à tout le réseau de machines de l'université, mais qui est un service payant. Cette grille met au total 5300 cœurs d'exécution à disposition.\\
 	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques aux organismes européens de recherche. Ces services comprennent des environnements d'exécutions et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution, la grille fournit au total plus de 650 000 cœurs.
 	\\{$\bullet$}\textbf{ sur un "cloud"}, c'est-à-dire un service par des entreprises telles que Google ou Amazon, qui autorise la location d'un serveur distant. Cette procédure moyenne cependant un coût croissant proportionnellement au temps de location.\\ ~\par
@@ -199,17 +199,12 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	Pour comprendre les différences fondamentales entre un CPU et un GPU, il suffit de comparer leur manière de traiter chaque opération. Les CPU incluent un nombre restreint de cœurs optimisés pour le traitement en série, alors que les GPU intègrent des milliers de cœurs conçus pour traiter efficacement de nombreuses tâches simultanées.\\
 	Les GPU incluent des milliers de cœurs pour traiter efficacement des tâches parallèles. \\ 
 	 
-%	pARAGRAPHE SUR LES AVANTAGES ET INCONVENIENTS CPU/GPU ICI, MAIS RECHERCHES PRÉALABLES + AVIS DE JOJO
-%	Le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus, bien que les opérations de traitement d'image utilisent souvent le GPU d'une machine, le MIRTK n'est pas capable d'utiliser ce genre d'accélérations matérielles.
-	
+	Le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus,  le MIRTK n'est pas encore capable d'utiliser d'accélérations matérielles telles que l'utilisation de GPU.
 	
 	\section{Cahier des charges}
 	La réduction du temps d'exécution est l'objectif principal du stage. Pour cela, l'amélioration sera portée sur les fonctions les plus atomiques du MIRTK. Dans le cadre du stage, l'intervention se fera au niveau de l'utilisation des bibliothèques mathématiques, et de leur interaction avec les dépendances liées aux backends du MIRTK.\\ ~\par
 	
 	Un backend (parfois aussi appelé un arrière-plan) est un terme ayant différentes significations dans le domaine informatique. Concernant MIRTK, il s'agit du lien entre le support physique d'exécution et le logiciel. On l'oppose au front-end (aussi appelé un frontal) qui, lui, correspond au code source du MIRTK. \\ ~\par
-	%retirer ca
-%	\t- \textit{CUDA ((Compute Unified Device Architecture)}, qui est compatible pour les GPU de la marque Intel.\\
-%	\t- OpenCL (Open Computing Language), qui est un backend semblable à CUDA, mais compatible avec davantage de dispositifs hardware (y compris certains CPU), puisqu'il est open-source.\\
 	
 	Dans le cadre du stage, les 3 axes de développement ont été définis : \\
 	\\{$\bullet$} Le support de l'exécution sur différents backends, que ce soit pour CPU ou GPU. A l'heure actuelle, la gestion des backends GPU n'est pas assurée par le MIRTK. Dans l'idéal, le MIRTK gérerait automatiquement les backends  pour des performances optimales . Si, par exemple, un ordinateur possède une bonne carte graphique, le MIRTK devra être apte à lui associer le bon backend de manière transparente, puis l'utiliser.\\
@@ -234,16 +229,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	~\par~\par 
 	\t 5) \textbf{Analyse des performances} \\
 	Une analyse des performances obtenues, en comparaison avec le logiciel non-modifié, sera attendue afin de justifier le travail réalisé.
-%	Détailler les objectifs a atteindre idéalement.
-%	- Ajouter ArrayFire à MIRTK, en remplaçant les fonctions d'EIGEN les moins adaptées par les fonctions d'AF. \newline
-%	- Faire un profiling des fonctions concernées par TBB, et interpréter les résultats afin d'élaborer une stratégie pour implanter la programmation // d'AF.\newline
-%	- Supprimer les TBB inutiles ou peu efficaces, et remplacer les autres par l'équivalent d'AF (gfor).\newline
-%	\noindent Dans un premier temps, il faudrait analyser le code de MIRTK sur deux plans:\\~\par 
-%	\t - Les fonctions utilisées par Eigen et qui seraient davantage adaptées avec ArrayFire \\~\par
-%	\t - Les outils de parallélisation et l'utilisation de la bibliothèque TBB \\\\
-%	La première étape se fera simplement en comparant l'utilisation directe de Eigen, ainsi que les interdépendances des fichiers MIRTK avec ceux de la bibliothèque. Cependant, la deuxième demandera une analyse plus approfondie: en plus d'une analyse de code tel que précédemment avec EIGEN, il faudra réaliser un "test de performance" sur certaines fonctions. Ce test est appelé un profilage (ou \textit{profiling} en anglais) et peut analyser différents critères. Ainsi pourrons-nous cibler les fonctions les plus urgentes à modifier, qui sont mal rédigées ou qui demande relativement trop de ressources.
-%	A la suite de ce profilage sera donc élaboré un "plan d'attaque" pour savoir par quelle partie du projet commencer.
-%	\t - A terme, après avoir retiré au maximum les dépendances de MIRTK avec TBB, on pourra commencer des tests de benchmarking afin de vérifier l'amélioration des performances.
+
 	\subsection{Diagramme de GANTT}
 %	 => gantt chart prévisionnel (à mettre en français)
 %	\begin{figure}[h!]
@@ -253,7 +239,8 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 %		\caption{Diagramme de GANTT prévisionnel}
 %		\label{Diagramme de GANTT prévisionnel}
 %	\end{figure}
-\chapter{Réalisation du stage} %faire apparaitre clairement la réalisation des objectifs, avec les concessions
+\chapter{Réalisation du stage} 
+
 Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son intégration dans le MIRTK.
 	\section{Introduction à ArrayFire}
 	ArrayFire est une bibliothèque logicielle open-source, proposant une grande variété de fonctions mathématiques optimisées. Elle propose aussi plusieurs fonctionnalités de manipulations de backends afin d'exécuter le même code sur différentes configurations matérielles.
@@ -306,22 +293,22 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 		\caption{smooth-image}\label{smooth-image}
 		\begin{algorithmic}[1]
 			\Procedure{Naive procedure }{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
-				\State $\textit{af::array InputArray, OutputArray, Kernel}$
+				\State $\textit{Initialization InputArray, OutputArray, Kernel}$
 				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
 				\State $\textit{InputArray} \gets \textit{OutputArray}$
 				\If {$SigmaX > 0$} 
-					\State $\textit{af::array KernelX}$	
+					\State $\textit{Initialization KernelX}$	
 					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$ \Comment  \textit{InitializeKernel} creates a 1D Gaussian kernel
 					\State $\textit{Kernel} \gets \textit{KernelX}$
 				\EndIf
 				\If {$SigmaY > 0$} 
-					\State $\textit{af::array KernelY}$	
+					\State $\textit{Initialization KernelY}$	
 					\State $\textit{KernelY} \gets \textit{InitializeKernel(SigmaY)}$
 					\State $\textit{Kernel} \gets \textit{Kernel*KernelY}$
 
 				\EndIf
 				\If {$SigmaZ > 0$} 
-					\State $\textit{af::array KernelZ}$	
+					\State $\textit{Initialization KernelZ}$	
 					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
 					\State $\textit{Kernel} \gets \textit{Kernel*KernelZ}$
 				\EndIf
@@ -330,75 +317,70 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 			\EndProcedure
 			\State $ $
 			\Procedure{Optimised procedure }{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
-				\State $\textit{af::array InputArray, OutputArray}$
+				\State $\textit{Initialization InputArray, OutputArray}$
 				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
 				\If {$SigmaX > 0$} 
-					\State $\textit{af::array KernelX}$	
+					\State $\textit{Initialization KernelX}$	
 					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$ 
 					\State $\textit{InputArray} \gets \textit{OutputArray}$
 					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelX)}$ \Comment \textit{convolve1} convolves one 3D matrix  \& one 1D matrix 
 				\EndIf
 				\If {$SigmaY > 0$} 
-					\State $\textit{af::array KernelY}$	
+					\State $\textit{Initialization KernelY}$	
 					\State $\textit{KernelY} \gets \textit{InitializeKernel(SigmaY)}$
 					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$ \Comment \textit{reorder} switches dimensions into another order
 					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelY)}$
 					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$
 				\EndIf
 				\If {$SigmaZ > 0$} 
-					\State $\textit{af::array KernelZ}$	
+					\State $\textit{Initialization KernelZ}$	
 					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
 					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
 					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelZ)}$
 					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
 				\EndIf
 				\State $\textit{Output pointer} \gets \textit{OutputArray}$
-			\EndProcedure
-
-%			\State $j \gets \textit{patlen}$
-
-%			\If {$\textit{string}(i) = \textit{path}(j)$}
-%			\State $j \gets j-1$.
-%			\State $i \gets i-1$.
-%			\State \textbf{goto} \emph{loop}.
-%			\State \textbf{close};
-%			\EndIf
-%			\State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
-%			\State \textbf{goto} \emph{top}.
-			
+			\EndProcedure			
 		\end{algorithmic}
 	\end{algorithm}
-	\paragraph{Algorithme de "transform-image"}
-	%	Programmation transparente entre Eigen et ArrayFire.
-	%	Lister les fonctions principales à substituer.
 	
-	% A refaire !!!!
-%	L'une des premières fonctions qui nous a attiré était un filtre, qui avait une implémentation assez simple (un simple produit de convolution de deux matrices). On a donc choisi de s'y intéresser avec ArrayFire.
-%	Ce filtre a été précédemment profilé, il s'agit de la fonction \textit{smooth-image}. La version de MIRTK était déjà implémentée de manière séparable, c'est-à-dire que le floutage est réalisé une dimension après l'autre, et c'est la méthode la plus optimisée pour un tel calcul. Cependant, on a tout de même remplacé l'implémentation existante en intégrant ArrayFire afin de comparer les performances et simplifier le code de la fonction. \\
-%	Dans un premier temps, une implémentation naïve a été initiée en reprenant à zéro le code de la fonction. Le floutage d'une image se fais par un produit de convolution entre la matrice représentant l'image, et le filtre (gaussien), qui est déclaré dans la fonction elle-même. L'implémentation naïve a donc été de réaliser ce produit de convolution de matrices en utilisant la fonction \textit{af::convolve}, qui réalise simplement la convolution du filtre 3D avec l'image 3D, comme on peut le voir ci-dessous:\\
-%	\begin{figure}[h!]
-%		\begin{center}
-%			\includegraphics[width=11cm]{Reports/figures/gaussianblurring.png}
-%		\end{center}	
-%		\caption{Algorithme de flou gaussien incluant Arrayfire - Implémentation naïve}
-%		\label{Algorithme de flou gaussien incluant Arrayfire - Implémentation naïve}
-%	\end{figure}~\par
-%	Afin d'optimiser au maximum la fonction, il faut maintenant la ré-implémenter de la même manière que dans MIRTK, c'est-à-dire de manière séparable. Pour cela on effectue sur chaque dimension un produit de convolution sur la dimension 1 de la matrice, qu'on réordonne après, de telle manière à faire passer les valeurs de la dimension choisie en première dimension: \\
-%	\begin{figure}[h!]
-%		\begin{center}
-%			\includegraphics[width=12cm]{Reports/figures/mygaussianblurring.png}
-%		\end{center}	
-%		\caption{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
-%		\label{Algorithme de flou gaussien incluant Arrayfire - Implémentation optimisée}
-%	\end{figure}~\par
+	
+	\paragraph{Algorithme de "transform-image"}
+~\par
+	
+	\begin{algorithm}[H]
+	\caption{transform-image}\label{transform-image}
+		\begin{algorithmic}[1]
+			\Procedure{Homogeneous transform - NN interpolation}{Input pointer, Output pointer, TransformationMatrix, TransformedPointsArray}
+			\State $\textit{Initialization InputImageArray, InputWorldArray, TransformationArray, OutputArray}$
+			\State $\textit{InputImageArray} \gets \textit{Input Pointer}$
+			\State $\textit{InputWorldArray} \gets \textit{InputImageArray *(Input pointer->ImageToWorldMatrix)}$ 
+			\State \Comment converts the Image (in pixels/voxels) into a spatial representation (in millimeters)
+			\State $\textit{TransformationArray} \gets \textit{TransformationMatrix}$
+			\State $\textit{TransformedPointsArray} \gets \textit{InputWorldArray *  TransformationArray}$ 
+			\State $\textit{OutputArray} \gets \textit{round(TransformedPointsArray)}$ \Comment Applies the NN interpolation 
+			\State $\textit{Output pointer} \gets \textit{OutputArray}$
+			\EndProcedure
+			\State $ $
+			\Procedure{Homogeneous transform - Linear interpolation}{Input pointer, Output pointer, TransformationMatrix, TransformedPointsArray}
+			\State $\textit{Initialization InputImageArray, InputWorldArray, TransformationArray, OutputArray}$
+			\State $\textit{InputImageArray} \gets \textit{Input Pointer}$
+			\State $\textit{InputWorldArray} \gets \textit{InputImageArray * (Input pointer->ImageToWorldMatrix)}$
+			\State $\textit{TransformationArray} \gets \textit{TransformationMatrix}$
+			\State $\textit{TransformedPointsArray} \gets \textit{InputWorldArray * TransformationArray}$
+		    \State $ ???? $
+			\State $\textit{Output pointer} \gets \textit{OutputArray}$
+			\EndProcedure
+		\end{algorithmic}
+	\end{algorithm}
+
 	\subsection{Dette technique}
-	%	Optimisation des threads et suppression de TBB au profit de ArrayFire.
+
 	
 c++ => langage qui vieillit, programmé en application de kernels successivement sur tous les voxels	//
 Kernels en voxel/voxel => bien qu'optimisé, n'atteindra jamais les performances de fonctions vectorisees.
 	
-	
-	%	\newline
+
 	%	Le contenus des sous-parties, ainsi que d'éventuelles d'autres sous-parties dépendront du résultat du profilage.
 	
 	\section{Évaluation des performances}
@@ -406,7 +388,7 @@ Kernels en voxel/voxel => bien qu'optimisé, n'atteindra jamais les performances
 	%	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
 Un profilage est une étude de comportement d'un programme lors de son exécution. Cette étape est un relevé de performances du MIRTK, et, de même que toutes les démarches utilisées dans la partie "Evaluation de performances", ne modifie aucunement le code source du MIRTK. 
 
-		\subsubsection{Configuration}
+		\subsubsection{a) Configuration}
 			\paragraph{Choix du profileur}~\par
 
 Avant d'effectuer un profilage, il a en premier lieu été nécessaire de choisir le bon outil de profilage. Pour le choisir, ont été définis deux principaux critères:\\
@@ -461,10 +443,10 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 %	%	Expliquer le choix de valgrind, parmi les autres profileurs
 %	% => projet open-source multi-plateforme et disponible dans les packages linux, autres alternatives étudiées (VTUNE intel, installation compliquée, et codeXL, valgrindqui nécessite des proc AMD).\\
 %		
-		\subsubsection{Résultats}
+		\subsubsection{b) Résultats}
 		La suite d'outils de Valgrind permet d'étudier deux différents critères au travers de deux modules appelés Callgrind et Cachegrind.\\
 		Callgrind va étudier le coût, en nombre d'instructions CPU, des fonctions du programmes profilé. Chaque instruction ayant le même temps d'exécution, le nombre d'instructions est proportionnel au temps. L'évolution relative du nombre d'instructions est donc équivalente à celle du temps d'exécution.\\
-		Cachegrind est un module qui simule l'interaction du programme avec la hiérarchie des caches et la prédiction des branches. Les caches représentent une partie de la mémoire informatique, qui enregistre temporairement des copies de données provenant d'une source, afin de diminuer le temps d'un nouvel accès d'un CPU à ces données. Comme représenté en figure \ref{Différents niveaux de mémoire d'un microprocesseur}, il y a plusieurs niveaux de mémoire entre un CPU et sa mémoire principale. 
+		Cachegrind est un module qui simule l'interaction du programme avec la hiérarchie des caches. Les caches représentent une partie de la mémoire informatique, et enregistrent temporairement des copies de données provenant d'une source, afin de diminuer le temps d'un nouvel accès d'un CPU à ces données. Comme représenté en figure \ref{Différents niveaux de mémoire d'un microprocesseur}, il y a plusieurs niveaux de mémoire entre un CPU et sa mémoire principale. 
 
 		\begin{figure}[h!]
 			\begin{center}
