@@ -347,7 +347,7 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	
 	\paragraph{Algorithme de "transform-image"}
 ~\par
-	
+	A modifier :
 	\begin{algorithm}[H]
 	\caption{transform-image}\label{transform-image}
 		\begin{algorithmic}[1]
@@ -378,10 +378,9 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 
 	Le MIRTK est un logiciel dont le code source dérive de celui d'un logiciel plus ancien, appelé IRTK (Image Registration ToolKit). Cependant, peu d'améliorations techniques y ont été ajouté lors de sa refonte en MIRTK. C'est-à-dire que le langage employé, le C++, a été conservé, ou encore que les classes et structures de données ont été simplement étoffées de nouveaux attributs et méthodes. \\
 	
-	Devenant un logiciel de plus en plus abouti, le code source du MIRTK à renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. Ces interdépendances sont devenues tellement omniprésentes que l'intégration d'ArrayFire dans le MIRTK a dû se réaliser sur des fonctions dont l'implémentation est relativement simple. \\
+	Devenant un logiciel de plus en plus abouti, le code source du MIRTK à renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. Ces interdépendances sont devenues tellement omniprésentes que l'intégration d'ArrayFire dans le MIRTK a dû se restreindre à des fonctions dont l'implémentation est relativement simple. \\
 	
-	De plus, outre la complexité du code, 
-	
+	De plus, outre la complexité du code, le MIRTK fonctionne en utilisant des filtres appliqués sur chaque voxel indépendamment. Par exemple, un floutage d'image appliquera un même calcul sur la totalité des voxels de l'image. L'un des problèmes, au niveau des performances de calcul, de cette pratique, est qu'il n'y a que très peu de potentiel d'amélioration. Autrement dit, un logiciel bien optimisé qui utilise cette méthode n'est pas capable d'atteindre les performances d'un logiciel procédant à l'aide de calculs vectorisés. Plus les données à traiter seront importantes, plus le calcul vectoriel devient ainsi rentable.
 	
 %c++ => langage qui vieillit, programmé en application de kernels successivement sur tous les voxels	//
 %Kernels en voxel/voxel => bien qu'optimisé, n'atteindra jamais les performances de fonctions vectorisees.
@@ -461,11 +460,11 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 			\caption{Différents niveaux de mémoire d'un microprocesseur}
 			\label{Différents niveaux de mémoire d'un microprocesseur}
 		\end{figure}~\par
-		Sur la figure précédente sont représenté 2 niveaux de mémoire cache, mais il est possible d'avoir plus ou moins de niveaux.
+		Sur la figure \ref{Différents niveaux de mémoire d'un microprocesseur} sont représenté 2 niveaux de mémoire cache, mais il est possible d'avoir plus ou moins de niveaux.
 		Les différents niveaux de mémoire cache sont désignés de la manière suivante : Level 1 (abrégé L1), Level 2 (abrégé L2) ... et le dernier niveau : Last Level (abrégé LL). Les niveaux de cache les plus bas correspondent aux caches les plus proches du CPU. 
 		
 		\paragraph{Analyse du nombre d'instructions}
-%		
+
 		
 		\begin{wrapfigure}{r}{7.2cm}
 			\includegraphics[height=10cm]{Reports/figures/smooth_image_costs.eps}
@@ -486,13 +485,11 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 		\end{figure}~\par
 %		L'interpolation gaussienne est donc parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}.
 %		
-		\paragraph{Analyse des fuites de cache}
+		\paragraph{Analyse des fuites de cache}~\par
+		En plus des fuites de caches, CacheGrind est capable de relever d'autres informations pertinentes telles que les erreur de prédiction de branchement.\\
+		La prédiction de branchement est une fonctionnalité d'un processeur qui lui permet de prédire le résultat d'un branchement. Avec cette technique, le processeur va faire de l’exécution spéculative : il va parier sur le résultat d'un branchement, et va poursuivre l’exécution du programme avec le résultat du pari. Si le pari échoue, les instructions chargées par erreur sont annulées. Dans ce cas-ci, CacheGrind relèvera une mauvaise prédiction de branche. \\
+		\\Pour "transform-image", CacheGrind indique relativement peu de fuites de caches, mais, en revanche, le taux de mauvaise prédiction de branche vaut entre 10\% et 20\% en fonction de l'interpolation choisie. De plus, le taux de variation des mauvaises prédictions de branches et de fuites de caches est très faibles entre un code sérialisé et un code parallélisé avec les fonctionnalités présentes dans le MIRTK.
 
-%		Un deuxième critère intéressant à regarder, au travers du profilage, est la quantité de fuites de caches à l'exécution de la fonction étudiée. Bien que la parallélisation ne soit pas toujours optimale, elle peut néanmoins être parfois délaissée au profit d'une gestion de fuites de caches plus poussée.
-%		
-%		\subparagraph{Qu'est-ce qu'une fuite de cache?}
-%		\textit{?????}\\
-%		Ci-dessous est détaillé l'histogramme de la quantité des fuites de caches pour \textit{transform-image}, dans chaque mode d'interpolation:
 			\begin{figure}[h!]
 				\begin{center}
 					\includegraphics[width=15cm]{Reports/figures/cache_misses_transform_image.eps}
@@ -500,12 +497,6 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 				\caption{Fuites de cache pour la fonction transform-image}
 				\label{Fuites de cache pour la fonction transform-image}
 			\end{figure}~\par
-%		Les valeurs données ci-dessus (en pourcentage) sont assez mal réparties, mais le faible "cache miss rate" (taux de fuites de caches) est très faible. Le seul taux non négligeable est celui des mauvaises prédictions de branche, qui peut être considéré comme une fuite de cache, mais un taux inférieur à 20 \% reste négligeable. 
-%		~\par
-%		MIRTK est donc bien conçu au niveau de la gestion de la mémoire cache, alors que le système de parallélisation est largement améliorable.
-
-%	\subsection{Switch automatique de back-end}
-%	Commandes prépocesseur pour indiquer au logiciel quel est le back-end à utiliser (ArrayFire ou Eigen) en fonction de l'opération souhaitée.
 
 	\subsection{Analyse}
 %	(partie dépendante du déroulement du projet)\newline
@@ -515,7 +506,9 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 	
 \chapter{Améliorations et perspectives}
 	\section{A cours terme}
-		De plus, puisque ArrayFire remplace maintenant les fonctions \textit{smooth-image} et \textit{transform-image}, un réusinage de son code est nécessaire, afin d'éliminer les doublons, ou les attributs et méthodes qui ne sont plus utiles.
+	Une fois le stage achevé sur le plan technique, les modifications apportées vont parfois annuler l'utilisation de certains attributs et/ou méthodes de classes. Ces variables se retrouveront donc non-utilisées. De même, certaines fonctionnalités d'ArrayFire ont remplacé d'anciennes fonctions du MIRTK, et la présence de doublons est encore possible. L'étape prioritaire après le stage sera de réorganiser la structure du code par réusinage.\\
+	\\Par la suite, d'autres fonctions du MIRTK pourront être ré-implémentées avec ArrayFire afin d'encore améliorer les performances du module de recalage du logiciel.
+%		De plus, puisque ArrayFire remplace maintenant les fonctions \textit{smooth-image} et \textit{transform-image}, un réusinage de son code est nécessaire, afin d'éliminer les doublons, ou les attributs et méthodes qui ne sont plus utiles.
 	\section{A long terme}
 %uk biobank
 \chapter*{Conclusion} % dans cet ordre
@@ -529,12 +522,12 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 \url{http://www.ukbiobank.ac.uk/about-biobank-uk/} : inspiration pour le paragraphe 1.2.2 (UK BioBank)\\
 \url{http://ric.uthscsa.edu/mango/papaya/index.html} : outil de visualisation d'images en format NIFTI\\
 \url{https://wiki.imperial.ac.uk/display/HPC/Systems} : données sur la grille de calcul de l'Imperial College\\
-\url{http://www.egi.eu/} : données sur la grille européenne de calcul
+\url{http://www.egi.eu/} : données sur la grille européenne de calcul\\
 \url{https://fr.wikipedia.org/wiki/Parall\%C3\%A9lisme_\%28informatique\%29} : définition de la parallélisation, partie 2.1\\
 \url{https://fr.wikipedia.org/wiki/R\%C3\%A9usinage_de_code} :  définition d'un réusinage \\
 \url{http://www.nvidia.fr/object/gpu-computing-fr.html}: explication du calcul sur GPU en 2.1\\
 ProGit\\
-
+\url{https://fr.wikipedia.org/wiki/Pr\%C3\%A9diction_de_branchement}: définition d'une prédiction de branchement.\\
 
 \renewcommand{\listfigurename}{Table des illustations}\listoffigures 
 \addcontentsline{toc}{chapter}{Table des illustrations}
@@ -553,6 +546,7 @@ ProGit\\
 \textbf{Environnement d'exécution:}\\
 \textbf{CPU:}\\
 \textbf{GPU:}\\
+\textbf{Voxel:}\\
 \textbf{Réusinage d'un code (ou \textit{code refactoring}, en anglais):} opération consistant à retravailler le code source d'un programme informatique (sans toutefois y ajouter des fonctionnalités ni en corriger les bogues) de façon à en améliorer la lisibilité et par voie de conséquence la maintenance, ou à le rendre plus générique (afin par exemple de faciliter le passage de simple en multiple précision); on parle aussi de « remaniement ». 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
