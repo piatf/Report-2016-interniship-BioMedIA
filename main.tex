@@ -278,13 +278,9 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	\subsection{Filtres concernés}
 	La finalité de la plupart des exécutables du MIRTK est de contribuer directement ou indirectement au module de recalage du logiciel. 
 	
+	Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par la recherche d'une transformation géométrique permettant de passer d'une image à une autre.
+	
 	~\par
-	ICI UNE EXPLICATION DU FONCTIONNEMENT DU RECALAGE??
-	
-	
-	 Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par la recherche d'une transformation géométrique permettant de passer d'une image à une autre.
-	 source: wikipédia
-	\\~\par
 	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, deux fonctions ont été traitées: \textit{smooth-image} et \textit{transform-image}.
 	\paragraph{Algorithme de "smooth-image"}
 ~\par
@@ -508,8 +504,10 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 	\section{A cours terme}
 	Une fois le stage achevé sur le plan technique, les modifications apportées vont parfois annuler l'utilisation de certains attributs et/ou méthodes de classes. Ces variables se retrouveront donc non-utilisées. De même, certaines fonctionnalités d'ArrayFire ont remplacé d'anciennes fonctions du MIRTK, et la présence de doublons est encore possible. L'étape prioritaire après le stage sera de réorganiser la structure du code par réusinage.\\
 	\\Par la suite, d'autres fonctions du MIRTK pourront être ré-implémentées avec ArrayFire afin d'encore améliorer les performances du module de recalage du logiciel.
-%		De plus, puisque ArrayFire remplace maintenant les fonctions \textit{smooth-image} et \textit{transform-image}, un réusinage de son code est nécessaire, afin d'éliminer les doublons, ou les attributs et méthodes qui ne sont plus utiles.
+
 	\section{A long terme}
+	Comme détaillé dans les parties 1.2.2 et 2.1, le projet UK BioBank rassemblera d'importantes données d'imagerie. Le logiciel traitant ces images devra être cependant plus performant que le MIRTK actuel. En effet, malgré les résultats prometteurs du stage, la modification des fonctions telle qu'initiée ne permettra pas, à terme d'obtenir un logiciel aux performances optimales. \\
+	\\Puisque les concepts logiciels utilisé dans le MIRTK sont, pour l'instant, optimisés pour des calculs sur les voxels de l'image, le MIRTK devra être modifié au niveau de ses structures de données et de ses classes pour favoriser au mieux l'amélioration des performances initiée par ArrayFire. Dans cet optique, il sera nécessaire d'orienter les classes du MIRTK vers des vecteurs et des matrices, et dont les méthodes faciliteront des calculs vectorisés.
 %uk biobank
 \chapter*{Conclusion} % dans cet ordre
 \addcontentsline{toc}{chapter}{Conclusion}
@@ -528,7 +526,7 @@ Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les crit�
 \url{http://www.nvidia.fr/object/gpu-computing-fr.html}: explication du calcul sur GPU en 2.1\\
 ProGit\\
 \url{https://fr.wikipedia.org/wiki/Pr\%C3\%A9diction_de_branchement}: définition d'une prédiction de branchement.\\
-
+\url{https://fr.wikipedia.org/wiki/Recalage_d'images}: définition du recalage d'images.\\
 \renewcommand{\listfigurename}{Table des illustations}\listoffigures 
 \addcontentsline{toc}{chapter}{Table des illustrations}
 \chapter*{Glossaire}
