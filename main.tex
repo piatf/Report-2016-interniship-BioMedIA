@@ -133,11 +133,11 @@
 mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\end{lstlisting}
 	
-	Sur cette ligne de commande:
-	\\{$\bullet$} "mirtk" indique que la commande à exécuter est une commande du MIRTK.
-	\\{$\bullet$} "extract-image-region" est la commande désirée. Celle-ci effectue un rognage.
-	\\{$\bullet$} "input.nii.gz" indique l'emplacement de l'image d'entrée, idem pour la sortie avec "output.nii.gz". Ces fichiers sont au format NIFTI (ici compressées).
-	\\{$\bullet$} "-Ry1 200 -Ry2 100" permet de spécifier la région sur laquelle le rognage est effectué. Ici, dans le cadre d'une étude de la section abdominale par exemple, la hauteur de l'image est réduite à la zone d'étude. 
+	\noindent Sur cette ligne de commande:\\
+	\t{$\bullet$} \textbf{"mirtk"} indique que la commande à exécuter est une commande du MIRTK.\\
+	\t{$\bullet$} \textbf{"extract-image-region"} est la commande désirée. Celle-ci effectue un rognage.\\
+	\t{$\bullet$} \textbf{"input.nii.gz"} indique l'emplacement et le nom de l'image d'entrée, idem pour la sortie avec \textbf{"output.nii.gz"}. Ces fichiers sont au format NIFTI (ici compressées).\\
+	\t{$\bullet$} \textbf{"-Ry1 200 -Ry2 100"} permet de spécifier la région sur laquelle le rognage est effectué. Ici, dans le cadre d'une étude de la section abdominale par exemple, la hauteur de l'image est réduite à la zone d'étude. \\
 	\\L'action de cette ligne de commande est visualisable sur la Figure \ref{Effet de la fonction "extract-image-region"}.
 	
 	\begin{figure}[h!]
@@ -170,113 +170,100 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 \chapter{Objectifs et cahier des charges}
 	Ce chapitre détaille la motivation du stage, le cahier des charges et la planification des différentes étapes du projet.
 	\section{Problématique} 
-	Jusqu'ici, le MIRTK a été utilisé pour des études de tailles modestes, dont la validation s'effectue sur une dizaine ou une centaine de patients. Pour cet ordre de grandeur, les performances actuelles du MIRTK sont suffisantes. Cependant avec UK BioBank, cette ordre de grandeur va être multiplié par 10, 100, voire 1000 et le moindre gain de performances, à l'échelle du MIRTK, impactera le temps d'exécution globale sur la base de données UK BioBank.\\ ~\par
+	Jusqu'ici, le MIRTK a été utilisé pour des études de tailles modestes, dont la validation s'effectue sur une dizaine voire une centaine de patients. Pour cet ordre de grandeur, les performances actuelles du MIRTK sont suffisantes. Cependant avec UK BioBank, cette ordre de grandeur va être multiplié par 10, 100, voire 1000 et le moindre gain de performances, à l'échelle du MIRTK, impactera le temps d'exécution globale sur la base de données UK BioBank.\\ ~\par
 	
-	Pour traiter un grand nombre de données, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution:
+	Afin d'accélérer leur temps de traitement, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution:
 	\\{$\bullet$}\textbf{ sur une machine en local}, 
-	qui distribuera les tâches sur différents cœurs d'exécution. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines cœurs.  
-	\\{$\bullet$}\textbf{ une solution d'ordonnancement de tâches informatiques}, tel que SLURM \textit{(Simple Linux Utility for Resource Management)}, qui permettrait de déployer et gérer des tâches simultanément sur plusieurs machines. 
-	\\{$\bullet$}\textbf{ une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécutions) et mise à disposition d'entreprises et/ou de chercheurs. Selon la quantité de ressources nécessitées, il existe des grilles de tailles différentes : \\
+	qui distribuera les tâches sur différents cœurs d'exécution et profitera des divers niveaux de cache du processeur pour accélérer les accès mémoire. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines cœurs et jusqu'à 20 MB de mémoire cache.
+	\\{$\bullet$}\textbf{une solution d'ordonnancement de tâches informatiques}, tel que SLURM \textit{(Simple Linux Utility for Resource Management)}, qui permettrait de déployer et gérer des tâches simultanément sur plusieurs machines. 
+	\\{$\bullet$}\textbf{une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécutions) et mise à disposition d'entreprises et/ou de chercheurs. \newline
+	Par exemple, les chercheurs du laboratoire BioMedIA utilisent les grilles suivantes : \\
 	\t - La grille de l'Imperial College, qui s'étend à tout le réseau de machines de l'université, mais qui est un service payant. Cette grille met au total 5300 cœurs d'exécution à disposition.\\
 	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques aux organismes européens de recherche. Ces services comprennent des environnements d'exécutions et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution, la grille fournit au total plus de 650 000 cœurs.
-	\\{$\bullet$}\textbf{ sur un "cloud"}, c'est-à-dire un service par des entreprises telles que Google ou Amazon, qui autorise la location d'un serveur distant. Cette procédure moyenne cependant un coût croissant proportionnellement au temps de location.\\ ~\par
-	En revanche, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un cloud serait payant, avec un prix croissant selon le temps d'exécution. Semblablement, un slurm ou une grille de calculs mutualisée utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'autres tâches. La réduction du temps d'exécution du MIRTK représenterait un coût moindre dans un cas, sinon un impact plus faible sur les ressources mutualisées.\\ ~\par
-	Par conséquent, plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'enchaînement des commandes sur un réseau de différentes machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"Interfaçage de fonctions de traitement d'images médicales à une bibliothèque Python et intégration dans un outil de workflow".\\
+	\\{$\bullet$}\textbf{ dans le "cloud"}, c'est-à-dire un service proposé par des entreprises telles que Microsoft ou Amazon, qui permet la location d'un serveur distant, moyennant un certain coût. \\ ~\par
+	En revanche, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un cloud implique un coût qui peut rapidement devenir prohibitif. Un slurm ou une grille de calculs mutualisée utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'autres tâches. La réduction du temps d'exécution du MIRTK représenterait un coût moindre dans un cas, sinon un impact plus faible sur les ressources mutualisées.\\ ~\par
+	Plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'exécution multi-machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"Interfaçage de fonctions de traitement d'images médicales à une bibliothèque Python et intégration dans un outil de workflow".\\
 	\vspace{-0.7cm}
-	\begin{wrapfigure}[20]{r}{9cm}
-		\includegraphics[width=10cm]{Reports/figures/gfor.eps}	
+
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=14cm]{Reports/figures/gfor.eps}	
+		\end{center}
 		\caption{Fonctionnement d'une boucle en parallèle}
 		\label{Fonctionnement d'une boucle en parallèle}
-	\end{wrapfigure}
-	
+	\end{figure}
 	~\par~\par
 	Une autre possibilité d'optimisation sera la réduction du temps d'exécution sur une machine. Pour cela, le MIRTK utilise une technique d'optimisation appelée "la parallélisation" d'un code. 
 	A l'inverse de l'exécution séquentielle, la parallélisation consiste à mettre en œuvre des architectures d'électronique numérique permettant de traiter des informations de manière simultanée, ainsi que les algorithmes spécialisés pour celles-ci. Ces techniques ont pour but de réaliser le plus grand nombre d'opérations en un temps le plus court possible.
 	Un algorithme adapté pour la parallélisation partage l'exécution globale d'un programme en plusieurs "blocks" d'exécution, chacun correspondant à un groupe d'instructions. La figure \ref{Fonctionnement d'une boucle en parallèle} ci-contre représente ce principe avec des blocks de 2 itérations.\\
 
 	
-	Le calcul par le GPU permet de paralléliser les tâches et d'offrir un maximum de performances dans de nombreuses applications : le GPU accélère les portions de code les plus lourdes en ressources de calcul, le reste de l'application restant affecté au CPU. Les applications des utilisateurs s'exécutent ainsi bien plus rapidement.\\
-	Pour comprendre les différences fondamentales entre un CPU et un GPU, il suffit de comparer leur manière de traiter chaque opération. Les CPU incluent un nombre restreint de cœurs optimisés pour le traitement en série, alors que les GPU intègrent des milliers de cœurs conçus pour traiter efficacement de nombreuses tâches simultanées.\\
+	Le calcul par le GPU, ou le GPGPU (General-Purpose computing on Graphics Processing Units) permet de paralléliser les tâches et d'offrir un maximum de performances dans de nombreuses applications : le GPU accélère les portions de code les plus lourdes en ressources de calcul, le reste de l'application étant géré par le CPU. Les applications des utilisateurs s'exécutent ainsi bien plus rapidement.\\
+	Pour comprendre les différences fondamentales entre un CPU et un GPU, il suffit de comparer leur manière de traiter chaque opération. Les CPU incluent un nombre restreint de cœurs optimisés pour l'exécution de noyaux complexes, alors que les GPU intègrent des milliers de cœurs conçus pour traiter efficacement de nombreux noyaux simples simultanément.\\
 	Les GPU incluent des milliers de cœurs pour traiter efficacement des tâches parallèles. \\ 
 	 
-	Le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus,  le MIRTK n'est pas encore capable d'utiliser d'accélérations matérielles telles que l'utilisation de GPU.
+	A l'heure actuelle, le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus,  le MIRTK n'est pas encore capable d'utiliser d'accélérations matérielles telles que l'utilisation de GPU.
 	
 	\section{Cahier des charges}
-	La réduction du temps d'exécution est l'objectif principal du stage. Pour cela, l'amélioration sera portée sur les fonctions les plus atomiques du MIRTK. Dans le cadre du stage, l'intervention se fera au niveau de l'utilisation des bibliothèques mathématiques, et de leur interaction avec les dépendances liées aux backends du MIRTK.\\ ~\par
+	La réduction du temps d'exécution est l'axe principal de développement du stage. Pour cela, l'amélioration devra se concentrer sur les fonctions élementaires du MIRTK les plus consommatrices en ressource de calcul. Dans le cadre du stage, l'intervention se fera au niveau de son implémentation concrète sur CPU et GPU, appelée "backend" par la suite.\\ ~\par
 	
-	Un backend (parfois aussi appelé un arrière-plan) est un terme ayant différentes significations dans le domaine informatique. Concernant MIRTK, il s'agit du lien entre le support physique d'exécution et le logiciel. On l'oppose au front-end (aussi appelé un frontal) qui, lui, correspond au code source du MIRTK. \\ ~\par
-	
-	Dans le cadre du stage, les 3 axes de développement ont été définis : \\
-	\\{$\bullet$} Le support de l'exécution sur différents backends, que ce soit pour CPU ou GPU. A l'heure actuelle, la gestion des backends GPU n'est pas assurée par le MIRTK. Dans l'idéal, le MIRTK gérerait automatiquement les backends  pour des performances optimales . Si, par exemple, un ordinateur possède une bonne carte graphique, le MIRTK devra être apte à lui associer le bon backend de manière transparente, puis l'utiliser.\\
-	\\{$\bullet$} Garder l'intégrité et la transparence du code du MIRTK. Il sera imposé de garder la même interface et les mêmes ligne de commande afin de conserver l'intégrité des applications actuelles du MIRTK.  \\
-	\\{$\bullet$} Dans la mesure du possible, un réusinage devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
+	\noindent Dans le cadre du stage, les besoins suivants ont été définis : \\
+	\\{$\bullet$} Adapter l'exécution du MIRTK sur GPU. A l'heure actuelle, le MIRTK utilisent uniquement les quelques cœurs d'un processeur et ne tire pas encore l'avantage des capacités d'un GPU.\\
+	\\{$\bullet$} Conserver une exécution transparente du code, en n'altérant ni les lignes de commandes utilisées, ni le résultat attendu.  \\
+	\\{$\bullet$} Dans la mesure du possible, un réusinage du code devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
 	\section{Planification}
 	\subsection{Objectifs} 
-	Les objectifs ont été établis de manière chronologique, de la manière suivante: 
+	Les objectifs de stage sont définis de la manière chronologique suivante:
 	~\par~\par 
 	1) \textbf{Étude du MIRTK et de ses dépendances} \\
-	Cette étape préliminaire permettra de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. 
+	Cette étape préliminaire a pour but de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. 
 	~\par~\par 
 	2)\textbf{Analyse de l'interface d'ArrayFire} \\
-	Dans le même temps, l'analyse de l'interface d'ArrayFire, une bibliothèque mathématique optimisée, et des différentes fonctions proposées par la bibliothèque sera entreprise. Cette étude corrélera les besoins du MIRTK et les solutions proposées par ArrayFire.
+	Dans le même temps, une analyse de l'interface d'ArrayFire, une bibliothèque mathématique optimisée, et des différentes fonctions proposées par la bibliothèque sera entreprise. Cette étude corrélera les besoins du MIRTK et les solutions proposées par ArrayFire.
 	~\par~\par 
-	3) \textbf{Profilage du MIRTK}\\
-	Un profilage du logiciel en amont de l'implémentation permettra de visualiser les performances du logiciel non-modifié.	
-	Après le profilage des fonctions principales du recalage d'image, celles qui auront les plus médiocres performances seront travaillées en premier par la suite.
+	\t 3) \textbf{Intégration de ArrayFire dans le MIRTK} \\
+	L'étape fondamentale du stage sera la ré-implémentation de différentes fonctions du MIRTK avec l'intégration des outils apportés par ArrayFire.
 	~\par~\par 
-	\t 4) \textbf{Intégration de ArrayFire dans le MIRTK} \\
-	L'étape fondamentale du stage sera la ré-implémentation de différentes fonctions du MIRTK. Tout en intégrant les fonctionnalités mathématiques d'ArrayFire. Il faudra ensuite utiliser ArrayFire pour implémenter l'utilisation optimisée des backends avec le MIRTK.
-	~\par~\par 
-	\t 5) \textbf{Analyse des performances} \\
-	Une analyse des performances obtenues, en comparaison avec le logiciel non-modifié, sera attendue afin de justifier le travail réalisé.
-
+	\t 4) \textbf{Analyse des performances} \\
+	Un profilage du MIRTK sera effectuée avant et après la modification du code source.
+\newpage
 	\subsection{Diagramme de GANTT}
-%	 => gantt chart prévisionnel (à mettre en français)
-%	\begin{figure}[h!]
-%		\begin{center}
-%			\includegraphics[width=18cm]{Reports/figures/estimated_gantt.png}
-%		\end{center}	
-%		\caption{Diagramme de GANTT prévisionnel}
-%		\label{Diagramme de GANTT prévisionnel}
-%	\end{figure}
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=18cm]{ganttchart.png}
+		\end{center}	
+		\caption{Diagramme de GANTT du stage}
+		\label{Diagramme de GANTT du stage}
+	\end{figure}
+	Durant la première partie du stage, il était convenable de combiner de manière parallèle l'étude de l'interface d'ArrayFire et l'étude du MIRTK. De cette manière, j'ai pu corréler les fonctions utiles dans le MIRTK et les outils semblables disposés par ArrayFire.\\
+	Le profilage a ensuite été le lien entre la phase d'étude et celle d'implémentation. \\
+	Par manque de temps, la gestion optimisée des backends n'a pas été abordé, afin de finaliser le stage convenablement et d'obtenir tout de même quelques relevés de performances.
 \chapter{Réalisation du stage} 
 
 Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son intégration dans le MIRTK.
 	\section{Introduction à ArrayFire}
 	ArrayFire est une bibliothèque logicielle open-source, proposant une grande variété de fonctions mathématiques optimisées. Elle propose aussi plusieurs fonctionnalités de manipulations de backends afin d'exécuter le même code sur différentes configurations matérielles.
 	\subsection{Les fonctions mathématiques}
-	ArrayFire utilise un type de variable appelé \textit{af::array} ("array" signifiant "tableau" en anglais). Un \textit{af::array} contient une ou plusieurs valeurs d'un même type, dans une structure de données semblables à la représentation mathématique d'une matrice. Ces matrices traitent tous les types numériques de variables, et peuvent être de une, deux, trois, ou quatre dimensions. ~\par 
+	L'interface d'ArrayFire repose sur la manipulation d'un type générique de tableau nommé \textit{af::array}. Celui-ci peut contenir tout type de valeurs numériques (entier, flottant ou complexe) et peut être utiliser pour représenter des structures de données allant jusqu'à 4 dimensions, comme des vecteurs, matrices, images, volumes, ou série de volumes. Ce type présente plusieurs constructeurs, et ceux-ci peuvent faire appel à une variable appelée \textit{af::dim4} qui est un ensemble de 4 entiers définissant la taille du \textit{af::array} sur chacune de ses dimensions.\\ ~\par 
 	
-	Autour de ce type s'articulent de nombreuses fonctions issues d'algèbre linéaire, de traitement du signal, et d'algorithmes vectoriels. %contenu a rajouter 
+	\noindent Autour de ce type s'articulent deux types de fonctions:\\ ~\par 
+	- Des fonctions mathématiques basiques qui traitent d'algèbre linéaire, telles que des factorisations, décompositions ou opérations de matrices. Jointes à un jeu de fonctions de manipulations de matrices, cet ensemble constitue un noyau de fonctionnalités mathématiques complet. Dans le cas où ArrayFire ne couvre pas une fonctionnalité particulière, il est facile de l'étendre grâce à ces quelques fonctionnalités de base. Pour des fonctionnalités plus complexes, ArrayFire met à disposition un outil appelé \textit{"GFOR"}, qui représente l'équivalent d'une boucle \textit{"FOR"} classique vectorisée. \\~\par 
+	- Des fonctions appliquées à divers domaines scientifiques, qui met à disposition des chercheurs en traitement d'images, en traitement du signal, ou en statistiques, une interface pourvue d'outils simple à utiliser. La vectorisation de certaines de ces fonctions peut, grâce à un paramètre supplémentaire, être volontairement activée ou désactivée. Dans le cadre du stage, les fonctions de traitement d'images seront insuffisantes car uniquement appliquées sur des images en 2 dimensions, alors que le MIRTK traite aussi des images en 3 et 4 dimensions. Il sera en revanche possible de s'inspirer de leur implémentation.\\
+	
+	 %contenu a rajouter 
 	~\par 
-	Cependant, une fonction de calcul des valeurs propres d'une matrice n'est pas fournie par ArrayFire. Une telle fonction étant utilisée par le MIRTK, il a fallu l'implémenter manuellement avec ArrayFire, ce qui a fait office d'exercice pour se familiariser avec ses fonctions d'algèbre linéaire. Le code source de cette fonction est exposé en \textbf{Annexe 2}. Dans ce code ont été utilisées quelques fonctions issues d'ArrayFire :\\~\par
-	{$\bullet$} \underline{\textit{array identity(const long d0, const long d1)}}: 
-	retourne un array représentant une matrice identité (1 sur la diagonale, 0 sinon) dont la taille des dimensions est passées en paramètres. Cet exemple confirme la déclaration d'une matrice en 2 dimensions.\\~\par
-	{$\bullet$} \underline{\textit{array constant(double val, const long d0, const long d1)}}: retourne un array représentant une matrice pleine. Elle est remplie avec une seule et même valeur, passée en premier paramètre. Les paramètres suivants correspondent à la taille des dimensions de la matrice.\\~\par
-	{$\bullet$} \underline{\textit{array abs(const array \&in)}}: retourne une matrice dont les valeurs sont égales aux valeurs absolues de la matrice d'entrée.\\~\par
-	{$\bullet$} \underline{\textit{array diag(const array \&in, const int num=0, const bool extract=true)}}:
-	retourne un array contenant les valeurs de la diagonale d'un array passé en paramètre. Par défaut, les valeurs retournées proviennent de la diagonale du milieu et sont stockées dans un vecteur colonne. La modification du deuxième paramètre permet d'obtenir les valeurs d'une diagonale qui n'est pas celle du milieu. La modification du dernier paramètre permet de retourner une matrice de taille identique à celle d'entrée, contenant uniquement les valeurs de la diagonale choisie.\\~\par
-	{$\bullet$} \textit{\underline{void max(array \&val, array \&idx, const array \&in)}} Attribue la valeur maximum d'un array passé en (troisième) paramètre à la valeur en premier paramètre. Le second paramètre récupère l'indice de ce maximum.\\~\par
-	{$\bullet$} \underline{\textit{array matmul(const array \&lhs, const array \&rhs)}}: retourne un array, résultat du produit matriciel des deux arrays en paramètres. Par la suite, la fonction \underline{\textit{array matmul(const array \&a, const array \&b, const array \&c)}} est employée, et effectue deux produits matriciels consécutifs. \\~\par
-	{$\bullet$} \textit{\underline{array transpose(const array \&in)}}: retourne un array représentant la matrice transposée de l'array passé en paramètre.\\~\par
+
+	\subsection{La gestion des backends}
 	
-	Ces quelques fonctions reflètent la forme de l'interface d'ArrayFire, mais ne représentent en aucun cas une liste exhaustive des fonctions disponibles.\\~\par
-	Outre les fonctionnalités mathématiques qu'elles fournissent, les fonctions d'ArrayFire sont optimisées en termes de performances. Ces fonctions étant structurées de manière à traiter des vecteurs de données.  
-	
-		%Algèbre linéaire, manipulations de matrices...
-	\subsection{Les fonctionnalités d'optimisation}
-	
-	ArrayFire dispose aussi d'un ensemble de fonctions permettant de manipuler des backends. La fonction suivante initialise le backend choisi:
-	\underline{\textit{void setBackend(const Backend bknd)}}. \\Grâce à cette fonction, toute la partie du code située après cette commande sera exécutée avec ce backend, jusqu'à la fin du programme ou jusqu'à un autre appel de \underline{\textit{void setBackend(const Backend bknd)}}. Cette fonctionnalité permet d'interagir directement avec l'interface d'ArrayFire sans se préoccuper des commandes associées aux interfaces des backends et ainsi d'obtenir un code facilement lisible.\\~\par
-	De la même manière, ArrayFire possède des fonctionnalités de gestion des supports physiques. Semblablement à la fonction précédente, il existe une fonction permettant de choisir le support physique désiré: \textit{\underline{void setDevice(const int device)}}. L'entier passé en paramètre est le numéro d'identification du support voulu, qui peut être récupéré par \underline{\textit{int deviceget()}}.\\~\par
-	En combinant les différentes fonctions précédentes, et en utilisant les fonctions vectorisées d'ArrayFire, les performances du MIRTK sont enclines être améliorées.
-	
-	
+	ArrayFire dispose aussi d'un ensemble de modules permettant de manipuler des backends. \\
+	Un premier ensemble de fonctionnalités permet de détecter les backends disponibles pour l'exécution du code.\\ Grâce à cette fonction, il sera possible d'adapter l'exécution du code sur GPU de manière transparente.
+	De plus, module de switch de backend dynamique:\\
+	+ Infos sur matériel.
 	
 	
 	\section{Intégration de ArrayFire dans le MIRTK}
 	\subsection{Filtres concernés}
-	La finalité de la plupart des exécutables du MIRTK est de contribuer directement ou indirectement au module de recalage du logiciel. 
+	La fonctionnalité majeure du MIRTK est le recalage d'images médicales.
 	
 	Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par la recherche d'une transformation géométrique permettant de passer d'une image à une autre.
 	
