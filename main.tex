@@ -255,10 +255,13 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 
 	\subsection{La gestion des backends}
 	
-	ArrayFire dispose aussi d'un ensemble de modules permettant de manipuler des backends. \\
-	Un premier ensemble de fonctionnalités permet de détecter les backends disponibles pour l'exécution du code.\\ Grâce à cette fonction, il sera possible d'adapter l'exécution du code sur GPU de manière transparente.
-	De plus, module de switch de backend dynamique:\\
-	+ Infos sur matériel.
+	ArrayFire dispose aussi d'un ensemble de modules permettant de manipuler des backends: \\ ~\par
+	
+	Un premier ensemble de fonctionnalités permet de détecter les backends disponibles pour l'exécution du code. Par un affichage dans la console, ArrayFire va automatiquement lister les backends compatibles avec l'exécution du code. Puisque chaque machine ne possède pas toujours tous les backends que supporte ArrayFire (par soucis de compatibilité matérielle) , il sera nécessaire de savoir, avant de choisir la solution la plus optimisée pour l'exécution, quels backends sont disponibles.\\ ~\par
+	
+	De plus, un module de bascule dynamique entre plusieurs backends est présent dans la bibliothèque ArrayFire. Grâce à cette fonction, il sera possible d'adapter l'exécution du code entre CPU et GPU. Pour exécuter des fonctions de conversion ou de déclaration en mémoire par exemple, la meilleure solution sera d'utiliser le backend du processeur car celui-ci sera plus adapté pour ce genre de tâches qu'une carte graphique. Avant l'application d'un filtre, on pourra donc, grâce à cette fonctionnalité, basculer l'exécution sur la carte graphique, et ce, de manière transparente.\\
+	
+	Une autre fonctionnalité permet aussi de détecter les informations matérielles de la machine, en listant les caractéristiques des cartes graphiques et du processeur de la machine sur laquelle l'exécution est lancée. Ce module permet de se rendre compte des performances des différentes entités d'exécution sur la machine et ainsi orienter convenablement l'exécution de chaque fonction.
 	
 	
 	\section{Intégration de ArrayFire dans le MIRTK}
