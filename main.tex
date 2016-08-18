@@ -266,71 +266,30 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	
 	\section{Intégration de ArrayFire dans le MIRTK}
 	\subsection{Filtres concernés}
-	La fonctionnalité majeure du MIRTK est le recalage d'images médicales.
-	
-	Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par la recherche d'une transformation géométrique permettant de passer d'une image à une autre.
-	
-	~\par
-	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, deux fonctions ont été traitées: \textit{smooth-image} et \textit{transform-image}.
+	La fonctionnalité majeure du MIRTK est le recalage d'images médicales. Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par le recherche d'une transformation géométrique permettant de passer d'une image à une autre.\\
+	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, ces deux fonctions du MIRTK ont été traitées: \textit{smooth-image} et \textit{transform-image}.
 	\paragraph{Algorithme de "smooth-image"}
 ~\par
-
-	\begin{algorithm}[H]
-		\caption{smooth-image}\label{smooth-image}
-		\begin{algorithmic}[1]
-			\Procedure{Naive procedure }{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
-				\State $\textit{Initialization InputArray, OutputArray, Kernel}$
-				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
-				\State $\textit{InputArray} \gets \textit{OutputArray}$
-				\If {$SigmaX > 0$} 
-					\State $\textit{Initialization KernelX}$	
-					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$ \Comment  \textit{InitializeKernel} creates a 1D Gaussian kernel
-					\State $\textit{Kernel} \gets \textit{KernelX}$
-				\EndIf
-				\If {$SigmaY > 0$} 
-					\State $\textit{Initialization KernelY}$	
-					\State $\textit{KernelY} \gets \textit{InitializeKernel(SigmaY)}$
-					\State $\textit{Kernel} \gets \textit{Kernel*KernelY}$
-
-				\EndIf
-				\If {$SigmaZ > 0$} 
-					\State $\textit{Initialization KernelZ}$	
-					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
-					\State $\textit{Kernel} \gets \textit{Kernel*KernelZ}$
-				\EndIf
-				\State $\textit{OutputArray} \gets \textit{convolve3(InputArray, Kernel)}$ \Comment  \textit{convolve3} convolves two 3D matrix 
-				\State $\textit{Output pointer} \gets \textit{OutputArray}$
-			\EndProcedure
-			\State $ $
-			\Procedure{Optimised procedure }{Input pointer, Output pointer, SigmaX, SigmaY, SigmaZ}
-				\State $\textit{Initialization InputArray, OutputArray}$
-				\State $\textit{OutputArray} \gets \textit{Input Pointer}$
-				\If {$SigmaX > 0$} 
-					\State $\textit{Initialization KernelX}$	
-					\State $\textit{KernelX} \gets \textit{InitializeKernel(SigmaX)}$ 
-					\State $\textit{InputArray} \gets \textit{OutputArray}$
-					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelX)}$ \Comment \textit{convolve1} convolves one 3D matrix  \& one 1D matrix 
-				\EndIf
-				\If {$SigmaY > 0$} 
-					\State $\textit{Initialization KernelY}$	
-					\State $\textit{KernelY} \gets \textit{InitializeKernel(SigmaY)}$
-					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$ \Comment \textit{reorder} switches dimensions into another order
-					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelY)}$
-					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 1, 0, 2)}$
-				\EndIf
-				\If {$SigmaZ > 0$} 
-					\State $\textit{Initialization KernelZ}$	
-					\State $\textit{KernelZ} \gets \textit{InitializeKernel(SigmaZ)}$
-					\State $\textit{InputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
-					\State $\textit{OutputArray} \gets \textit{convolve1(InputArray, KernelZ)}$
-					\State $\textit{OutputArray} \gets \textit{reorder(OutputArray, 2, 1, 0)}$
-				\EndIf
-				\State $\textit{Output pointer} \gets \textit{OutputArray}$
-			\EndProcedure			
-		\end{algorithmic}
-	\end{algorithm}
-	
-	
+	L'algorithme de floutage d'une image est, dans le MIRTK, traité comme une convolution d'un filtre gaussien et les valeurs numériques de chaque voxel de l'image. Cette application de filtre peut être traduite de la manière suivante:
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=12cm]{convolve.jpg}
+		\end{center}
+		\caption{Principe d'une matrice de convolution pour un filtre}
+		\label{Principe d'une matrice de convolution pour un filtre}
+	\end{figure} ~\par
+	Sur la figure précédente est traduite un gradient de l'image sur l'axe horizontal. Pour effectuer un floutage de l'image, la méthode précédente reste la même, mais avec une matrice de convolution traduisant un filtre gaussien :
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=8cm]{matrix_gaussian.jpg}
+		\end{center}
+		\caption{Matrice de convolution gaussienne}
+		\label{Matrice de convolution gaussienne}
+	\end{figure} ~\par
+	Le MIRTK utilise, à l'heure actuelle, une boucle itérant ce calcul sur chaque pixel de l'image de manière parallélisée, mais le temps d'exécution de la boucle en elle même peut être relativement longue, en fonction de l'image traitée. \\
+	La vectorisation de la convolution permettrai en revanche de palier à ce défaut d'optimisation. C'est ce que fait la fonction \textbf{\textit{af::convolve1(af::array, af::array)}} dans ArrayFire.\\
+	Si la convolution s'effectue sur les 3 dimensions, la fonction est exécutée en 3 temps (un pour chaque dimension): la convolution s'exécute entre un filtre gaussien et les valeurs de la première dimension de l'image à chaque itération afin de rendre le floutage séparable. Pour respecter une intégrité du floutage, le contenu de l'image est réarrangé avec la fonction \textbf{\textit{af::reorder(af::array, int, int, int)}} en amenant, pour chaque itération, les valeurs de la dimension à flouter à la place de la première dimension.\\ 
+	Contrairement au MIRTK qui itère cette convolution sur chaque pixel de l'image, ArrayFire présente une fonction convoluant directement l'image avec le filtre de manière vectorisée.
 	\paragraph{Algorithme de "transform-image"}
 ~\par
 	A modifier :
