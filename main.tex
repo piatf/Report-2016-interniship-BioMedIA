@@ -60,11 +60,25 @@
 	{\large Année universitaire 2015 - 2016 \par}
 \end{titlepage}
 
-\section*{Remerciements}\newpage
-\paragraph*{Résumé} % dans cet ordre
-\paragraph*{Mots-clés}
-\paragraph*{Abstract}
-\paragraph*{Key-words}
+\section*{Remerciements}
+En plus de mes 2 tuteurs Dr. Julien OLIVIER et Dr. Ghislain-Anthony VAILLANT, je souhaite remercier Dr. Jonathan PASSERAT-PALMBACH qui a joué un rôle important dans le projet qui incluait les stage de M. Maxime NOEL et moi-même. Il a ainsi su me venir en aide sur le plan technique dès que la situation le permettait.
+\newpage
+\subsection*{RESUME} 
+~\par 
+Au sein du laboratoire BioMedIA, situé dans le département informatique de l'Imperial College London, plusieurs projets ont vu le jour depuis la mise en place de UK BioBank, qui sera d'ici quelques années la plus grosse banque de données médicales en Europe. BioMedIA a développé un logiciel, codé en C++, de traitement d'images médicales : le Medical Image Registration Tool-Kit (MIRTK). Ce logiciel pourrait intervenir comme un des outils d'analyse des données de UK BioBank. Cependant, le MIRTK ne possède pas encore les optimisations nécessaires pour s'intégrer dans un projet d'une telle ampleur.\\
+Dans ce cadre, ce stage a eu pour but d'améliorer le temps d'exécution du MIRTK sur une machine. La fonction principale du MIRTK est d'effectuer un recalage d'images, c'est-à-dire une "mise en correspondance" de deux images. Le MIRTK traite des images en 3 dimensions, pouvant provenir de plusieurs sources médicales (scanner, scintigraphie, échographie, rayons X ...) au format NIFTI. Ce travail a été réalisé sur le module de calcul mathématique, en y insérant une bibliothèque, appelée ArrayFire, traitant de manière vectorisée des calculs matriciels et offrant aussi la possibilité de rendre le logiciel compatible avec une carte graphique. \\
+A la fin des 18 semaines de stage, deux fonctions du logiciel ont principalement été impactées: une fonction de floutage et une fonction de transformation homogène (c'est-à-dire translation et/ou rotation), qui interviennent dans les algorithmes d'un recalage. De plus, les améliorations obtenues ont été soutenues par une analyse de performances du MIRTK.
+~\par 
+\paragraph*{Mots-clés:}
+bibliothèque mathématique, calcul vectorisé, carte graphique, flou, imagerie médicale, performances, recalage, temps d'exécution, traitement d'image, transformation.
+~\par \vspace{0.5cm}
+\subsection*{ABSTRACT}
+~\par
+Into the BioMedIA laboratory, located in the cmoputing department of the Imperial College London, some projects has been started since the UK BioBank set up, which will be, within a few years from now, the largest medical data bank in Europe. BioMedIA developped an image proccessing software, coded in C++, named Medical Image Registration Tool-Kit (MIRTK). This sofwtare could be one of the data analysis tools for UK BioBank. However, the MIRTK is not optimized enough yet to be integrated in such a big project.\\
+Considering this remit, this internship has been an opportunity to decrease the run time of the MIRTK on one machine. The main function of the MIRTK is to register images, i.e. make the link between two images. The MIRTK processes 3 dimensions images, extracted from several medicale sources (medical scanner, scintigraphy, ultrasound, X-rays...) formatted as NIFTI. This work has been carried out on the numeric computing module, by integrating a library, named ArrayFire, which processes a vectorized matrix computation and adds the option to make the software compatible with a Graphical Processing Unit (GPU).\\
+After 18 weeks, two functions have been modified: a blurring function and a homogeneous transformation function (i.e. translation and/or rotation), which are involved in registration algorithms. Finally, the effective improvements have been checked by a performance test of the MIRTK. 	
+
+\paragraph*{Key-words:} blurring, GPU, image processing, mathematics library, medical imaging, performances, registration, run-time, transformation, vectorized computation.
 
 \renewcommand\contentsname{Sommaire}
 \tableofcontents
@@ -172,14 +186,14 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\section{Problématique} 
 	Jusqu'ici, le MIRTK a été utilisé pour des études de tailles modestes, dont la validation s'effectue sur une dizaine voire une centaine de patients. Pour cet ordre de grandeur, les performances actuelles du MIRTK sont suffisantes. Cependant avec UK BioBank, cette ordre de grandeur va être multiplié par 10, 100, voire 1000 et le moindre gain de performances, à l'échelle du MIRTK, impactera le temps d'exécution globale sur la base de données UK BioBank.\\ ~\par
 	
-	Afin d'accélérer leur temps de traitement, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution:
+	Afin d'accélérer leur temps de traitement, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution*:
 	\\{$\bullet$}\textbf{ sur une machine en local}, 
 	qui distribuera les tâches sur différents cœurs d'exécution et profitera des divers niveaux de cache du processeur pour accélérer les accès mémoire. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines cœurs et jusqu'à 20 MB de mémoire cache.
 	\\{$\bullet$}\textbf{une solution d'ordonnancement de tâches informatiques}, tel que SLURM \textit{(Simple Linux Utility for Resource Management)}, qui permettrait de déployer et gérer des tâches simultanément sur plusieurs machines. 
-	\\{$\bullet$}\textbf{une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécutions) et mise à disposition d'entreprises et/ou de chercheurs. \newline
+	\\{$\bullet$}\textbf{une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécution*) et mise à disposition d'entreprises et/ou de chercheurs. \newline
 	Par exemple, les chercheurs du laboratoire BioMedIA utilisent les grilles suivantes : \\
 	\t - La grille de l'Imperial College, qui s'étend à tout le réseau de machines de l'université, mais qui est un service payant. Cette grille met au total 5300 cœurs d'exécution à disposition.\\
-	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques aux organismes européens de recherche. Ces services comprennent des environnements d'exécutions et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution, la grille fournit au total plus de 650 000 cœurs.
+	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques aux organismes européens de recherche. Ces services comprennent des environnements d'exécution* et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution*, la grille fournit au total plus de 650 000 cœurs.
 	\\{$\bullet$}\textbf{ dans le "cloud"}, c'est-à-dire un service proposé par des entreprises telles que Microsoft ou Amazon, qui permet la location d'un serveur distant, moyennant un certain coût. \\ ~\par
 	En revanche, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un cloud implique un coût qui peut rapidement devenir prohibitif. Un slurm ou une grille de calculs mutualisée utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'autres tâches. La réduction du temps d'exécution du MIRTK représenterait un coût moindre dans un cas, sinon un impact plus faible sur les ressources mutualisées.\\ 
 	Plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'exécution multi-machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"Interfaçage de fonctions de traitement d'images médicales à une bibliothèque Python et intégration dans un outil de workflow".\\
@@ -196,11 +210,11 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 		\label{Fonctionnement d'une boucle en parallèle}
 	\end{figure}
 	~\par
-	Le calcul par le GPU, ou le GPGPU (General-Purpose computing on Graphics Processing Units) permet de paralléliser les tâches et d'offrir un maximum de performances dans de nombreuses applications : le GPU accélère les portions de code les plus lourdes en ressources de calcul, le reste de l'application étant géré par le CPU. Les applications des utilisateurs s'exécutent ainsi bien plus rapidement.\\
+	Le calcul par le GPU*, ou le GPGPU (General-Purpose computing on Graphics Processing Units) permet de paralléliser les tâches et d'offrir un maximum de performances dans de nombreuses applications : le GPU accélère les portions de code les plus lourdes en ressources de calcul, le reste de l'application étant géré par le CPU*. Les applications des utilisateurs s'exécutent ainsi bien plus rapidement.\\
 	Pour comprendre les différences fondamentales entre un CPU et un GPU, il suffit de comparer leur manière de traiter chaque opération. Les CPU incluent un nombre restreint de cœurs optimisés pour l'exécution de noyaux complexes, alors que les GPU intègrent des milliers de cœurs conçus pour traiter efficacement de nombreux noyaux simples simultanément.\\
 	Les GPU incluent des milliers de cœurs pour traiter efficacement des tâches parallèles. \\ 
 	 
-	A l'heure actuelle, le MIRTK bénéficie seulement du multi-threading pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus,  le MIRTK n'est pas encore capable d'utiliser d'accélérations matérielles telles que l'utilisation de GPU.
+	A l'heure actuelle, le MIRTK bénéficie seulement du multi-threading* pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus,  le MIRTK n'est pas encore capable d'utiliser d'accélérations matérielles telles que l'utilisation de GPU.
 	\newpage
 	\section{Cahier des charges}
 	La réduction du temps d'exécution est l'axe principal de développement du stage. Pour cela, l'amélioration devra se concentrer sur les fonctions élementaires du MIRTK les plus consommatrices en ressource de calcul. Dans le cadre du stage, l'intervention se fera au niveau de son implémentation concrète sur CPU et GPU, appelée "backend" par la suite.\\ ~\par
@@ -208,7 +222,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 200 -Ry2 100
 	\noindent Dans le cadre du stage, les besoins suivants ont été définis : \\
 	\\{$\bullet$} Adapter l'exécution du MIRTK sur GPU. A l'heure actuelle, le MIRTK utilisent uniquement les quelques cœurs d'un processeur et ne tire pas encore l'avantage des capacités d'un GPU.\\
 	\\{$\bullet$} Conserver une exécution transparente du code, en n'altérant ni les lignes de commandes utilisées, ni le résultat attendu.  \\
-	\\{$\bullet$} Dans la mesure du possible, un réusinage du code devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
+	\\{$\bullet$} Dans la mesure du possible, un réusinage* du code devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
 	\section{Planification}
 	\subsection{Objectifs} 
 	Les objectifs de stage sont définis de la manière chronologique suivante:
@@ -263,7 +277,7 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, ces deux fonctions du MIRTK ont été traitées: \textit{smooth-image} et \textit{transform-image}.
 	\paragraph{Algorithme de "smooth-image"}
 ~\par
-	L'algorithme de floutage d'une image est, dans le MIRTK, traité comme une convolution d'un filtre gaussien et les valeurs numériques de chaque voxel de l'image. Cette application de filtre peut être traduite de la manière suivante:
+	L'algorithme de floutage d'une image est, dans le MIRTK, traité comme une convolution d'un filtre gaussien et les valeurs numériques de chaque voxel* de l'image. Cette application de filtre peut être traduite de la manière suivante:
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=12cm]{convolve.jpg}
@@ -429,7 +443,7 @@ Cette dernière partie du rapport détaille les travaux possibles suite à ce st
 
 	\section{A long terme}
 	Puisque le MIRTK possède aujourd'hui un ensemble de structures de données centrées sur une exécution séquentielle, il faudra, à long terme modifier cette architecture pour lorienter sur une exécution vectorisée en intégrant ArrayFire directement dans ce jeu de classes et de structures de données.\\
-	Après ces différentes modifications et ajouts, il est possible que plusieurs fonctions seront dépréciées ou ré-implémentées, c'est pourquoi un réusinage de l'intégralité du code source devra être entrepris.\\  
+	Après ces différentes modifications et ajouts, il est possible que plusieurs fonctions seront dépréciées ou ré-implémentées, c'est pourquoi un réusinage* de l'intégralité du code source devra être entrepris.\\  
 	Afin d'exploiter le potentiel d'un cluster GPU, il faudra enfin adapter l'exécution du MIRTK à un support multi-GPU.  
 
 \chapter*{Conclusion} 
@@ -437,38 +451,43 @@ Cette dernière partie du rapport détaille les travaux possibles suite à ce st
 \chapter*{Sources}
 \addcontentsline{toc}{chapter}{Sources}
 \noindent
-\url{https://biomedia.doc.ic.ac.uk/}  : image page de garde, partie du texte 1.1.3 \\
-\url{http://www.imperial.ac.uk} : partie du texte 1.1.2 (Department of computing) et schéma stratégie du département\\
-\url{https://fr.wikipedia.org/wiki/Imperial_College_London} : partie du texte 1.1.1 (Imperial College London)\\
-\url{http://www.ukbiobank.ac.uk/about-biobank-uk/} : inspiration pour le paragraphe 1.2.2 (UK BioBank)\\
-\url{http://ric.uthscsa.edu/mango/papaya/index.html} : outil de visualisation d'images en format NIFTI\\
-\url{https://wiki.imperial.ac.uk/display/HPC/Systems} : données sur la grille de calcul de l'Imperial College\\
-\url{http://www.egi.eu/} : données sur la grille européenne de calcul\\
-\url{https://fr.wikipedia.org/wiki/Parall\%C3\%A9lisme_\%28informatique\%29} : définition de la parallélisation, partie 2.1\\
-\url{https://fr.wikipedia.org/wiki/R\%C3\%A9usinage_de_code} :  définition d'un réusinage \\
-\url{http://www.nvidia.fr/object/gpu-computing-fr.html}: explication du calcul sur GPU en 2.1\\
-ProGit\\
-\url{https://fr.wikipedia.org/wiki/Pr\%C3\%A9diction_de_branchement}: définition d'une prédiction de branchement.\\
-\url{https://fr.wikipedia.org/wiki/Recalage_d'images}: définition du recalage d'images.\\
+\url{https://biomedia.doc.ic.ac.uk/}  : site officiel du laboratoire BioMedIA. \\
+\\
+\url{http://www.imperial.ac.uk} : site officiel de l'Imperial Colleg London.\\
+\\
+\url{https://fr.wikipedia.org/wiki/Imperial_College_London} : article Wikipédia de l'Imperial College London.\\
+\\
+\url{http://www.ukbiobank.ac.uk/about-biobank-uk/} : article du site de UK BioBank présentant le projet.\\
+\\
+\url{http://ric.uthscsa.edu/mango/papaya/index.html} : outil de visualisation d'images en format NIFTI.\\
+\\
+\url{https://wiki.imperial.ac.uk/display/HPC/Systems} : données et statistiques de la grille de calcul de l'Imperial College.\\
+\\
+\url{http://www.egi.eu/} : site officiel de la grille européenne de calcul.\\
+\\
+\url{https://fr.wikipedia.org/wiki/Parall\%C3\%A9lisme_\%28informatique\%29}: article Wikipédia du parallélisme informatique.\\
+\\
+\url{https://fr.wikipedia.org/wiki/R\%C3\%A9usinage_de_code} : article Wikipédia du réusinage d'un code. \\
+\\
+\url{http://www.nvidia.fr/object/gpu-computing-fr.html}: article du site nvidia présentant le principe de fonctionnement d'une carte graphique.\\
+\\
+\url{https://fr.wikipedia.org/wiki/Recalage_d'images}: article Wikipédia du recalage d'images.\\
+\\
+\url{https://fr.wikipedia.org/wiki/Environnement_d'ex\%C3\%A9cution}: article Wikipédia de l'environnement d'exécution.\\
+\\
+
 \renewcommand{\listfigurename}{Table des illustations}\listoffigures 
 \addcontentsline{toc}{chapter}{Table des illustrations}
 \chapter*{Glossaire}
 \addcontentsline{toc}{chapter}{Glossaire}
-\noindent
-\textbf{Back-end:}\\ 
-\textbf{Front-end:}\\
-\textbf{Profilage:} Différence avec le benchmarking ?\\
-\textbf{Run-time:}\\
-\textbf{Fuite de cache:}\\
-\textbf{Parangonnage:} Différence avec le profiling ?\\
-\textbf{Thread:}\\
-\textbf{Prédiction de branche:}\\
-\textbf{Fuite de cache:}\\
-\textbf{Environnement d'exécution:}\\
-\textbf{CPU:}\\
-\textbf{GPU:}\\
-\textbf{Voxel:}\\
-\textbf{Réusinage d'un code (ou \textit{code refactoring}, en anglais):} opération consistant à retravailler le code source d'un programme informatique (sans toutefois y ajouter des fonctionnalités ni en corriger les bogues) de façon à en améliorer la lisibilité et par voie de conséquence la maintenance, ou à le rendre plus générique (afin par exemple de faciliter le passage de simple en multiple précision); on parle aussi de « remaniement ». 
+\noindent 
+\textbf{Thread:} entité d'exécution, c'est-à-dire une partie code qui peut être exécutée en un bloc. \vspace{2cm} 
+\textbf{\\Environnement d'exécution:}  logiciel responsable de l'exécution des programmes informatiques écrits dans un langage de programmation donné. Un environnement d'exécution offre des services d'exécution de programmes tels que les entrées-sorties, l'arrêt des processus, l'utilisation des services du système d'exploitation, le traitement des erreurs de calcul, la génération d'événements, l'utilisation de services offerts dans un autre langage de programmation, le débogage, le profilage et le ramasse-miette.\vspace{2cm} 
+\textbf{\\CPU:} \textit{Central Processing Unit}, processeur. \vspace{2cm}
+\textbf{\\GPU:} \textit{Graphics Processing Unit}, carte graphique.  \vspace{2cm}
+\textbf{\\Voxel:} équivalent d'un pixel, en 3 dimensions. Il s'agit d'une portion spatiale atomique d'une image qui représente une couleur unique, indiquée, dans le cadre du stage, par une valeur entre 0 et 255 (0 signifiant noir, et 255 blanc). Une haute résolution implique un nombre important de voxels et vice-versa.  \vspace{2cm}
+\textbf{\\Réusinage d'un code (ou \textit{code refactoring}, en anglais):} opération consistant à retravailler le code source d'un programme informatique (sans toutefois y ajouter des fonctionnalités ni en corriger les bogues) de façon à en améliorer la lisibilité et par voie de conséquence la maintenance, ou à le rendre plus générique (afin par exemple de faciliter le passage de simple en multiple précision); on parle aussi de « remaniement ». \\
+
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
