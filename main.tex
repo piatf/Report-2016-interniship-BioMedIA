@@ -347,88 +347,101 @@ Cette partie du rapport va présenter la bibliothèque ArrayFire, ainsi que son 
 	
 
 	\section{Évaluation des performances}
+	\vspace{0.7cm}
 		\subsection{Profilage}
-	%	Définir le profilage et expliquer la nécessité d'une telle étape dans ce contexte\newline
-%	Cette partie est ta description du plan d'experience qui va amener les resultats.
-%	
-%	I faut donc dans l'ordre:
-%	- presenter valgrind
-%	- montrer comment il s'utilise
-%	- montrer comment generer les resultats (pas les interpreter par contre ! Ca c'est apres)
-%	- detailler le hardware sur lequel le profilage a ete fait
 Un profilage est une étude de comportement d'un programme lors de son exécution. Cette étape est un relevé de performances du MIRTK, et, de même que toutes les démarches utilisées dans la partie "Evaluation de performances", ne modifie aucunement le code source du MIRTK. 
 
-		\subsubsection{a) Configuration}
-			\paragraph{Choix du profileur}~\par
+\subsubsection{a) Configuration}
+\vspace{0.7cm}
+	\paragraph{Choix du profileur}~\par
 
 Avant d'effectuer un profilage, il a en premier lieu été nécessaire de choisir le bon outil de profilage. Pour le choisir, ont été définis deux principaux critères:\\
 {$\bullet$} Le genre d'informations relevées : dans le cadre du MIRTK il était suffisant de se restreindre au temps d'exécution. En revanche, il était nécessaire d'avoir une fonctionnalité analysant (ou permettant au moins de visualiser) l'exécution parallèle du code. \\
 {$\bullet$} L'accès gratuit au programme de profilage, puisqu'il ne sera pas utilisé à long terme.\\
-Après recherche en ligne d'outils respectant ces critères, 3 différents logiciels de profilage ont été retenus: le "JIT (just-in-time) profiling tool" issu de l'application VTune, CodeXL et le module "Callgrind" de la suite d'outils Valgrind.\\~\par
-\noindent VTune, développé par l'entreprise Intel, possède un ensemble de fonctionnalités d'analyses de performances couplées à des outils d'assistance pour rendre un programme plus performant. \\
-CodeXL est un outil qui rassemble deux fonctionnalités principales qui sont le débuggage et le profilage. Il s'agit d'un produit fournit par l'entreprise AMD pour accompagner les développeurs à la fois sur CPU, GPU.
-\\Les fonctionnalités fournies par Valgrind sont similaires à celles de CodeXL. Cependant, Valgrind est un logiciel open-source dont la structure est constituée de différents modules, chacun étant spécialisé pour une fonction précise.\\
+Avec mes tuteurs, nous avons choisi d'utiliser le module \textit{Callgrind} de la suite d'outils \textit{Valgrind}, qui répond à aux critères précédents.
+ \paragraph{Présentation de Valgrind et Callgrind}~\par
+ La suite d'outils Valgrind présente des modules de débogage, de profilage, et d'analyses de mémoire pour tous types de programmes informatiques. \\
+ Le module CallGrind a principalement été utilisé afin de compter le nombre d'appels pour toutes les routines d'un programme durant son exécution, ainsi que le temps passé dans la routine. L'utilisation de Callgrind était essentiellement en ligne de commande, 
+ de la manière suivante:
+ 	\begin{lstlisting}
+ 	valgrind --tools=callgrind [options] [commande]
+ 	\end{lstlisting}
+ Cette méthode ajoute donc un préfixe à la commande voulue, par exemple le floutage d'une image avec le MIRTK, accompagné de un ou plusieurs options si nécessaires. Dans le cadre du profilage du MIRTK, 3 options ont été régulièrement utilisées: \\
+ - \textit{separate-threads}: impose l'analyse indépendante de chaque thread* lors de l'exécution.\\
+ - \textit{cache-sim}: simule l'interaction du programme avec la hiérarchie des caches. Cette commande fait appel à l'outil \textit{CacheGrind}.\\
+ - \textit{callgrind-out-file}: définit le nom du fichier de profilage généré.\\ ~\par
+  \newpage
+ Par ailleurs, pour mettre en forme les résultats obtenus par callgrind, le module KCacheGrind a permis de visualiser les fichiers de profilage par l'intermédiaire de l'interface suivante:\\
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width=18cm]{Reports/figures/UIkcachegrind.png}	
+	\end{center}
+	\caption{Interface graphique de KCacheGrind}
+	\label{Interface graphique de KCacheGrind}
+\end{figure}\\
+Cette interface est découpée en 3 secteurs, visibles sur la figure \ref{Interface graphique de KCacheGrind} : \\
+- Le cadre vert indique les différents threads d'exécution du programme. Lorsqu'un programme est séquentiel, il n'y a qu'un seul rectangle.\\
+- le cadre bleu répertorie toutes les fonctions et du thread sélectionné et les ressources associées à chacune d'elles.\\
+- le cadre rouge indique les interdépendances des fonctions du programme. Elles sont ici représentées sous forme de graphe.\\ 
 
-Bien que les trois programmes précédents semblaient convenir pour l'étude, un critère pourtant essentiel n'avait pas été pris en compte. En effet il était nécessaire que le profileur soit compatible avec différentes configurations matérielles afin de pouvoir réaliser le profilage d'un même code sur différents machines si nécessaire. VTune étant développé par Intel, il n'est compatible qu'avec des configurations matérielles issue de l'entreprise Intel. Semblablement, CodeXL n'est pas fonctionnel pour des supports physiques non produits par AMD.\\
-
-Finalement, c'est Valgrind qui a été choisi, puisqu'il respecte tous les critères cités précédemment.
- \\
- \paragraph{Présentation de Valgrind}~\par
- \paragraph{Caractéristiques de la machine utilisées pour le profilage}
+\paragraph{Caractéristiques de la machine utilisées pour le profilage}  ~\par 
 
  	
- 	
-		\subsubsection{b) Résultats}
-%		La suite d'outils de Valgrind permet d'étudier deux différents critères au travers de deux modules appelés Callgrind et Cachegrind.\\
-%		Callgrind va étudier le coût, en nombre d'instructions CPU, des fonctions du programmes profilé. Chaque instruction ayant le même temps d'exécution, le nombre d'instructions est proportionnel au temps. L'évolution relative du nombre d'instructions est donc équivalente à celle du temps d'exécution.\\
-%		Cachegrind est un module qui simule l'interaction du programme avec la hiérarchie des caches. Les caches représentent une partie de la mémoire informatique, et enregistrent temporairement des copies de données provenant d'une source, afin de diminuer le temps d'un nouvel accès d'un CPU à ces données. Comme représenté en figure \ref{Différents niveaux de mémoire d'un microprocesseur}, il y a plusieurs niveaux de mémoire entre un CPU et sa mémoire principale. 
-%
-%		\begin{figure}[h!]
-%			\begin{center}
-%				\includegraphics[width=13cm]{Reports/figures/Mem_hierarchy.jpg}
-%			\end{center}	
-%			\caption{Différents niveaux de mémoire d'un microprocesseur}
-%			\label{Différents niveaux de mémoire d'un microprocesseur}
-%		\end{figure}~\par
-%		Sur la figure \ref{Différents niveaux de mémoire d'un microprocesseur} sont représenté 2 niveaux de mémoire cache, mais il est possible d'avoir plus ou moins de niveaux.
-%		Les différents niveaux de mémoire cache sont désignés de la manière suivante : Level 1 (abrégé L1), Level 2 (abrégé L2) ... et le dernier niveau : Last Level (abrégé LL). Les niveaux de cache les plus bas correspondent aux caches les plus proches du CPU. 
-%		
-%		\paragraph{Analyse du nombre d'instructions}
-%
-%		
-%		\begin{wrapfigure}{r}{7.2cm}
-%			\includegraphics[height=10cm]{Reports/figures/smooth_image_costs.eps}
-%			\caption{Coût de la fonction de flou gaussien}
-%			\label{Coût de la fonction de flou gaussien}
-%		\end{wrapfigure}
-%
-%		\begin{figure}[h!]
-%			\begin{center}
-%				\includegraphics[width=9cm]{Reports/figures/performances_tbb_transform_image.eps}
-%			\end{center}	
-%			\caption{Améliorations apportées par TBB pour transform-image}
-%			\label{Améliorations apportées par TBB pour transform-image}
-%		\end{figure}~\par
-%		L'interpolation gaussienne est donc parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}.
-%		
-%		\paragraph{Analyse des fuites de cache}~\par
-%		En plus des fuites de caches, CacheGrind est capable de relever d'autres informations pertinentes telles que les erreur de prédiction de branchement.\\
-%		La prédiction de branchement est une fonctionnalité d'un processeur qui lui permet de prédire le résultat d'un branchement. Avec cette technique, le processeur va faire de l’exécution spéculative : il va parier sur le résultat d'un branchement, et va poursuivre l’exécution du programme avec le résultat du pari. Si le pari échoue, les instructions chargées par erreur sont annulées. Dans ce cas-ci, CacheGrind relèvera une mauvaise prédiction de branche. \\
-%		\\Pour "transform-image", CacheGrind indique relativement peu de fuites de caches, mais, en revanche, le taux de mauvaise prédiction de branche vaut entre 10\% et 20\% en fonction de l'interpolation choisie. De plus, le taux de variation des mauvaises prédictions de branches et de fuites de caches est très faibles entre un code sérialisé et un code parallélisé avec les fonctionnalités présentes dans le MIRTK.
-%
-%			\begin{figure}[h!]
-%				\begin{center}
-%					\includegraphics[width=15cm]{Reports/figures/cache_misses_transform_image.eps}
-%				\end{center}	
-%				\caption{Fuites de cache pour la fonction transform-image}
-%				\label{Fuites de cache pour la fonction transform-image}
-%			\end{figure}~\par
+\newpage
+\subsubsection{b) Résultats}
+Le profilage a été exécuté sur l'ensemble du MIRTK, mais les résultats des fonctions de transformation (transform-image) et celles de floutage (smooth-image) sont les plus pertinents. \\
+Ces résultats ont été récoltés avec l'exécution des programmes sur la même image en entrée. Cependant, transform-image possède différents moyens d'interpoler les voxels de l'image de sortie, comme expliqué en partie 3.2.1. Il a donc été nécessaire de relever les performances de chaque interpolation: NN, linéaire, sinus cardinal, gaussienne, et B-spline. Une parallélisation du code était présente avant le stage, via la bibliothèque \textit{Threading Building Blocks} (abrégé TBB), et est comparée ci-dessous avec une exécution séquentielle de chaque fonction:
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=10cm]{Reports/figures/performances_tbb_transform_image.eps}
+		\caption{Améliorations apportées par TBB pour transform-image}
+		\label{Améliorations apportées par TBB pour transform-image}
+		\vspace{0.1cm}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=6cm]{Reports/figures/smooth_image_costs.eps}
+		\caption{Coût de la fonction de flou gaussien}
+		\label{Coût de la fonction de flou gaussien}
+	\end{subfigure}
+	\caption{Relevés du nombre d'instructions}
+	\label{Relevés du nombre d'instructions}
+\end{figure}
 
-	\subsection{Analyse}
-%	(partie dépendante du déroulement du projet)\newline
-%	- Analyse des performances obtenues \newline
-%	- Comparaison avec le profilage initial ? \newline
-%	- Points où il y a eu des concessions (exemple: alourdir le code pour parvenir à un résultat précis)
+A l'aide du module CacheGrind, il a été aussi possible de relever les fuites de caches et les mauvaises prédictions de branche:
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width=15cm]{Reports/figures/cache_misses_transform_image.eps}
+	\end{center}	
+	\caption{Fuites de cache pour la fonction transform-image}
+	\label{Fuites de cache pour la fonction transform-image}
+\end{figure}~\par
+Pour "transform-image", CacheGrind indique relativement peu de fuites de caches, mais, en revanche, le taux de mauvaise prédiction de branche vaut entre 10\% et 20\% en fonction de l'interpolation choisie. De plus, le taux de variation des mauvaises prédictions de branches et de fuites de caches est très faibles entre un code sérialisé et un code parallélisé avec les fonctionnalités présentes dans le MIRTK.\\
+Les résultats concernant les fuites de cache pour transform-image sont très semblables pour smooth-image.
+\subsection{Analyse}
+    \paragraph{Analyse du nombre d'instructions}~\par
+Callgrind étudie le coût, en nombre d'instructions CPU, des fonctions du programme profilé. Chaque instruction ayant le même temps d'exécution, le nombre d'instructions est proportionnel au temps. L'évolution relative du nombre d'instructions est donc équivalente à celle du temps d'exécution.\\
+Pour transform-image, la parallélisation du code des différentes interpolation est inégale. L'interpolation gaussienne est quasiment parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}. En effet, la machine possédant 8 coeurs, la parallélisation optimale serait à un taux x8, ce qui est le cas pour l'interpolation gaussienne seulement.\\
+Concernant la fonction smooth-image, l'amélioration apportée par TBB est aussi faible, de l'ordre d'un taux de x1.59. La marge de réduction du temps d'exécution était encore grande.
+\newpage
+\paragraph{Analyse des fuites de cache}~\par
+Cachegrind est un module qui simule l'interaction du programme avec la hiérarchie des caches. Les caches représentent une partie de la mémoire informatique, et enregistrent temporairement des copies de données provenant d'une source, afin de diminuer le temps d'un nouvel accès d'un CPU à ces données. Comme représenté en figure \ref{Différents niveaux de mémoire d'un microprocesseur}, il y a plusieurs niveaux de mémoire entre un CPU et sa mémoire principale. 
+
+Sur la figure \ref{Différents niveaux de mémoire d'un microprocesseur} sont représenté 2 niveaux de mémoire cache, mais il est possible d'avoir plus ou moins de niveaux.
+Les différents niveaux de mémoire cache sont désignés de la manière suivante : Level 1 (abrégé L1), Level 2 (abrégé L2) ... et le dernier niveau : Last Level (abrégé LL). Les niveaux de cache les plus bas correspondent aux caches les plus proches du CPU. 
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width=13cm]{Reports/figures/Mem_hierarchy.jpg}
+	\end{center}	
+	\caption{Différents niveaux de mémoire d'un microprocesseur}
+	\label{Différents niveaux de mémoire d'un microprocesseur}
+\end{figure}~\par 
+En plus des fuites de caches, CacheGrind est capable de relever d'autres informations pertinentes telles que les erreurs de prédiction de branchement.\\
+La prédiction de branchement est une fonctionnalité d'un processeur qui lui permet de prédire le résultat d'un branchement. Avec cette technique, le processeur va faire de l’exécution spéculative : il va prédire le résultat d'un branchement, et va poursuivre l’exécution du programme avec le résultat de la prédiction. Si la prédiction échoue, les instructions chargées par erreur sont annulées. Dans ce cas-ci, CacheGrind relèvera une mauvaise prédiction de branche et engendrer des ralentissements possibles.\\
+Dans le cas des fonctions profilées, les fuites de caches sont minimes, inférieures à 2 \%. En revanche, les erreurs de prédictions de branche sont de l'ordre de 20\%, ce qui reste suffisamment acceptable pour se focaliser sur le temps d'exécution uniquement.  
 	
 \chapter{Améliorations et perspectives} \vspace{-1cm}
 Cette dernière partie du rapport détaille les travaux possibles suite à ce stage. Les perspectives à court et long terme sont détaillées séparément.
