@@ -217,7 +217,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 100 -Ry2 200
 		\label{Fonctionnement d'une boucle en parallèle}
 	\end{figure}
 	~\par
-	Le calcul par le GPU*, ou le GPGPU (General-Purpose computing on Graphics Processing Units) permet de paralléliser les tâches et d'offrir un maximum de performances dans de nombreuses applications : le GPU accélère les portions de code les plus lourdes en ressources de calcul, le reste de l'application étant géré par le CPU*. Les applications des utilisateurs s'exécutent ainsi bien plus rapidement.\\
+	Le calcul par le GPU*, ou le GPGPU permet de paralléliser les tâches et d'offrir un maximum de performances dans de nombreuses applications : le GPU accélère les portions de code les plus lourdes en ressources de calcul, le reste de l'application étant géré par le CPU*. Les applications des utilisateurs s'exécutent ainsi bien plus rapidement.\\
 	Pour comprendre les différences fondamentales entre un CPU et un GPU, il suffit de comparer leur manière de traiter chaque opération. Les CPU incluent un nombre restreint de cœurs optimisés pour l'exécution de noyaux complexes, alors que les GPU intègrent des milliers de cœurs conçus pour traiter efficacement de nombreux noyaux simples simultanément.\\
 	Les GPU incluent des milliers de cœurs pour traiter efficacement des tâches parallèles. \\ 
 	 
@@ -259,30 +259,32 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	- Des fonctions spécifiques a certains domaines scientifiques, comme le traitement de signal, d'images ou encore les statistiques. La vectorisation de certaines de ces fonctions peut, grâce à un paramètre supplémentaire, être explicitement activée ou désactivée. Dans le cadre du stage, les fonctions de traitement d'images se sont révélées être insuffisantes car uniquement applicables sur des images en 2 dimensions, tandis que le MIRTK traite aussi des images en 3 et 4 dimensions. Il sera en revanche possible de s'inspirer de leur implémentation.
 	\subsection{La gestion des backends}
 	
-	ArrayFire dispose aussi d'un ensemble de modules permettant de manipuler des backends. \\ ~\par
+	ArrayFire dispose aussi d'un ensemble de modules permettant de manipuler des backends. Parmi eux, un backend CPU est général à tous les processeurs, pour le traitement d'un code séquentiel. Les backends CUDA et OPENCL sont aussi principalement utilisés.\\
+	Le backend CUDA, acronyme de \textit{Compute Unified Device Architecture}, est une technologie de GPGPU (General-Purpose Computing on Graphics Processing Units), c'est-à-dire utilisant un GPU pour exécuter des calculs généraux à la place du CPU.
+	Elle a été développée par NVIDIA pour ses cartes graphiques GeForce 8 Series, et utilise un pilote unifié utilisant une technique de streaming (flux continu). Le premier kit de développement pour CUDA a été publié le 15 février 2007.\\
+	\\OpenCL (Open Computing Language) est la combinaison d'une interface et d'un langage de programmation dérivé du C, proposé comme un standard ouvert par le Khronos Group. OpenCL est conçu pour programmer des systèmes parallèles hétérogènes comprenant par exemple à la fois un CPU multi-cœur et un GPU. OpenCL propose donc un modèle de programmation se situant à l'intersection naissante entre le monde des CPU et des GPU, les premiers étant de plus en plus parallèles, les seconds étant de plus en plus programmables.\\ ~\par
 	
-	Tout d'abord, l'interface d'ArrayFire est commune à tous les backends, ce qui offre la transparence d'exécution. Le code client cible un backend unifié lors de la compilation, mais on peut définir un backend spécifique concrètement pour une exécution.\\ ~\par
-
-	De plus, un module de bascule dynamique entre plusieurs backends est présent dans la bibliothèque ArrayFire. Grâce à cette fonction, il sera possible d'adapter l'exécution du code entre CPU et GPU. Pour exécuter des fonctions de conversion ou de déclaration en mémoire par exemple, la meilleure solution sera d'utiliser le backend du processeur car celui-ci sera plus adapté pour ce genre de tâches qu'une carte graphique. Avant l'application d'un filtre, on pourra donc, grâce à cette fonctionnalité, basculer l'exécution sur la carte graphique, et ce, de manière transparente.\\
-	
+	Concernant ArrayFire, son interface est commune à tous les backends, ce qui offre la transparence d'exécution. Le code client cible un backend unifié lors de la compilation, mais on peut définir un backend spécifique concrètement pour une exécution.\\ ~\par
+	De plus, un module de bascule dynamique entre plusieurs backends est présent dans la bibliothèque ArrayFire. Grâce à cette fonction, il sera possible d'adapter l'exécution du code entre CPU et GPU. Pour exécuter des fonctions de conversion ou de déclaration en mémoire par exemple, la meilleure solution sera d'utiliser le backend du processeur car celui-ci sera plus adapté pour ce genre de tâches qu'une carte graphique. Avant l'application d'un filtre, on pourra donc, grâce à cette fonctionnalité, basculer l'exécution sur la carte graphique, et ce, de manière transparente.\\ ~\par
 	Une autre fonctionnalité permet aussi de détecter les informations matérielles de la machine, en listant les caractéristiques des cartes graphiques et du processeur de la machine sur laquelle l'exécution est lancée. Ce module permet de se rendre compte des performances des différentes entités d'exécution sur la machine et ainsi orienter convenablement l'exécution de chaque fonction.
-	
+	\vspace{1cm}
 	
 	\section{Intégration de ArrayFire dans le MIRTK}
 	\subsection{Filtres concernés}
-	La fonctionnalité majeure du MIRTK est le recalage d'images médicales. Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par le recherche d'une transformation géométrique permettant de passer d'une image à une autre. C'est une optimisation, ce qui implique que les différentes étapes nécessaires au calcul de la fonction de coup (ici la similarité) doivent être accélérées.\\
+	La fonctionnalité majeure du MIRTK est le recalage d'images médicales. Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par le recherche d'une transformation géométrique permettant de passer d'une image à une autre. C'est une optimisation, ce qui implique que les différentes étapes nécessaires au calcul de la fonction de coup (ici la similarité) sont répétées jusqu'a convergence vers une solution. Chaque étape doit donc être individuellement accéléré.\\
 	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, ces deux fonctions du MIRTK ont été traitées: \textit{smooth-image} et \textit{transform-image}.
+	\newpage
 	\paragraph{Algorithme de "smooth-image"}
-~\par
+ ~\par \vspace{1cm}
 	L'algorithme de floutage d'une image est, dans le MIRTK, traité comme une convolution d'un filtre gaussien et les valeurs numériques de chaque voxel* de l'image. Ce procédé est illustré en figure \ref{Principe d'une matrice de convolution pour un filtre}.
 	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics[width=12cm]{convolve.jpg}
+			\includegraphics[width=14cm]{convolve.jpg}
 		\end{center}
 		\caption{Principe d'une matrice de convolution pour un filtre}
 		\label{Principe d'une matrice de convolution pour un filtre}
 	\end{figure} ~\par
-	Sur la figure \ref{Principe d'une matrice de convolution pour un filtre} est traduite un gradient de l'image sur l'axe horizontal. Pour effectuer un floutage de l'image, la méthode précédente reste la même, mais avec une matrice de convolution traduisant un filtre gaussien :
+	Sur la figure \ref{Principe d'une matrice de convolution pour un filtre} est traduite un gradient de l'image sur l'axe horizontal. Pour effectuer un floutage de l'image, la méthode précédente reste la même, mais avec une matrice de convolution traduisant un filtre gaussien, telle que la matrice G sur la figure \ref {Matrice de convolution gaussienne}.
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=8cm]{matrix_gaussian.jpg}
@@ -290,13 +292,25 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 		\caption{Matrice de convolution gaussienne}
 		\label{Matrice de convolution gaussienne}
 	\end{figure} ~\par
-	Le MIRTK utilise, à l'heure actuelle, une boucle itérant ce calcul sur chaque pixel de l'image de manière parallélisée, mais le temps d'exécution de la boucle en elle même peut être relativement longue, en fonction de la taille de l'image traitée. 
-	Puisqu'une convolution est un produit matriciel, qui peut d'ailleurs être séparable selon les dimensions, la vectorisation est possible et permettrai de palier à ce défaut d'optimisation. C'est ce que fait la fonction \textbf{\textit{af::convolve1(af::array, af::array)}} dans ArrayFire.\\
-	Si la convolution s'effectue sur les 3 dimensions, la fonction est exécutée en 3 temps (un pour chaque dimension): la convolution s'exécute entre un filtre gaussien et les valeurs de la première dimension de l'image à chaque itération afin de rendre le floutage séparable. Pour respecter une intégrité du floutage, le contenu de l'image est réarrangé avec la fonction \textbf{\textit{af::reorder(af::array, int, int, int)}} en amenant, pour chaque itération, les valeurs de la dimension à flouter à la place de la première dimension.\\ 
+	Le MIRTK utilise, à l'heure actuelle, une boucle itérant ce calcul sur chaque pixel de l'image de manière parallélisée. Le temps d'exécution de cette boucle  peut être relativement long, en fonction de la taille de l'image traitée. 
+	La figure \ref{Principe d'une matrice de convolution pour un filtre} montrant qu'une convolution est un produit matriciel la vectorisation est possible et permettrai de palier à ce défaut d'optimisation. C'est ce que fait la fonction \textbf{\textit{af::convolve1(af::array, af::array)}} dans ArrayFire.\\
+	\newpage
+	Afin de traiter les dimensions séparément, et effectuer le floutage sur une ou deux dimensions définies de l'image, un filtre gaussien à l'avantage d'être séparable. Cette notion est explicitée sur la figure \ref{Séparabilité d'une matrice gaussienne}.
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=10cm]{gauss_sep.jpg}
+		\end{center}
+		\caption{Séparabilité d'une matrice gaussienne}
+		\label{Séparabilité d'une matrice gaussienne}
+	\end{figure} ~\par
+	La séparabilité est une propriété de certains filtres qui offre la possibilité de traiter chacune de leur dimension indépendamment. Dans le cas de la fonction de floutage, il est possible d'en tirer profit en séparant la convolution 3D en 3 convolutions successives en une dimension. Pour respecter une intégrité du floutage, le contenu de l'image est réarrangé avec la fonction \textbf{\textit{af::reorder(af::array, int, int, int)}}, issue d'ArrayFire, avant chacune des 3 convolutions.\\
+
 	Contrairement au MIRTK qui itère cette convolution sur chaque pixel de l'image, ArrayFire présente une fonction convoluant directement l'image avec le filtre de manière vectorisée.\\
+	
 	Cet algorithme de floutage est détaillé en annexe 2 en langage Python.
-	\paragraph{Algorithme de "transform-image"} ~\par
-	La transformation d'image a pour but de bouger la position de chacun des voxels de l'image d'entrée, en fonction des paramètres indiqués par dans un fichier décrivant la transformation voulue.\\
+	\newpage
+	\paragraph{Algorithme de "transform-image"} ~\par \vspace{1cm}
+	La transformation d'image a pour but de modifier la position de chacun des voxels de l'image d'entrée, en fonction des paramètres indiqués par dans un fichier décrivant la transformation voulue.\\
 	Le MIRTK est apte à traiter des transformations homogènes et non-homogènes. Une transformation homogène applique la même transformation à tous les voxels de l'image, alors qu'une transformation non-homogène est dépendante des coordonnées de chaque voxel.  \\
 	Ci-dessous est décrit le procédé de transformation homogène :
 	\begin{figure}[h!]
@@ -317,6 +331,7 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 		\label{Calcul des distances entre les points transformés et les voxels voisins}
 	\end{figure}
 	~\par 
+	\newpage
 	L'interpolation de chaque voxel de l'image de sortie est la dernière étape du procédé de calcul des points transformés, qui peut être réalisé par plusieurs méthodes :\\
 	- L'interpolation \textit{Nearest Neighbour}, abrégée NN, qui associe au point transformé son voxel voisin le plus proche. Ci-dessous est détaillé ce type d'interpolation sur l'exemple de la transformation du point P1 en figure \ref{Calcul des distances entre les points transformés et les voxels voisins}.\\
 	\begin{figure}[h!]
@@ -337,24 +352,14 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	\end{figure}
 	~\par 
 
-	
-
 	\section{Évaluation des performances}
-	\vspace{0.7cm}
 		\subsection{Profilage}
 Un profilage est une étude de comportement d'un programme lors de son exécution. Cette étape est un relevé de performances du MIRTK, et, de même que toutes les démarches utilisées dans la partie "Evaluation de performances", ne modifie aucunement le code source du MIRTK. 
-
 \subsubsection{a) Configuration}
-\vspace{0.7cm}
-	\paragraph{Choix du profileur}~\par
 
-Avant d'effectuer un profilage, il a en premier lieu été nécessaire de choisir le bon outil de profilage. Pour le choisir, ont été définis deux principaux critères:\\
-{$\bullet$} Le genre d'informations relevées : dans le cadre du MIRTK il était suffisant de se restreindre au temps d'exécution. En revanche, il était nécessaire d'avoir une fonctionnalité analysant (ou permettant au moins de visualiser) l'exécution parallèle du code. \\
-{$\bullet$} L'accès gratuit au programme de profilage, puisqu'il ne sera pas utilisé à long terme.\\
-Avec mes tuteurs, nous avons choisi d'utiliser le module \textit{Callgrind} de la suite d'outils \textit{Valgrind}, qui répond à aux critères précédents.
  \paragraph{Présentation de Valgrind et Callgrind}~\par
  La suite d'outils Valgrind présente des modules de débogage, de profilage, et d'analyses de mémoire pour tous types de programmes informatiques. \\
- Le module CallGrind a principalement été utilisé afin de compter le nombre d'appels pour toutes les routines d'un programme durant son exécution, ainsi que le temps passé dans la routine. L'utilisation de Callgrind était essentiellement en ligne de commande, 
+ Le module CallGrind a principalement été utilisé pour compter le nombre d'appels pour toutes les routines d'un programme durant son exécution, ainsi que le temps passé dans la routine. L'utilisation de Callgrind était essentiellement en ligne de commande, 
  de la manière suivante:
  	\begin{lstlisting}
  	valgrind --tools=callgrind [options] [commande]
@@ -363,8 +368,7 @@ Avec mes tuteurs, nous avons choisi d'utiliser le module \textit{Callgrind} de l
  - \textit{separate-threads}: impose l'analyse indépendante de chaque thread* lors de l'exécution.\\
  - \textit{cache-sim}: simule l'interaction du programme avec la hiérarchie des caches. Cette commande fait appel à l'outil \textit{CacheGrind}.\\
  - \textit{callgrind-out-file}: définit le nom du fichier de profilage généré.\\ ~\par
-  \newpage
- Par ailleurs, pour mettre en forme les résultats obtenus par callgrind, le module KCacheGrind a permis de visualiser les fichiers de profilage par l'intermédiaire de l'interface suivante:\\
+ Par ailleurs, pour mettre en forme les résultats obtenus par callgrind, l'application KCacheGrind permet de visualiser les fichiers de profilage par l'intermédiaire de l'interface suivante:\\
 \begin{figure}[h!]
 	\begin{center}
 		\includegraphics[width=18cm]{Reports/figures/UIkcachegrind.png}	
@@ -387,14 +391,14 @@ Le profilage a été exécuté sur l'ensemble du MIRTK, mais les résultats des 
 Ces résultats ont été récoltés avec l'exécution des programmes sur la même image en entrée. Cependant, transform-image possède différents moyens d'interpoler les voxels de l'image de sortie, comme expliqué en partie 3.2.1. Il a donc été nécessaire de relever les performances de chaque interpolation: NN, linéaire, sinus cardinal, gaussienne, et B-spline. Une parallélisation du code était présente avant le stage, via la bibliothèque \textit{Threading Building Blocks} (abrégé TBB), et est comparée ci-dessous avec une exécution séquentielle de chaque fonction:
 \begin{figure}[h!]
 	\centering
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{\textwidth}
 		\centering
-		\includegraphics[width=10cm]{Reports/figures/performances_tbb_transform_image.eps}
+		\includegraphics[width=12.5cm]{Reports/figures/performances_tbb_transform_image.eps}
 		\caption{Améliorations apportées par TBB pour transform-image}
 		\label{Améliorations apportées par TBB pour transform-image}
 		\vspace{0.1cm}
 	\end{subfigure}
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{\textwidth}
 		\centering
 		\includegraphics[width=6cm]{Reports/figures/smooth_image_costs.eps}
 		\caption{Coût de la fonction de flou gaussien}
@@ -453,13 +457,13 @@ Dans le cas des fonctions profilées, les fuites de caches sont minimes, inféri
 Cette dernière partie du rapport détaille les travaux possibles suite à ce stage. Les perspectives à court et long terme sont détaillées séparément.
 
 	\section{A cours terme}
-	 La réduction du temps d'exécution des fonctions de transformation et de floutage devrait améliorer le temps d'exécution du recalage. Une fois le stage achevé sur le plan technique, il sera alors pertinent de vérifier l'amélioration des performances du module de recalage du MIRTK. Pour cela, il faudra procéder à un profilage de la fonction de recalage, idéalement sur différentes machines, et en faisant varier les paramètres d'entrée.\\
+	 La réduction du temps d'exécution des fonctions de transformation et de floutage devrait améliorer le temps d'exécution du recalage. Une fois le stage achevé sur le plan technique, il sera alors pertinent de vérifier l'amélioration des performances du module de recalage du MIRTK. Pour cela, il faudra procéder à un profilage de la fonction de recalage, idéalement sur différentes machines et pour plusieurs images.\\
 	 ArrayFire étant implanté que succinctement dans le MIRTK, il faudra porter son intégration sur les autres fonctionnalités du module mathématique du MIRTK, ainsi que sur les autres modules liés au recalage d'image.\\
 	 Après ces différentes modifications et ajouts, il est possible que plusieurs fonctions seront dépréciées ou ré-implémentées, c'est pourquoi un réusinage* de l'intégralité du code source devra être entrepris, pour maintenir une certaine clarté dans le code source.\\ 
 
 	\section{A long terme}
-	Le MIRTK est un logiciel dont les fonctions et structures de données du MIRTK ont été conçues pour du traitement séquentiel, c'est-a-dire voxel par voxel. Modifier le code pour tirer avantage de l'accélération fournie par le calcul vectorisé est, par conséquent, plus difficile.\\
-	Depuis quelques années, le code source du MIRTK à renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. En plus de l'architecture séquentielle du traitement, ce couplage important restreint l'usinage du code du MIRTK.\\
+	Le MIRTK est un logiciel dont les fonctions et structures de données ont été conçues pour du traitement séquentiel, c'est-a-dire voxel par voxel. Les modifications requises (pour tirer avantage de l'accélération fournie par le calcul vectorisé) sont plus difficiles car elles sont invasives et requièrent des copies entre le contexte du MIRTK et celui d'ArrayFire. \\
+	Au fil de son développement, le code source du MIRTK à renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. En plus de l'architecture séquentielle du traitement, ce couplage important restreint l'usinage du code du MIRTK.\\
 	Le code source du MIRTK dérive de celui d'un logiciel plus ancien, appelé IRTK (Image Registration ToolKit). Cependant, peu d'améliorations techniques y ont été ajouté lors de sa refonte en MIRTK. C'est-à-dire que le langage employé, le C++, a été conservé, ou encore que les classes et structures de données ont été simplement étoffées de nouveaux attributs et méthodes. Le manque de direction dans le développement depuis plus de 15 ans induit aussi un manque de cohérence dans l'implémentation de ses différentes fonctionnalités. Par exemple, bien qu'il soit codé en C++, tous les modules n'utilisent pas systématiquement l'encapsulation offerte par le module mathématique pour l'implémentation de leurs algorithmes de calcul.\\	
 	Puisque le MIRTK possède aujourd'hui un ensemble de structures de données centrées sur une exécution séquentielle, il faudra, à long terme modifier cette architecture pour l'orienter sur une exécution vectorisée en intégrant ArrayFire directement dans ce jeu de classes et de structures de données.\\ 
 	Afin d'exploiter le potentiel d'un cluster GPU, il faudra enfin adapter l'exécution du MIRTK à un support multi-GPU.  
@@ -496,7 +500,12 @@ Sur un plan personnel, j'ai pu tiré beaucoup de notions techniques de ce stage,
 \\
 \url{https://fr.wikipedia.org/wiki/Environnement_d'ex\%C3\%A9cution}: article Wikipédia de l'environnement d'exécution.\\
 \\
-
+\url{https://fr.wikipedia.org/wiki/Compute_Unified_Device_Architecture}: article Wikipédia du backend CUDA.\\
+\\
+\url{https://fr.wikipedia.org/wiki/OpenCL}: article Wikipédia du backend OPENCL.\\
+\\
+\url{http://www.dspguide.com/} guide en traitement du signal numérique.\\
+\\
 \renewcommand{\listfigurename}{Table des illustations}\listoffigures 
 \addcontentsline{toc}{chapter}{Table des illustrations}
 \chapter*{Glossaire}
