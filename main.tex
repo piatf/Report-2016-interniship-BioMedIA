@@ -230,8 +230,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 100 -Ry2 200
 	\\{$\bullet$} Rendre l'exécution du MIRTK possible sur GPU. A l'heure actuelle, le MIRTK utilisent uniquement les quelques cœurs d'un processeur et ne tire pas encore l'avantage des capacités d'un GPU.\\
 	\\{$\bullet$} Conserver une exécution transparente du code, en n'altérant ni les lignes de commandes utilisées, ni le résultat attendu.  \\
 	\\{$\bullet$} Dans la mesure du possible, un réusinage* du code devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
-	\section{Planification}
-	\subsection{Objectifs} 
+	\section{Objectifs}
 	Les objectifs de stage sont définis de la manière chronologique suivante:
 	~\par~\par 
 	1) \textbf{Étude du MIRTK et de ses dépendances} \\
@@ -255,7 +254,7 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	L'interface d'ArrayFire repose sur la manipulation d'un type générique de tableau nommé \textit{af::array}. Celui-ci peut contenir tout type de valeurs numériques (entier, flottant ou complexe) et peut être utiliser pour représenter des structures de données allant jusqu'à 4 dimensions, comme des vecteurs, matrices, images, volumes, ou série de volumes. Ce type présente plusieurs constructeurs, et ceux-ci peuvent faire appel à une variable appelée \textit{af::dim4} qui est un ensemble de 4 entiers définissant la taille du tableau sur chacune de ses dimensions.\\ ~\par 
 	
 	\noindent Autour de ce type s'articulent deux types de fonctions: ~\par 
-	- Des fonctions mathématiques basiques qui traitent d'algèbre linéaire, telles que des factorisations, décompositions ou opérations de matrices. Jointes à un jeu de fonctions de manipulations de matrices, cet ensemble constitue un noyau de fonctionnalités mathématiques complet. Dans le cas où ArrayFire ne couvre pas une fonctionnalité particulière, il est possible de l'étendre grâce à ces quelques fonctionnalités de base. Pour des fonctionnalités plus complexes, ArrayFire met à disposition un outil appelé \textit{"GFOR"}, qui représente l'équivalent d'une boucle \textit{"FOR"} classique vectorisée. \\~\par 
+	- Des fonctions mathématiques basiques qui traitent d'algèbre linéaire, telles que des factorisations, décompositions ou opérations de matrices. Jointes à un jeu de fonctions de manipulations de matrices, cet ensemble constitue un noyau de fonctionnalités mathématiques complet. Dans le cas où ArrayFire ne couvre pas une fonctionnalité particulière, il est possible de l'étendre grâce à ces quelques fonctionnalités de base (cf \textbf{annexe 1}, exemple de programme cherchant les valeurs propres d'une matrice, avec ArrayFire). Pour des fonctionnalités plus complexes, ArrayFire met à disposition un outil appelé \textit{"GFOR"}, qui représente l'équivalent d'une boucle \textit{"FOR"} classique vectorisée. \\~\par 
 	- Des fonctions spécifiques a certains domaines scientifiques, comme le traitement de signal, d'images ou encore les statistiques. La vectorisation de certaines de ces fonctions peut, grâce à un paramètre supplémentaire, être explicitement activée ou désactivée. Dans le cadre du stage, les fonctions de traitement d'images se sont révélées être insuffisantes car uniquement applicables sur des images en 2 dimensions, tandis que le MIRTK traite aussi des images en 3 et 4 dimensions. Il sera en revanche possible de s'inspirer de leur implémentation.
 	\subsection{La gestion des backends}
 	
@@ -274,8 +273,8 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	La fonctionnalité majeure du MIRTK est le recalage d'images médicales. Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par le recherche d'une transformation géométrique permettant de passer d'une image à une autre. C'est une optimisation, ce qui implique que les différentes étapes nécessaires au calcul de la fonction de coup (ici la similarité) sont répétées jusqu'a convergence vers une solution. Chaque étape doit donc être individuellement accéléré.\\
 	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, ces deux fonctions du MIRTK ont été traitées: \textit{smooth-image} et \textit{transform-image}.
 	\newpage
-	\paragraph{Algorithme de "smooth-image"}
- ~\par \vspace{1cm}
+	\subsection{Algorithme de "smooth-image"}
+
 	L'algorithme de floutage d'une image est, dans le MIRTK, traité comme une convolution d'un filtre gaussien et les valeurs numériques de chaque voxel* de l'image. Ce procédé est illustré en figure \ref{Principe d'une matrice de convolution pour un filtre}.
 	\begin{figure}[h!]
 		\begin{center}
@@ -307,9 +306,9 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 
 	Contrairement au MIRTK qui itère cette convolution sur chaque pixel de l'image, ArrayFire présente une fonction convoluant directement l'image avec le filtre de manière vectorisée.\\
 	
-	Cet algorithme de floutage est détaillé en annexe 2 en langage Python.
+	Cet algorithme de floutage est détaillé en \textbf{annexe 2} en langage Python.
 	\newpage
-	\paragraph{Algorithme de "transform-image"} ~\par \vspace{1cm}
+	\subsection{Algorithme de "transform-image"} 
 	La transformation d'image a pour but de modifier la position de chacun des voxels de l'image d'entrée, en fonction des paramètres indiqués par dans un fichier décrivant la transformation voulue.\\
 	Le MIRTK est apte à traiter des transformations homogènes et non-homogènes. Une transformation homogène applique la même transformation à tous les voxels de l'image, alors qu'une transformation non-homogène est dépendante des coordonnées de chaque voxel.  \\
 	Ci-dessous est décrit le procédé de transformation homogène :
@@ -463,16 +462,20 @@ Cette dernière partie du rapport détaille les travaux possibles suite à ce st
 
 	\section{A long terme}
 	Le MIRTK est un logiciel dont les fonctions et structures de données ont été conçues pour du traitement séquentiel, c'est-a-dire voxel par voxel. Les modifications requises (pour tirer avantage de l'accélération fournie par le calcul vectorisé) sont plus difficiles car elles sont invasives et requièrent des copies entre le contexte du MIRTK et celui d'ArrayFire. \\
-	Au fil de son développement, le code source du MIRTK à renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. En plus de l'architecture séquentielle du traitement, ce couplage important restreint l'usinage du code du MIRTK.\\
-	Le code source du MIRTK dérive de celui d'un logiciel plus ancien, appelé IRTK (Image Registration ToolKit). Cependant, peu d'améliorations techniques y ont été ajouté lors de sa refonte en MIRTK. C'est-à-dire que le langage employé, le C++, a été conservé, ou encore que les classes et structures de données ont été simplement étoffées de nouveaux attributs et méthodes. Le manque de direction dans le développement depuis plus de 15 ans induit aussi un manque de cohérence dans l'implémentation de ses différentes fonctionnalités. Par exemple, bien qu'il soit codé en C++, tous les modules n'utilisent pas systématiquement l'encapsulation offerte par le module mathématique pour l'implémentation de leurs algorithmes de calcul.\\	
+	Le code source du MIRTK dérive de celui d'un logiciel plus ancien, appelé IRTK (Image Registration ToolKit). Cependant, peu d'améliorations techniques y ont été ajouté lors de sa refonte en MIRTK. C'est-à-dire que le langage employé, le C++, a été conservé, ou encore que les classes et structures de données ont été simplement étoffées de nouveaux attributs et méthodes. Au fil de son développement, le code source du MIRTK a cependant renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. Dans l'optique d'une modification du code source du MIRTK, ce couplage important restreint son usinage puisque:\\
+	\t - d'une part, les nouvelles structures de données devront se connecter à ces dépendances pour une intégration totale.\\
+	\t - d'autre part, la suppression de structures obsolètes ne devront pas porter atteinte à la structure du code.\\
+	
+	Par ailleurs, le manque de direction dans le développement depuis plus de 15 ans induit aussi un manque de cohérence dans l'implémentation de ses différentes fonctionnalités. Par exemple, bien qu'il soit codé en C++, tous les modules n'utilisent pas systématiquement l'encapsulation offerte par le module mathématique pour l'implémentation de leurs algorithmes de calcul.\\	
 	Puisque le MIRTK possède aujourd'hui un ensemble de structures de données centrées sur une exécution séquentielle, il faudra, à long terme modifier cette architecture pour l'orienter sur une exécution vectorisée en intégrant ArrayFire directement dans ce jeu de classes et de structures de données.\\ 
 	Afin d'exploiter le potentiel d'un cluster GPU, il faudra enfin adapter l'exécution du MIRTK à un support multi-GPU.  
 
 \chapter*{Conclusion} 
 \addcontentsline{toc}{chapter}{Conclusion}
-Afin de répondre au mieux à la problématique du stage, un profilage du MIRTK a tout d'abord permis de mettre en valeur les fonctions les plus intéressantes à améliorer: le floutage et la transformation homogène. Ces fonctions intervenant dans le cadre d'un recalage d'images, spécialité du MIRTK, elles ont été ré-implémentées en utilisant la bibliothèque mathématique performante ArrayFire. Outre ses capacités de vectorisation, ArrayFire permet aussi la gestion de différents backends, rendant l'exécution sur carte graphique totalement transparente. ArrayFire a ainsi permis de rester aisément dans le cadre du cahier des charges imposé en début de stage. Par la suite, ces travaux pourront être poussés davantage pour que le MIRTK soit intégré dans le projet d'UK BioBank.\\ ~\par
+Afin de réduire au mieux le temps d'exécution du MIRTK sur une machine, un profilage a tout d'abord permis de mettre en valeur les fonctions les plus intéressantes à améliorer: le floutage et la transformation homogène. Ces fonctions intervenant dans le cadre d'un recalage d'images, spécialité du MIRTK, elles ont été ré-implémentées en utilisant la bibliothèque mathématique performante ArrayFire. ArrayFire a permis de rester aisément dans le cadre du cahier des charges imposé en début de stage grâce à ses diverses fonctionnalités. \\
+Malgré les travaux effectués durant le stage, les autres interpolations de transform-image, et la transformation non-homogène ne sont pas encore implémentées. Le stage a d'ailleurs été relativement pauvre en résultats d'implémentation puisque seules 2 fonctions ont été traitées, et la gestion des backends peut encore être optimisée. En revanche, le profilage a permis de se rendre compte des performances du MIRTK puisqu'aucune étude n'avait été commencée auparavant. Par la suite, les travaux d'implémentation pourront être continués davantage pour que le MIRTK soit, à long terme, intégré dans le projet d'UK BioBank. \\ ~\par
 \noindent
-Sur un plan personnel, j'ai pu tiré beaucoup de notions techniques de ce stage, en utilisant les outils d'un chercheur en informatique, tels que l'utilisation d'un logiciel de contrôle de version (GIT) ou l'apprentissage du langage LaTeX pour l'écriture de mes rapports. Par ailleurs, j'ai aussi pu appréhender le fonctionnement de base d'un logiciel de traitement d'images tel que le MIRTK, préparant de manière concrète ma cinquième année en option SA3I à l'INSA, tout en évoluant dans un milieu de recherche, qui m'était inconnu auparavant.
+Sur un plan personnel, j'ai pu tiré beaucoup de notions techniques de ce stage, en utilisant les outils d'un chercheur en informatique, tels que l'utilisation d'un logiciel de contrôle de version (GIT) ou l'apprentissage du langage LaTeX pour l'écriture de mes rapports. Par ailleurs, j'ai appréhendé le fonctionnement de base d'un logiciel de traitement d'images tel que le MIRTK, préparant concrètement ma cinquième année en option SA3I à l'INSA Centre Val de Loire, tout en évoluant dans un milieu de recherche, qui m'était inconnu auparavant.
 \chapter*{Sources}
 \addcontentsline{toc}{chapter}{Sources}
 \noindent
