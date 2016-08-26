@@ -89,12 +89,12 @@ After 18 weeks, two functions have been modified: a blurring function and a homo
 \addcontentsline{toc}{chapter}{Introduction}
 Dans le cadre de mon stage de quatrième année à l'INSA Centre Val de Loire, j'ai intégré l'équipe du laboratoire BioMedIA, à l'Imperial College London. Ce laboratoire de recherche produit des outils informatiques nécessaires aux chercheurs du milieu médical. Présentant l'occasion de m'intéresser au secteur de la recherche, ce stage m'a semblé approprié pour explorer une filière qui m'était encore inconnue en informatique: le traitement d'image.\\ ~\par  \noindent
 Afin de suivre les avancées de la recherche en milieu médical, les outils empruntés à des secteurs transverses tels que l'informatique, l'électronique ou encore la biomécanique doivent constamment respecter la demande de ces chercheurs. L'acquisition de données médicales rassemblant de plus en plus de données visualisables sur ordinateur, elle nécessite des outils de plus en plus rapides et performants en matière de traitement d'images. Outre l'amélioration par ajout de nouvelles fonctionnalités, il est pertinent de fournir aux produits informatiques une maintenance continue.\\   \noindent 
-\\Dans cette optique, la problématique générale dans laquelle le stage s'installe a été portée sur l'amélioration des performances d'un logiciel de traitement d'images. Afin de satisfaire cette problématique, plusieurs axes ont été développés par le laboratoire BioMedIA, et ont donné lieu à plusieurs sujet de stages. La position de mon sujet vis-à-vis de ce projet a été de réduire le temps d'exécution du logiciel sur une machine par une ré-implémentation de certaines de ses fonctions.  \\ ~\par
+\\Dans cette optique, la problématique générale dans laquelle le stage s'installe a été portée sur l'amélioration des performances d'un logiciel de traitement d'images. Afin de satisfaire cette problématique, plusieurs axes ont été développés par le laboratoire BioMedIA, et ont donné lieu à plusieurs sujets de stages. La position de mon sujet vis-à-vis de ce projet a été de réduire le temps d'exécution du logiciel sur une machine par une ré-implémentation de certaines de ses fonctions.  \\ ~\par
 \noindent
 La première partie du rapport présentera les conditions dans lesquelles le stage s'est déroulé. En plus du lieu de travail, le cadre du projet global sera détaillé.\\
 Par la suite, la problématique justifiera le sujet de stage, et le cahier des charges à respecter sera explicité. Une planification des objectifs sera aussi chronologiquement établie.\\
 La démarche sera ensuite décrite, avec toutes les notions abordées, les fonctions modifiées, et les algorithmes employés. Toutes les améliorations apportées au logiciel seront soutenues par une série de tests, présentée en fin de rapport.\\
-La dernière partie de ce rapport sera dédiée aux perspectives de développement futures du projet, à court et long terme.
+La dernière partie de ce rapport sera dédiée aux perspectives de développement futurs du projet, à court et long terme.
 
 
 \chapter{Environnement de travail} 
@@ -119,7 +119,7 @@ La dernière partie de ce rapport sera dédiée aux perspectives de développeme
 	Le département d'informatique est divisé en 5 groupes de recherche : 
 	\\{$\bullet$}\textit{\textbf{Logic and Artificial Intelligence:}} la recherche en Intelligence Artificielle et Logique englobe des études fondamentales de logique et une variété de disciplines en intelligence artificielle, telles que l'apprentissage automatisé, les flux neurologiques, et la vérification des systèmes autonomes.
 	\\{$\bullet$}\textit{\textbf{Distributed Software Engineering:}} la recherche dans le domaine de l'Ingénierie des Logiciels Distribués aborde la conception de systèmes distribués, adaptatifs et fiables.
-	\\{$\bullet$}\textit{\textbf{Quantitative Analysis and Decision Science:}} la recherche en Analyse Quantitative et Science de la décision varie de l'optimisation à l'ingénierie de performances, en passant par la des expériences de vérifications quantitatives ou de sécurité.
+	\\{$\bullet$}\textit{\textbf{Quantitative Analysis and Decision Science:}} la recherche en Analyse Quantitative et Science de la décision varie de l'optimisation à l'ingénierie de performances, en passant par des expériences de vérifications quantitatives ou de sécurité.
 	\\{$\bullet$}\textit{\textbf{Programming Languages and Systems:}} Systèmes et Langages de Programmation est une section qui combine des travaux théoriques et pratiques en langages et architecture pour obtenir des logiciels rapides, et efficaces.
 	\\{$\bullet$}\textit{\textbf{Visual Information Processing:}} la recherche en Traitement d'informations Visualisables couvre une multitude de domaines, incluant la vision numérique, les graphiques, l'apprentissage automatique, et le traitement d'images médicales.
 	
@@ -139,7 +139,7 @@ La dernière partie de ce rapport sera dédiée aux perspectives de développeme
 	domaines de recherche de pointe, y compris:\\
 	\\{$\bullet$} Le développement d'algorithmes d'acquisition, d'analyse et d'interprétation des images. En particulier dans les domaines du recalage, de la reconstruction,
 	du suivi de mouvement, de la segmentation et de la modélisation. \\
-	\\{$\bullet$} L'apprentissage machine pour l'extraction d'information clinique à partir
+	\\{$\bullet$} L'apprentissage machine pour l'extraction d'informations cliniques à partir
 	d'images médicales. Les applications incluent le diagnostic assisté par
 	ordinateur, la planification automatisée de traitement médical, ou encore la thérapie et les interventions guidées par ordinateur. \\
 	\\Le laboratoire s'intéresse particulièrement à l'imagerie et les technologies de
@@ -186,7 +186,7 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 100 -Ry2 200
 	
 	 \subsection{UK BioBank}
 
-	 \textit{UK BioBank} est une association fournissant la banque de données médicales la plus importante du Royaume-Uni. Elle a pour but d'améliorer la prévention, le diagnostic et le traitement d'un large éventail de maladies graves, y compris le cancer, les maladies cardiaques, les accidents vasculaires cérébraux, le diabète, l'arthrite, l'ostéoporose, les affections oculaires, la dépression et les formes de démence. 500.000 personnes âgées de 40 à 69 ans ont été recrutées sur la période 2006-2010 à l'échelle nationale pour prendre part à ce projet. Ils ont accepté de donner leur sang, leur urine et des échantillons de salive pour une analyse future, ainsi que des informations détaillées sur eux-mêmes et sur leur santé. D'ici quelques années, ce processus permettra aux chercheurs d'identifier les critères qui influent le développement de certaines maladies.
+	 \textit{UK BioBank} est une association fournissant la banque de données médicales la plus importante du Royaume-Uni. Elle a pour but d'améliorer la prévention, le diagnostic et le traitement d'un large éventail de maladies graves, y compris le cancer, les maladies cardiaques, les accidents vasculaires cérébraux, le diabète, l'arthrite, l'ostéoporose, les affections oculaires, la dépression et les formes de démence. 500.000 personnes âgées de 40 à 69 ans ont été recrutées sur la période 2006-2010 à l'échelle nationale pour prendre part à ce projet. Ils ont accepté de donner leur sang, leurs urines et des échantillons de salive pour une analyse future, ainsi que des informations détaillées sur eux-mêmes et sur leur santé. D'ici quelques années, ce processus permettra aux chercheurs d'identifier les critères qui influent le développement de certaines maladies.
 	 	 
 \chapter{Objectifs et cahier des charges}
 	Ce chapitre détaille la motivation du stage, le cahier des charges et la planification des différentes étapes du projet.
@@ -195,20 +195,20 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 100 -Ry2 200
 	
 	Afin d'accélérer leur temps de traitement, les calculs du MIRTK peuvent être effectués sur différents environnement d'exécution*:
 	\\{$\bullet$}\textbf{ sur une machine en local}, 
-	qui distribuera les tâches sur différents cœurs d'exécution et profitera des divers niveaux de cache du processeur pour accélérer les accès mémoire. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines cœurs et jusqu'à 20 MB de mémoire cache.
+	qui distribuera les tâches sur différents cœurs d'exécution et profitera des divers niveaux de cache du processeur pour accélérer les accès mémoire. Les meilleurs processeurs à l'heure actuelle possède quelques dizaines de cœurs et jusqu'à 20 MB de mémoire cache.
 	\\{$\bullet$}\textbf{une solution d'ordonnancement de tâches informatiques}, tel que SLURM \textit{(Simple Linux Utility for Resource Management)}, qui permettrait de déployer et gérer des tâches simultanément sur plusieurs machines. 
 	\\{$\bullet$}\textbf{une grille de calculs}, qui est une infrastructure virtuelle fournissant ensemble de ressources informatiques (dont des environnements d'exécution*) et mise à disposition d'entreprises et/ou de chercheurs. \newline
 	Par exemple, les chercheurs du laboratoire BioMedIA utilisent les grilles suivantes : \\
 	\t - La grille de l'Imperial College, qui s'étend à tout le réseau de machines de l'université, mais qui est un service payant. Cette grille met au total 5300 cœurs d'exécution à disposition.\\
 	\t - La grille européenne, financée par l'Union Européenne et conduite par le CERN, qui met à disposition des services informatiques aux organismes européens de recherche. Ces services comprennent des environnements d'exécution* et plus de 500 PétaBytes de stockage de données (1 Pétabyte = 10\up{15} bytes). Concernant les environnements d'exécution*, la grille fournit au total plus de 650 000 cœurs.
 	\\{$\bullet$}\textbf{ dans le "cloud"}, c'est-à-dire un service proposé par des entreprises telles que Microsoft ou Amazon, qui permet la location d'un serveur distant, moyennant un certain coût. \\ ~\par
-	En revanche, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un cloud implique un coût qui peut rapidement devenir prohibitif. Un slurm ou une grille de calculs mutualisée utilisent les performances d'autres machines, qui, elles-même peuvent éventuellement être déjà occupées par l'exécution d'autres tâches. La réduction du temps d'exécution du MIRTK représenterait un coût moindre dans un cas, sinon un impact plus faible sur les ressources mutualisées.\\ 
-	Plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'exécution multi-machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:"Interfaçage de fonctions de traitement d'images médicales à une bibliothèque Python et intégration dans un outil de workflow".\\
+	En revanche, ces différents services possèdent chacun certaines contraintes. L'exécution sur un réseau local, une grille de calculs fournie par l'université ou un cloud implique un coût qui peut rapidement devenir prohibitif. Un slurm ou une grille de calculs mutualisée utilisent les performances d'autres machines, qui, eux-même peuvent éventuellement être déjà occupées par l'exécution d'autres tâches. La réduction du temps d'exécution du MIRTK représenterait un coût moindre dans un cas, sinon un impact plus faible sur les ressources mutualisées.\\ 
+	Plusieurs directions sont possibles pour optimiser la durée de ces réquisitions. L'optimisation pourra intervenir au niveau de l'exécution multi-machines: c'est sur cet aspect qu'a travaillé Mr. Maxime Noël, dans le cadre de son stage intitulé:\textit{"Interfaçage de fonctions de traitement d'images médicales à une bibliothèque Python et intégration dans un outil de workflow"}.\\
 	\vspace{-0.7cm}
 
 	Une autre possibilité d'optimisation sera la réduction du temps d'exécution sur une machine. Pour cela, le MIRTK utilise une technique d'optimisation appelée "la parallélisation" d'un code. 
 	A l'inverse de l'exécution séquentielle, la parallélisation consiste à mettre en œuvre des architectures d'électronique numérique permettant de traiter des informations de manière simultanée, ainsi que les algorithmes spécialisés pour celles-ci. Ces techniques ont pour but de réaliser le plus grand nombre d'opérations en un temps le plus court possible.
-	Un algorithme adapté pour la parallélisation partage l'exécution globale d'un programme en plusieurs "blocks" d'exécution, chacun correspondant à un groupe d'instructions. La figure \ref{Fonctionnement d'une boucle en parallèle} représente ce principe avec des blocks de 2 itérations.
+	Un algorithme adapté pour la parallélisation partage l'exécution globale d'un programme en plusieurs "blocs" d'exécution, chacun correspondant à un groupe d'instructions. La figure \ref{Fonctionnement d'une boucle en parallèle} représente ce principe avec des blocs de 2 itérations.
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=14cm]{Reports/figures/gfor.eps}	
@@ -224,19 +224,19 @@ mirtk extract-image-region input.nii.gz output.nii.gz -Ry1 100 -Ry2 200
 	A l'heure actuelle, le MIRTK bénéficie seulement du multi-threading* pour l'instant, et nécessite une amélioration sur le plan de ses performances sur plusieurs cœurs. De plus,  le MIRTK n'est pas encore capable d'utiliser d'accélérations matérielles telles que l'utilisation de GPU.
 	\newpage
 	\section{Cahier des charges}
-	La réduction du temps d'exécution est l'axe principal de développement du stage. Pour cela, l'amélioration devra se concentrer sur les fonctions élementaires du MIRTK les plus consommatrices en ressource de calcul. Dans le cadre du stage, l'intervention se fera au niveau de son implémentation concrète sur CPU et GPU, appelée "backend" par la suite.\\ ~\par
+	La réduction du temps d'exécution est l'axe principal de développement du stage. Pour cela, l'amélioration devra se concentrer sur les fonctions élementaires du MIRTK les plus consommatrices en ressources de calcul. Dans le cadre du stage, l'intervention se fera au niveau de son implémentation concrète sur CPU et GPU, appelée "backend" par la suite.\\ ~\par
 	
 	\noindent Dans le cadre du stage, les besoins suivants ont été définis : \\
 	\\{$\bullet$} Rendre l'exécution du MIRTK possible sur GPU. A l'heure actuelle, le MIRTK utilisent uniquement les quelques cœurs d'un processeur et ne tire pas encore l'avantage des capacités d'un GPU.\\
 	\\{$\bullet$} Conserver une exécution transparente du code, en n'altérant ni les lignes de commandes utilisées, ni le résultat attendu.  \\
-	\\{$\bullet$} Dans la mesure du possible, un réusinage* du code devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code peut s'améliorer.	
+	\\{$\bullet$} Dans la mesure du possible, un réusinage* du code devra être opéré. Suite à la modification du code du MIRTK, ainsi qu'à l'ajout probable certaines fonctionnalités, il est possible que des doublons subsistent, et que la lisibilité de certaines parties du code puisse s'améliorer.	
 	\section{Objectifs}
 	Les objectifs de stage sont définis de la manière chronologique suivante:
 	~\par~\par 
 	1) \textbf{Étude du MIRTK et de ses dépendances} \\
 	Cette étape préliminaire a pour but de comprendre le fonctionnement global du MIRTK et de se familiariser avec son code source. 
 	~\par~\par 
-	2)\textbf{Analyse de l'interface d'ArrayFire} \\
+	2) \textbf{Analyse de l'interface d'ArrayFire} \\
 	Dans le même temps, une analyse de l'interface d'ArrayFire, une bibliothèque mathématique optimisée, et des différentes fonctions proposées par la bibliothèque sera entreprise. Cette étude corrélera les besoins du MIRTK et les solutions proposées par ArrayFire.
 	~\par~\par 
 	\t 3) \textbf{Intégration de ArrayFire dans le MIRTK} \\
@@ -251,17 +251,17 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	\section{Introduction à ArrayFire}
 	ArrayFire est une bibliothèque logicielle open-source, proposant une grande variété de fonctions mathématiques optimisées. Elle propose aussi plusieurs fonctionnalités de manipulations de backends afin d'exécuter le même code sur différentes configurations matérielles.
 	\subsection{Les fonctions mathématiques}
-	L'interface d'ArrayFire repose sur la manipulation d'un type générique de tableau nommé \textit{af::array}. Celui-ci peut contenir tout type de valeurs numériques (entier, flottant ou complexe) et peut être utiliser pour représenter des structures de données allant jusqu'à 4 dimensions, comme des vecteurs, matrices, images, volumes, ou série de volumes. Ce type présente plusieurs constructeurs, et ceux-ci peuvent faire appel à une variable appelée \textit{af::dim4} qui est un ensemble de 4 entiers définissant la taille du tableau sur chacune de ses dimensions.\\ ~\par 
+	L'interface d'ArrayFire repose sur la manipulation d'un type générique de tableau nommé \textit{af::array}. Celui-ci peut contenir tous types de valeurs numériques (entier, flottant ou complexe) et peut être utiliser pour représenter des structures de données allant jusqu'à 4 dimensions, comme des vecteurs, matrices, images, volumes, ou série de volumes. Ce type présente plusieurs constructeurs, et ceux-ci peuvent faire appel à une variable appelée \textit{af::dim4} qui est un ensemble de 4 entiers définissant la taille du tableau sur chacune de ses dimensions.\\ ~\par 
 	
 	\noindent Autour de ce type s'articulent deux types de fonctions: ~\par 
-	- Des fonctions mathématiques basiques qui traitent d'algèbre linéaire, telles que des factorisations, décompositions ou opérations de matrices. Jointes à un jeu de fonctions de manipulations de matrices, cet ensemble constitue un noyau de fonctionnalités mathématiques complet. Dans le cas où ArrayFire ne couvre pas une fonctionnalité particulière, il est possible de l'étendre grâce à ces quelques fonctionnalités de base (cf \textbf{annexe 1}, exemple de programme cherchant les valeurs propres d'une matrice, avec ArrayFire). Pour des fonctionnalités plus complexes, ArrayFire met à disposition un outil appelé \textit{"GFOR"}, qui représente l'équivalent d'une boucle \textit{"FOR"} classique vectorisée. \\~\par 
-	- Des fonctions spécifiques a certains domaines scientifiques, comme le traitement de signal, d'images ou encore les statistiques. La vectorisation de certaines de ces fonctions peut, grâce à un paramètre supplémentaire, être explicitement activée ou désactivée. Dans le cadre du stage, les fonctions de traitement d'images se sont révélées être insuffisantes car uniquement applicables sur des images en 2 dimensions, tandis que le MIRTK traite aussi des images en 3 et 4 dimensions. Il sera en revanche possible de s'inspirer de leur implémentation.
+	- Des fonctions mathématiques basiques relevant d'algèbre linéaire, telles que des factorisations, décompositions ou opérations de matrices. Jointes à un jeu de fonctions de manipulations de matrices, cet ensemble constitue un noyau de fonctionnalités mathématiques complet. Dans le cas où ArrayFire ne couvre pas une fonctionnalité particulière, il est possible de l'étendre grâce à ces quelques fonctionnalités de base (cf \textbf{annexe 1}, exemple de programme cherchant les valeurs propres d'une matrice, avec ArrayFire). Pour des fonctionnalités plus complexes, ArrayFire met à disposition un outil appelé \textit{"GFOR"}, qui représente l'équivalent d'une boucle \textit{"FOR"} classique vectorisée. \\~\par 
+	- Des fonctions spécifiques à certains domaines scientifiques, comme le traitement de signal, d'images ou encore les statistiques. La vectorisation de certaines de ces fonctions peut, grâce à un paramètre supplémentaire, être explicitement activée ou désactivée. Dans le cadre du stage, les fonctions de traitement d'images se sont révélées être insuffisantes car uniquement applicables sur des images en 2 dimensions, tandis que le MIRTK traite aussi des images en 3 et 4 dimensions. Il sera en revanche possible de s'inspirer de leur implémentation.
 	\subsection{La gestion des backends}
 	
 	ArrayFire dispose aussi d'un ensemble de modules permettant de manipuler des backends. Parmi eux, un backend CPU est général à tous les processeurs, pour le traitement d'un code séquentiel. Les backends CUDA et OPENCL sont aussi principalement utilisés.\\
 	Le backend CUDA, acronyme de \textit{Compute Unified Device Architecture}, est une technologie de GPGPU (General-Purpose Computing on Graphics Processing Units), c'est-à-dire utilisant un GPU pour exécuter des calculs généraux à la place du CPU.
-	Elle a été développée par NVIDIA pour ses cartes graphiques GeForce 8 Series, et utilise un pilote unifié utilisant une technique de streaming (flux continu). Le premier kit de développement pour CUDA a été publié le 15 février 2007.\\
-	\\OpenCL (Open Computing Language) est la combinaison d'une interface et d'un langage de programmation dérivé du C, proposé comme un standard ouvert par le Khronos Group. OpenCL est conçu pour programmer des systèmes parallèles hétérogènes comprenant par exemple à la fois un CPU multi-cœur et un GPU. OpenCL propose donc un modèle de programmation se situant à l'intersection naissante entre le monde des CPU et des GPU, les premiers étant de plus en plus parallèles, les seconds étant de plus en plus programmables.\\ ~\par
+	Elle a été développée par NVIDIA pour ses cartes graphiques GeForce 8 Series, et utilise un pilote unifié utilisant une technique de streaming (flux continu). \\
+	\\OpenCL (Open Computing Language) est la combinaison d'une interface et d'un langage de programmation dérivé du C, proposé comme un standard ouvert par le Khronos Group. OpenCL est conçu pour programmer des systèmes parallèles hétérogènes comprenant par exemple à la fois un CPU multi-cœurs et un GPU. OpenCL propose donc un modèle de programmation se situant à l'intersection naissante entre le monde des CPU et des GPU, les premiers étant de plus en plus parallèles, les seconds étant de plus en plus programmables.\\ ~\par
 	
 	Concernant ArrayFire, son interface est commune à tous les backends, ce qui offre la transparence d'exécution. Le code client cible un backend unifié lors de la compilation, mais on peut définir un backend spécifique concrètement pour une exécution.\\ ~\par
 	De plus, un module de bascule dynamique entre plusieurs backends est présent dans la bibliothèque ArrayFire. Grâce à cette fonction, il sera possible d'adapter l'exécution du code entre CPU et GPU. Pour exécuter des fonctions de conversion ou de déclaration en mémoire par exemple, la meilleure solution sera d'utiliser le backend du processeur car celui-ci sera plus adapté pour ce genre de tâches qu'une carte graphique. Avant l'application d'un filtre, on pourra donc, grâce à cette fonctionnalité, basculer l'exécution sur la carte graphique, et ce, de manière transparente.\\ ~\par
@@ -270,12 +270,13 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	
 	\section{Intégration de ArrayFire dans le MIRTK}
 	\subsection{Filtres concernés}
-	La fonctionnalité majeure du MIRTK est le recalage d'images médicales. Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par le recherche d'une transformation géométrique permettant de passer d'une image à une autre. C'est une optimisation, ce qui implique que les différentes étapes nécessaires au calcul de la fonction de coup (ici la similarité) sont répétées jusqu'a convergence vers une solution. Chaque étape doit donc être individuellement accéléré.\\
+	La fonctionnalité majeure du MIRTK est le recalage d'images médicales. Le recalage est une technique qui consiste en la « mise en correspondance d'images », ceci afin de pouvoir comparer ou combiner leurs informations respectives. Cette mise en correspondance se fait par le recherche d'une transformation géométrique permettant de passer d'une image à une autre. C'est une optimisation, ce qui implique que les différentes étapes nécessaires au calcul de la fonction de coût (ici le critère de similarité) sont répétées jusqu'à
+	 convergence vers une solution. Chaque étape doit donc être individuellement accélérée.\\
 	Le module de recalage du MIRTK utilise notamment des itérations successives de floutages et de transformations. Pour cette raison, ces deux fonctions du MIRTK ont été traitées: \textit{smooth-image} et \textit{transform-image}.
 	\newpage
 	\subsection{Algorithme de "smooth-image"}
 
-	L'algorithme de floutage d'une image est, dans le MIRTK, traité comme une convolution d'un filtre gaussien et les valeurs numériques de chaque voxel* de l'image. Ce procédé est illustré en figure \ref{Principe d'une matrice de convolution pour un filtre}.
+	L'algorithme de floutage d'une image est, dans le MIRTK, traité comme une convolution d'un filtre gaussien et des valeurs numériques de chaque voxel* de l'image. Ce procédé est illustré en figure \ref{Principe d'une matrice de convolution pour un filtre}.
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=14cm]{convolve.jpg}
@@ -291,10 +292,10 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 		\caption{Matrice de convolution gaussienne}
 		\label{Matrice de convolution gaussienne}
 	\end{figure} ~\par
-	Le MIRTK utilise, à l'heure actuelle, une boucle itérant ce calcul sur chaque pixel de l'image de manière parallélisée. Le temps d'exécution de cette boucle  peut être relativement long, en fonction de la taille de l'image traitée. 
+	Le MIRTK utilise, à l'heure actuelle, une boucle itérant ce calcul sur chaque voxel de l'image de manière parallélisée. Le temps d'exécution de cette boucle  peut être relativement long, en fonction de la taille de l'image traitée. 
 	La figure \ref{Principe d'une matrice de convolution pour un filtre} montrant qu'une convolution est un produit matriciel la vectorisation est possible et permettrai de palier à ce défaut d'optimisation. C'est ce que fait la fonction \textbf{\textit{af::convolve1(af::array, af::array)}} dans ArrayFire.\\
 	\newpage
-	Afin de traiter les dimensions séparément, et effectuer le floutage sur une ou deux dimensions définies de l'image, un filtre gaussien à l'avantage d'être séparable. Cette notion est explicitée sur la figure \ref{Séparabilité d'une matrice gaussienne}.
+	Afin de traiter les dimensions séparément, et effectuer le floutage sur une ou deux dimensions définies de l'image, un filtre gaussien a l'avantage d'être séparable. Cette notion est explicitée sur la figure \ref{Séparabilité d'une matrice gaussienne}.
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=10cm]{gauss_sep.jpg}
@@ -304,7 +305,7 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	\end{figure} ~\par
 	La séparabilité est une propriété de certains filtres qui offre la possibilité de traiter chacune de leur dimension indépendamment. Dans le cas de la fonction de floutage, il est possible d'en tirer profit en séparant la convolution 3D en 3 convolutions successives en une dimension. Pour respecter une intégrité du floutage, le contenu de l'image est réarrangé avec la fonction \textbf{\textit{af::reorder(af::array, int, int, int)}}, issue d'ArrayFire, avant chacune des 3 convolutions.\\
 
-	Contrairement au MIRTK qui itère cette convolution sur chaque pixel de l'image, ArrayFire présente une fonction convoluant directement l'image avec le filtre de manière vectorisée.\\
+	Contrairement au MIRTK qui itère cette convolution sur chaque voxel de l'image, ArrayFire présente une fonction convoluant directement l'image avec le filtre de manière vectorisée.\\
 	
 	Cet algorithme de floutage est détaillé en \textbf{annexe 2} en langage Python.
 	\newpage
@@ -331,7 +332,7 @@ Cette partie du rapport présente la bibliothèque ArrayFire, ainsi que son int�
 	\end{figure}
 	~\par 
 	\newpage
-	L'interpolation de chaque voxel de l'image de sortie est la dernière étape du procédé de calcul des points transformés, qui peut être réalisé par plusieurs méthodes :\\
+	L'interpolation de chaque voxel de l'image de sortie est la dernière étape du procédé de calcul des points transformés, qui peut être réalisée par plusieurs méthodes :\\
 	- L'interpolation \textit{Nearest Neighbour}, abrégée NN, qui associe au point transformé son voxel voisin le plus proche. Ci-dessous est détaillé ce type d'interpolation sur l'exemple de la transformation du point P1 en figure \ref{Calcul des distances entre les points transformés et les voxels voisins}.\\
 	\begin{figure}[h!]
 		\begin{center}
@@ -363,7 +364,7 @@ Un profilage est une étude de comportement d'un programme lors de son exécutio
  	\begin{lstlisting}
  	valgrind --tools=callgrind [options] [commande]
  	\end{lstlisting}
- Cette méthode ajoute donc un préfixe à la commande voulue, par exemple le floutage d'une image avec le MIRTK, accompagné de un ou plusieurs options si nécessaires. Dans le cadre du profilage du MIRTK, 3 options ont été régulièrement utilisées: \\
+ Cette méthode ajoute donc un préfixe à la commande voulue, par exemple le floutage d'une image avec le MIRTK, accompagnée de une ou plusieurs options si nécessaires. Dans le cadre du profilage du MIRTK, 3 options ont été régulièrement utilisées: \\
  - \textit{separate-threads}: impose l'analyse indépendante de chaque thread* lors de l'exécution.\\
  - \textit{cache-sim}: simule l'interaction du programme avec la hiérarchie des caches. Cette commande fait appel à l'outil \textit{CacheGrind}.\\
  - \textit{callgrind-out-file}: définit le nom du fichier de profilage généré.\\ ~\par
@@ -387,7 +388,7 @@ Les caractéristiques de la machine ayant déroulé les tests sont les suivantes
 \newpage
 \subsubsection{b) Résultats}
 Le profilage a été exécuté sur l'ensemble du MIRTK, mais les résultats des fonctions de transformation (transform-image) et celles de floutage (smooth-image) sont les plus pertinents. \\
-Ces résultats ont été récoltés avec l'exécution des programmes sur la même image en entrée. Cependant, transform-image possède différents moyens d'interpoler les voxels de l'image de sortie, comme expliqué en partie 3.2.1. Il a donc été nécessaire de relever les performances de chaque interpolation: NN, linéaire, sinus cardinal, gaussienne, et B-spline. Une parallélisation du code était présente avant le stage, via la bibliothèque \textit{Threading Building Blocks} (abrégé TBB), et est comparée ci-dessous avec une exécution séquentielle de chaque fonction:
+Ces résultats ont été récoltés avec l'exécution des programmes sur la même image en entrée. Cependant, transform-image possède différents moyens d'interpoler les voxels de l'image de sortie, comme expliqué en partie 3.2.3. Il a donc été nécessaire de relever les performances de chaque interpolation: NN, linéaire, sinus cardinal, gaussienne, et B-spline. Une parallélisation du code était présente avant le stage, via la bibliothèque \textit{Threading Building Blocks} (abrégé TBB), et est comparée ci-dessous avec une exécution séquentielle de chaque fonction:
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}{\textwidth}
@@ -407,7 +408,7 @@ Ces résultats ont été récoltés avec l'exécution des programmes sur la mêm
 	\label{Relevés du nombre d'instructions}
 \end{figure}
 
-A l'aide du module CacheGrind, il a été aussi possible de relever les fuites de caches et les mauvaises prédictions de branche:
+A l'aide du module CacheGrind, il a été aussi possible de relever les fuites de cache et les mauvaises prédictions de branche:
 
 \begin{figure}[h!]
 	\begin{center}
@@ -416,18 +417,18 @@ A l'aide du module CacheGrind, il a été aussi possible de relever les fuites d
 	\caption{Fuites de cache pour la fonction transform-image}
 	\label{Fuites de cache pour la fonction transform-image}
 \end{figure}~\par
-Pour "transform-image", CacheGrind indique relativement peu de fuites de caches, mais, en revanche, le taux de mauvaise prédiction de branche vaut entre 10\% et 20\% en fonction de l'interpolation choisie. De plus, le taux de variation des mauvaises prédictions de branches et de fuites de caches est très faibles entre un code sérialisé et un code parallélisé avec les fonctionnalités présentes dans le MIRTK.\\
+Pour "transform-image", CacheGrind indique relativement peu de fuites de cache, mais, en revanche, le taux de mauvaises prédictions de branche vaut entre 10\% et 20\% en fonction de l'interpolation choisie. De plus, le taux de variation des mauvaises prédictions de branches et de fuites de cache est très faible entre un code sérialisé et un code parallélisé avec les fonctionnalités présentes dans le MIRTK.\\
 Les résultats concernant les fuites de cache pour transform-image sont très semblables pour smooth-image.
 \subsection{Analyse}
     \paragraph{Analyse du nombre d'instructions}~\par
 Callgrind étudie le coût, en nombre d'instructions CPU, des fonctions du programme profilé. Chaque instruction ayant le même temps d'exécution, le nombre d'instructions est proportionnel au temps. L'évolution relative du nombre d'instructions est donc équivalente à celle du temps d'exécution.\\
-Pour transform-image, la parallélisation du code des différentes interpolation est inégale. L'interpolation gaussienne est quasiment parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}. En effet, la machine possédant 8 coeurs, la parallélisation optimale serait à un taux x8, ce qui est le cas pour l'interpolation gaussienne seulement.\\
+Pour transform-image, la parallélisation du code des différentes interpolations est inégale. L'interpolation gaussienne est quasiment parfaitement parallélisée, ce qui n'est pas le cas des autres interpolations de \textit{transform-image}. En effet, la machine possédant 8 coeurs, la parallélisation optimale serait à un taux x8, ce qui est le cas pour l'interpolation gaussienne seulement.\\
 Concernant la fonction smooth-image, l'amélioration apportée par TBB est aussi faible, de l'ordre d'un taux de x1.59. La marge de réduction du temps d'exécution était encore grande.
 \newpage
 \paragraph{Analyse des fuites de cache}~\par
 Cachegrind est un module qui simule l'interaction du programme avec la hiérarchie des caches. Les caches représentent une partie de la mémoire informatique, et enregistrent temporairement des copies de données provenant d'une source, afin de diminuer le temps d'un nouvel accès d'un CPU à ces données. Comme représenté en figure \ref{Différents niveaux de mémoire d'un microprocesseur}, il y a plusieurs niveaux de mémoire entre un CPU et sa mémoire principale. 
 
-Sur la figure \ref{Différents niveaux de mémoire d'un microprocesseur} sont représenté 2 niveaux de mémoire cache, mais il est possible d'avoir plus ou moins de niveaux.
+Sur la figure \ref{Différents niveaux de mémoire d'un microprocesseur} sont représentés 2 niveaux de mémoire cache, mais il est possible d'avoir plus ou moins de niveaux.
 Les différents niveaux de mémoire cache sont désignés de la manière suivante : Level 1 (abrégé L1), Level 2 (abrégé L2) ... et le dernier niveau : Last Level (abrégé LL). Les niveaux de cache les plus bas correspondent aux caches les plus proches du CPU. 
 \begin{figure}[h!]
 	\begin{center}
@@ -436,9 +437,9 @@ Les différents niveaux de mémoire cache sont désignés de la manière suivant
 	\caption{Différents niveaux de mémoire d'un microprocesseur}
 	\label{Différents niveaux de mémoire d'un microprocesseur}
 \end{figure}~\par 
-En plus des fuites de caches, CacheGrind est capable de relever d'autres informations pertinentes telles que les erreurs de prédiction de branchement.\\
+En plus des fuites de cache, CacheGrind est capable de relever d'autres informations pertinentes telles que les erreurs de prédiction de branchement.\\
 La prédiction de branchement est une fonctionnalité d'un processeur qui lui permet de prédire le résultat d'un branchement. Avec cette technique, le processeur va faire de l’exécution spéculative : il va prédire le résultat d'un branchement, et va poursuivre l’exécution du programme avec le résultat de la prédiction. Si la prédiction échoue, les instructions chargées par erreur sont annulées. Dans ce cas-ci, CacheGrind relèvera une mauvaise prédiction de branche et engendrer des ralentissements possibles.\\
-Dans le cas des fonctions profilées, les fuites de caches sont minimes, inférieures à 2 \%. En revanche, les erreurs de prédictions de branche sont de l'ordre de 20\%, ce qui reste suffisamment acceptable pour se focaliser sur le temps d'exécution uniquement.  
+Dans le cas des fonctions profilées, les fuites de cache sont minimes, inférieures à 2 \%. En revanche, les erreurs de prédictions de branche sont de l'ordre de 20\%, ce qui reste suffisamment acceptable pour se focaliser sur le temps d'exécution uniquement.  
 \newpage
 \section{Diagramme de GANTT}
 	\begin{figure}[h!]
@@ -458,22 +459,21 @@ Cette dernière partie du rapport détaille les travaux possibles suite à ce st
 	\section{A cours terme}
 	 La réduction du temps d'exécution des fonctions de transformation et de floutage devrait améliorer le temps d'exécution du recalage. Une fois le stage achevé sur le plan technique, il sera alors pertinent de vérifier l'amélioration des performances du module de recalage du MIRTK. Pour cela, il faudra procéder à un profilage de la fonction de recalage, idéalement sur différentes machines et pour plusieurs images.\\
 	 ArrayFire étant implanté que succinctement dans le MIRTK, il faudra porter son intégration sur les autres fonctionnalités du module mathématique du MIRTK, ainsi que sur les autres modules liés au recalage d'image.\\
-	 Après ces différentes modifications et ajouts, il est possible que plusieurs fonctions seront dépréciées ou ré-implémentées, c'est pourquoi un réusinage* de l'intégralité du code source devra être entrepris, pour maintenir une certaine clarté dans le code source.\\ 
+	 Après ces différentes modifications et ajouts, il est possible que plusieurs fonctions soient dépréciées ou ré-implémentées, c'est pourquoi un réusinage* de l'intégralité du code source devra être entrepris, pour maintenir une certaine clarté dans le code source.\\ 
 
 	\section{A long terme}
-	Le MIRTK est un logiciel dont les fonctions et structures de données ont été conçues pour du traitement séquentiel, c'est-a-dire voxel par voxel. Les modifications requises (pour tirer avantage de l'accélération fournie par le calcul vectorisé) sont plus difficiles car elles sont invasives et requièrent des copies entre le contexte du MIRTK et celui d'ArrayFire. \\
-	Le code source du MIRTK dérive de celui d'un logiciel plus ancien, appelé IRTK (Image Registration ToolKit). Cependant, peu d'améliorations techniques y ont été ajouté lors de sa refonte en MIRTK. C'est-à-dire que le langage employé, le C++, a été conservé, ou encore que les classes et structures de données ont été simplement étoffées de nouveaux attributs et méthodes. Au fil de son développement, le code source du MIRTK a cependant renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. Dans l'optique d'une modification du code source du MIRTK, ce couplage important restreint son usinage puisque:\\
+	Le MIRTK est un logiciel dont les fonctions et structures de données ont été conçues pour du traitement séquentiel, c'est-a-dire voxel par voxel. Il faudra, à long terme modifier cette architecture pour l'orienter sur une exécution vectorisée en intégrant ArrayFire directement dans ce jeu de classes et de structures de données.\\ Les modifications requises (pour tirer avantage de l'accélération fournie par le calcul vectorisé) sont rendues plus difficiles car elles sont invasives et requièrent des copies entre le contexte du MIRTK et celui d'ArrayFire. \\
+	Le code source du MIRTK dérive de celui d'un logiciel plus ancien, appelé IRTK (Image Registration ToolKit). Cependant, peu d'améliorations techniques y ont été ajoutées lors de sa refonte en MIRTK. C'est-à-dire que le langage employé, le C++, a été conservé, ou encore que les classes et structures de données ont été simplement étoffées de nouveaux attributs et méthodes. Au fil de son développement, le code source du MIRTK a cependant renforcé son interdépendance entre ses classes. De son architecture ressort maintenant un couplage "serré", qui, par opposition à un couplage "libre", reflète un agencement de classes très complexe, et qui reste déprécié. Dans l'optique d'une modification du code source du MIRTK, ce couplage important restreint son usinage puisque:\\
 	\t - d'une part, les nouvelles structures de données devront se connecter à ces dépendances pour une intégration totale.\\
 	\t - d'autre part, la suppression de structures obsolètes ne devront pas porter atteinte à la structure du code.\\
 	
 	Par ailleurs, le manque de direction dans le développement depuis plus de 15 ans induit aussi un manque de cohérence dans l'implémentation de ses différentes fonctionnalités. Par exemple, bien qu'il soit codé en C++, tous les modules n'utilisent pas systématiquement l'encapsulation offerte par le module mathématique pour l'implémentation de leurs algorithmes de calcul.\\	
-	Puisque le MIRTK possède aujourd'hui un ensemble de structures de données centrées sur une exécution séquentielle, il faudra, à long terme modifier cette architecture pour l'orienter sur une exécution vectorisée en intégrant ArrayFire directement dans ce jeu de classes et de structures de données.\\ 
 	Afin d'exploiter le potentiel d'un cluster GPU, il faudra enfin adapter l'exécution du MIRTK à un support multi-GPU.  
 
 \chapter*{Conclusion} 
 \addcontentsline{toc}{chapter}{Conclusion}
-Afin de réduire au mieux le temps d'exécution du MIRTK sur une machine, un profilage a tout d'abord permis de mettre en valeur les fonctions les plus intéressantes à améliorer: le floutage et la transformation homogène. Ces fonctions intervenant dans le cadre d'un recalage d'images, spécialité du MIRTK, elles ont été ré-implémentées en utilisant la bibliothèque mathématique performante ArrayFire. ArrayFire a permis de rester aisément dans le cadre du cahier des charges imposé en début de stage grâce à ses diverses fonctionnalités. \\
-Le stage étant achevé, les autres interpolations de transform-image, et la transformation non-homogène ne sont pas encore implémentées. Le stage a d'ailleurs été relativement pauvre en résultats d'implémentation puisque seules 2 fonctions ont été traitées, et la gestion des backends peut encore être optimisée. En revanche, le profilage a permis de se rendre compte des performances du MIRTK puisqu'aucune étude n'avait été commencée auparavant. Par la suite, les travaux d'implémentation pourront être continués davantage pour que le MIRTK soit, à long terme, intégré dans le projet d'UK BioBank. \\ ~\par
+Afin de réduire au mieux le temps d'exécution du MIRTK sur une machine, un profilage a tout d'abord permis de mettre en valeur les fonctions les plus intéressantes à améliorer: le floutage et la transformation homogène. Ces fonctions intervenant dans le cadre d'un recalage d'images, spécialité du MIRTK, ont été ré-implémentées en utilisant la bibliothèque mathématique performante ArrayFire. ArrayFire a permis de rester aisément dans le cadre du cahier des charges imposé en début de stage grâce à ses diverses fonctionnalités. \\
+Le stage étant achevé, les autres interpolations de transform-image, et la transformation non-homogène ne sont pas encore implémentées. Le stage a d'ailleurs été relativement pauvre en résultats d'implémentation puisque seules 2 fonctions ont été traitées, et la gestion des backends peut encore être optimisée. En revanche, le profilage a permis de se rendre compte des performances du MIRTK puisqu'aucune étude n'avait été commencée auparavant sur ce plan là. Par la suite, les travaux d'implémentation pourront être continués davantage pour que le MIRTK soit, à long terme, intégré dans le projet d'UK BioBank. \\ ~\par
 \noindent
 Sur un plan personnel, j'ai pu tiré beaucoup de notions techniques de ce stage, en utilisant les outils d'un chercheur en informatique, tels que l'utilisation d'un logiciel de contrôle de version (GIT) ou l'apprentissage du langage LaTeX pour l'écriture de mes rapports. Par ailleurs, j'ai appréhendé le fonctionnement de base d'un logiciel de traitement d'images tel que le MIRTK, préparant concrètement ma cinquième année en option SA3I à l'INSA Centre Val de Loire, tout en évoluant dans un milieu de recherche, qui m'était inconnu auparavant.
 \chapter*{Sources}
